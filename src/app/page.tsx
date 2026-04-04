@@ -449,7 +449,7 @@ export default function Home() {
       {/* Layout grid */}
       <div className="layout-grid">
         {/* Sidebar — desktop only */}
-        <aside className="hidden lg:flex flex-col sticky top-[var(--gap)]" style={{ gap: "var(--gap)", maxHeight: "calc(100vh - 48px)", overflowY: "auto" }}>
+        <aside className="hidden lg:flex flex-col sticky top-[var(--gap)]" style={{ gap: "var(--gap)" }}>
           <SidebarContent onOpenSearch={() => setSearchOpen(true)} />
         </aside>
 
