@@ -1,26 +1,197 @@
 @import "tailwindcss";
 
+@theme {
+  --font-mono: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #FAFAF9;
+  --text: #1a1a1a;
+  --yc-orange: #FF6600;
+  --yc-orange-light: #FFF3EB;
+  --dead-black: #000000;
+  --fraud-red: #dc2626;
+  --zombie-amber: #854d0e;
+  --scandal-purple: #9333ea;
+  --border: 1px solid #e5e5e5;
+  --border-heavy: 1.5px solid #1a1a1a;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  cursor: default;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+a, button, [role="button"] {
+  cursor: pointer;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Exhibit card */
+.exhibit-card {
+  background: white;
+  border: var(--border);
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.exhibit-card:hover {
+  border-color: var(--yc-orange);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.exhibit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--yc-orange);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: left;
+}
+
+.exhibit-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Status badge */
+.status-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 3px 8px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+/* Redacted text */
+.redacted {
+  background: #1a1a1a;
+  color: #1a1a1a;
+  padding: 1px 4px;
+  border-radius: 1px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.redacted:hover {
+  color: #fff;
+  background: var(--yc-orange);
+}
+
+/* Ticker */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-track {
+  display: inline-flex;
+  animation: ticker 40s linear infinite;
+  gap: 3rem;
+}
+
+.ticker-track:hover,
+.ticker-wrapper:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+/* Stats counter */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-card {
+  animation: countUp 0.6s ease forwards;
+}
+
+/* Tombstone effect for dead companies */
+.tombstone {
+  position: relative;
+}
+
+.tombstone::after {
+  content: 'R.I.P.';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  font-family: var(--font-serif);
+  font-size: 48px;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.06);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Pulse for fraud status */
+@keyframes fraudPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.fraud-pulse {
+  animation: fraudPulse 2s ease-in-out infinite;
+}
+
+/* Museum label */
+.museum-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+/* Section divider */
+.section-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #d4d4d4, transparent);
+  margin: 4rem 0;
+}
+
+/* Hero gradient */
+.hero-gradient {
+  background: linear-gradient(
+    180deg,
+    #FFF3EB 0%,
+    var(--bg) 100%
+  );
+}
+
+/* Scroll fade in */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Nav */
+.nav-blur {
+  backdrop-filter: blur(12px);
+  background: rgba(250, 250, 249, 0.85);
 }
