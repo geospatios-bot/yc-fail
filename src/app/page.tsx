@@ -117,8 +117,18 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
       {/* Logo block */}
       <div className="block block--accent">
         <div className="logo-block">
-          <div className="label-group" style={{ justifyContent: "center", marginBottom: "2rem" }}>
+          <div className="label-group" style={{ justifyContent: "center", marginBottom: "1.5rem" }}>
             <span className="pill-outline" style={{ borderColor: "var(--border-color)" }}>(OFFICIAL ARCHIVE)</span>
+          </div>
+          {/* YC Shield */}
+          <div className="flex items-center justify-center" style={{ gap: "10px", marginBottom: "1rem" }}>
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="36" height="36" rx="6" fill="#000"/>
+              <path d="M10.5 9L18 21V27H18V27H18V21L25.5 9" stroke="#fff" strokeWidth="3.5" strokeLinecap="square" fill="none"/>
+            </svg>
+            <span className="text-mono" style={{ fontSize: "0.6rem", color: "var(--border-color)", letterSpacing: "0.05em" }}>
+              FEATURING STARTUPS<br />FUNDED BY Y COMBINATOR
+            </span>
           </div>
           <h1>YCOMBINATOR.FYI</h1>
           <p className="text-mono" style={{ fontSize: "0.8rem" }}>
