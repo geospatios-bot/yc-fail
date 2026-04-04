@@ -10,17 +10,17 @@ import {
 
 function Nav() {
   return (
-    <nav className="sticky top-0 z-50 nav-blur border-b-2 border-[#333]">
+    <nav className="sticky top-0 z-50 nav-blur border-b-2 border-[var(--border-color)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-12 sm:h-14 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2">
           <div className="w-7 h-7 bg-[var(--yc-orange)] flex items-center justify-center">
             <span className="text-white text-xs font-black">YC</span>
           </div>
-          <span className="font-bold text-sm tracking-tight text-white">
+          <span className="font-bold text-sm tracking-tight">
             .FAIL
           </span>
         </a>
-        <div className="flex items-center gap-4 sm:gap-8 text-[10px] sm:text-xs tracking-[0.2em] uppercase text-[#666]">
+        <div className="flex items-center gap-4 sm:gap-8 text-[10px] sm:text-xs tracking-[0.2em] uppercase text-[var(--text-dim)]">
           <a
             href="#exhibits"
             className="hover:text-[var(--yc-orange)] transition-colors"
@@ -51,12 +51,12 @@ function Ticker() {
   );
   const doubled = [...items, ...items];
   return (
-    <div className="ticker-wrapper border-b-2 border-[#333] overflow-hidden py-2">
+    <div className="ticker-wrapper border-b-2 border-[var(--border-color)] bg-white overflow-hidden py-2">
       <div className="ticker-track whitespace-nowrap">
         {doubled.map((item, i) => (
           <span
             key={i}
-            className="text-[10px] sm:text-xs tracking-[0.15em] text-[#444] font-medium"
+            className="text-[10px] sm:text-xs tracking-[0.15em] text-[var(--text-dim)] font-medium"
           >
             {item}
           </span>
@@ -69,32 +69,32 @@ function Ticker() {
 function Hero() {
   const stats = computeStats();
   return (
-    <section className="relative grain">
+    <section className="bg-[var(--yc-orange)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 sm:pt-28 pb-12 sm:pb-24">
-        <div className="museum-label mb-6 sm:mb-8 text-[var(--yc-orange)]">
+        <div className="text-[10px] sm:text-xs font-bold tracking-[0.25em] uppercase text-black/50 mb-6 sm:mb-8">
           THE MUSEUM OF STARTUP FAILURES
         </div>
 
         <h1 className="font-[family-name:var(--font-serif)] text-5xl sm:text-7xl md:text-[120px] leading-[0.9] tracking-tight mb-6 sm:mb-8 text-white">
           Museum
           <br />
-          <span className="italic text-[var(--yc-orange)]">of </span>
+          <span className="italic text-black">of </span>
           Startup
           <br />
-          <span className="italic text-[var(--yc-orange)]">Failures</span>
+          <span className="italic text-black">Failures</span>
         </h1>
 
-        <p className="text-sm sm:text-base text-[#737373] max-w-lg leading-relaxed mb-10 sm:mb-16 font-light">
+        <p className="text-sm sm:text-base text-white/80 max-w-lg leading-relaxed mb-10 sm:mb-16">
           A curated exhibition of Y Combinator&apos;s most spectacular
           failures, frauds, and flameouts. {stats.totalRaised}+ in capital.
           Gone.
         </p>
 
         {/* Stats strip */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-2 border-[#333]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-2 border-black bg-white">
           {[
             {
-              label: "TOTAL CAPITAL INCINERATED",
+              label: "CAPITAL INCINERATED",
               value: stats.totalRaised,
               color: "var(--yc-orange)",
             },
@@ -106,7 +106,7 @@ function Hero() {
             {
               label: "CONFIRMED DEAD",
               value: String(stats.totalDead).padStart(2, "0"),
-              color: "#fff",
+              color: "var(--dead-black)",
             },
             {
               label: "ZOMBIES",
@@ -116,10 +116,10 @@ function Hero() {
           ].map((stat, i) => (
             <div
               key={stat.label}
-              className={`stat-animate p-4 sm:p-6 ${i > 0 ? "border-l-2 border-[#333]" : ""} ${i >= 2 ? "border-t-2 md:border-t-0 border-[#333]" : ""}`}
+              className={`stat-animate p-4 sm:p-6 ${i > 0 ? "border-l-2 border-black" : ""} ${i >= 2 ? "border-t-2 md:border-t-0 border-black" : ""}`}
               style={{ animationDelay: `${i * 0.1}s` }}
             >
-              <div className="museum-label mb-2 sm:mb-3 text-[9px] sm:text-[10px]">
+              <div className="museum-label mb-2 sm:mb-3 text-[9px] sm:text-[10px] text-[var(--text-dim)]">
                 {stat.label}
               </div>
               <div
@@ -132,9 +132,6 @@ function Hero() {
           ))}
         </div>
       </div>
-
-      {/* Orange accent line */}
-      <div className="h-1 bg-[var(--yc-orange)]" />
     </section>
   );
 }
@@ -173,10 +170,10 @@ function ExhibitCard({
                 ? `BATCH ${failure.batch}`
                 : "YC ADJACENT"}
             </div>
-            <h3 className="text-xl sm:text-2xl font-black tracking-tight text-white">
+            <h3 className="text-xl sm:text-2xl font-black tracking-tight">
               {failure.company}
             </h3>
-            <div className="text-xs text-[#555] mt-1 font-medium">
+            <div className="text-xs text-[var(--text-dim)] mt-1 font-medium">
               {failure.founders.join(" / ")} &mdash; {failure.sector}
             </div>
           </div>
@@ -189,18 +186,18 @@ function ExhibitCard({
       </div>
 
       {/* Financials bar */}
-      <div className="mx-4 sm:mx-6 border-2 border-[#333] mb-3 sm:mb-4">
-        <div className="grid grid-cols-2 sm:grid-cols-3 divide-x-2 divide-[#333]">
+      <div className="mx-4 sm:mx-6 border-2 border-[var(--border-color)] mb-3 sm:mb-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 divide-x-2 divide-[var(--border-color)]">
           <div className="p-2.5 sm:p-3">
             <div className="museum-label text-[9px]">RAISED</div>
-            <div className="font-black text-sm sm:text-base mt-1 text-white">
+            <div className="font-black text-sm sm:text-base mt-1">
               {failure.raised}
             </div>
           </div>
           {failure.valuation && (
             <div className="p-2.5 sm:p-3">
               <div className="museum-label text-[9px]">PEAK VALUATION</div>
-              <div className="font-black text-sm sm:text-base mt-1 text-white">
+              <div className="font-black text-sm sm:text-base mt-1">
                 {failure.valuation}
               </div>
             </div>
@@ -209,7 +206,7 @@ function ExhibitCard({
             <div className="museum-label text-[9px]">
               {failure.yearDied ? "LIVED" : "STATUS"}
             </div>
-            <div className="font-black text-sm sm:text-base mt-1 text-white">
+            <div className="font-black text-sm sm:text-base mt-1">
               {failure.yearDied
                 ? `${failure.yearFounded}–${failure.yearDied}`
                 : `Since ${failure.yearFounded}`}
@@ -220,7 +217,7 @@ function ExhibitCard({
 
       {/* Description */}
       <div className="px-4 sm:px-6 pb-3 sm:pb-4">
-        <p className="text-xs sm:text-sm leading-relaxed text-[#999]">
+        <p className="text-xs sm:text-sm leading-relaxed text-[var(--text-muted)]">
           {failure.description}{" "}
           <span
             className="redacted"
@@ -236,7 +233,7 @@ function ExhibitCard({
 
       {/* Body count */}
       {failure.bodyCount && (
-        <div className="mx-4 sm:mx-6 mb-3 sm:mb-4 bg-[#1c1208] border-2 border-[#FF6600] px-3 sm:px-4 py-2">
+        <div className="mx-4 sm:mx-6 mb-3 sm:mb-4 bg-[#FFF3EB] border-2 border-[var(--yc-orange)] px-3 sm:px-4 py-2">
           <span className="text-[10px] sm:text-xs font-bold text-[var(--yc-orange)] tracking-wider uppercase">
             DAMAGE REPORT: {failure.bodyCount}
           </span>
@@ -246,7 +243,7 @@ function ExhibitCard({
       {/* Expand toggle */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full px-4 sm:px-6 py-3 text-[10px] sm:text-xs tracking-[0.2em] uppercase text-[#555] hover:text-[var(--yc-orange)] border-t-2 border-[#333] transition-colors flex items-center justify-center gap-2 font-semibold"
+        className="w-full px-4 sm:px-6 py-3 text-[10px] sm:text-xs tracking-[0.2em] uppercase text-[var(--text-dim)] hover:text-[var(--yc-orange)] border-t-2 border-[var(--border-color)] transition-colors flex items-center justify-center gap-2 font-semibold"
       >
         {expanded ? "Close exhibit" : "View sources"}
         <span
@@ -261,7 +258,7 @@ function ExhibitCard({
 
       {/* Sources */}
       {expanded && (
-        <div className="px-4 sm:px-6 pb-4 sm:pb-6 border-t-2 border-[#333] bg-[#111]">
+        <div className="px-4 sm:px-6 pb-4 sm:pb-6 border-t-2 border-[var(--border-color)] bg-[var(--bg)]">
           <div className="pt-3 sm:pt-4 space-y-2.5">
             {failure.sources.map((source, i) => (
               <a
@@ -269,7 +266,7 @@ function ExhibitCard({
                 href={source.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-2.5 text-[10px] sm:text-xs text-[#777] hover:text-[var(--yc-orange)] transition-colors group"
+                className="flex items-start gap-2.5 text-[10px] sm:text-xs text-[var(--text-muted)] hover:text-[var(--yc-orange)] transition-colors group"
               >
                 <span className="text-[var(--yc-orange)] font-bold flex-shrink-0">
                   →
@@ -277,7 +274,7 @@ function ExhibitCard({
                 <span className="underline underline-offset-2 break-words min-w-0">
                   {source.label}
                 </span>
-                <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.15em] text-[#444] ml-auto flex-shrink-0 border border-[#333] px-1.5 py-0.5">
+                <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.15em] text-[var(--text-dim)] ml-auto flex-shrink-0 border border-[var(--border-color)] px-1.5 py-0.5">
                   {source.type}
                 </span>
               </a>
@@ -301,26 +298,22 @@ function ExhibitsSection() {
       subtitle:
         "Criminal charges filed. Investors duped. Founders indicted.",
       items: fraud,
-      accent: "var(--fraud-red)",
     },
     {
       title: "Scandal Gallery",
       subtitle: "Not dead yet, but the headlines were brutal.",
       items: scandals,
-      accent: "var(--scandal-purple)",
     },
     {
       title: "The Graveyard",
       subtitle:
         "Dead on arrival. Capital incinerated. Dreams deferred.",
       items: dead,
-      accent: "#fff",
     },
     {
       title: "Zombie Hall",
       subtitle: "Still technically alive. Nobody knows why.",
       items: zombies,
-      accent: "var(--zombie-amber)",
     },
   ].filter((s) => s.items.length > 0);
 
@@ -331,17 +324,12 @@ function ExhibitsSection() {
       {sections.map((section) => (
         <div key={section.title} className="mb-12 sm:mb-20">
           <div className="flex items-baseline gap-4 mb-2">
-            <h2
-              className="font-[family-name:var(--font-serif)] text-3xl sm:text-4xl md:text-5xl italic text-white"
-            >
+            <h2 className="font-[family-name:var(--font-serif)] text-3xl sm:text-4xl md:text-5xl italic">
               {section.title}
             </h2>
-            <div
-              className="h-[3px] flex-1 opacity-20"
-              style={{ background: section.accent }}
-            />
+            <div className="h-[2px] flex-1 bg-[var(--border-color)] opacity-10" />
           </div>
-          <p className="text-xs sm:text-sm text-[#555] mb-6 sm:mb-10 font-medium tracking-wide">
+          <p className="text-xs sm:text-sm text-[var(--text-dim)] mb-6 sm:mb-10 font-medium tracking-wide">
             {section.subtitle}
           </p>
           <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
@@ -365,21 +353,21 @@ function ExhibitsSection() {
 
 function CemeterySection() {
   return (
-    <section id="graveyard" className="border-t-2 border-b-2 border-[#333] py-12 sm:py-20">
+    <section id="graveyard" className="bg-[var(--border-color)] text-white py-12 sm:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="museum-label text-[var(--yc-orange)] mb-3 sm:mb-4">
           PERMANENT COLLECTION
         </div>
-        <h2 className="font-[family-name:var(--font-serif)] text-3xl sm:text-5xl md:text-6xl italic mb-4 sm:mb-6 text-white">
+        <h2 className="font-[family-name:var(--font-serif)] text-3xl sm:text-5xl md:text-6xl italic mb-4 sm:mb-6">
           The <span className="text-[var(--yc-orange)]">Cemetery</span>
         </h2>
-        <p className="text-sm text-[#666] max-w-xl mb-8 sm:mb-12 leading-relaxed">
+        <p className="text-sm text-[#999] max-w-xl mb-8 sm:mb-12 leading-relaxed">
           A non-exhaustive list of YC-backed companies that raised millions,
           shipped products nobody wanted, and quietly 404&apos;d into the
           void.
         </p>
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-0">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-0 border-2 border-[#333]">
           {[
             "Tutorspree",
             "Meteor",
@@ -410,17 +398,17 @@ function CemeterySection() {
               key={name}
               className="border border-[#333] p-3 sm:p-4 text-center hover:bg-[var(--yc-orange)] hover:text-black transition-all group"
             >
-              <div className="text-[10px] sm:text-xs font-bold text-[#555] group-hover:text-black tracking-wide">
+              <div className="text-[10px] sm:text-xs font-bold text-[#666] group-hover:text-black tracking-wide">
                 {name}
               </div>
-              <div className="text-[9px] text-[#333] group-hover:text-black/60 mt-1 font-semibold tracking-[0.2em]">
+              <div className="text-[9px] text-[#444] group-hover:text-black/60 mt-1 font-semibold tracking-[0.2em]">
                 R.I.P.
               </div>
             </div>
           ))}
         </div>
 
-        <p className="text-[10px] text-[#444] mt-8 sm:mt-12 text-center tracking-[0.2em] uppercase font-semibold">
+        <p className="text-[10px] text-[#555] mt-8 sm:mt-12 text-center tracking-[0.2em] uppercase font-semibold">
           This is a partial list. The full cemetery requires a separate wing.
         </p>
       </div>
@@ -435,15 +423,15 @@ function GiftShopSection() {
         <div className="museum-label text-[var(--yc-orange)] mb-3 sm:mb-4">
           BEFORE YOU LEAVE
         </div>
-        <h2 className="font-[family-name:var(--font-serif)] text-3xl sm:text-4xl md:text-5xl italic mb-4 sm:mb-6 text-white">
+        <h2 className="font-[family-name:var(--font-serif)] text-3xl sm:text-4xl md:text-5xl italic mb-4 sm:mb-6">
           The Gift Shop
         </h2>
-        <p className="text-sm text-[#666] max-w-xl mb-8 sm:mb-12 leading-relaxed">
+        <p className="text-sm text-[var(--text-muted)] max-w-xl mb-8 sm:mb-12 leading-relaxed">
           Take home a piece of the wreckage. Every failed startup leaves
           behind lessons — these are the ones YC would prefer you forget.
         </p>
 
-        <div className="grid gap-0 md:grid-cols-3 border-2 border-[#333]">
+        <div className="grid gap-0 md:grid-cols-3 border-2 border-[var(--border-color)] bg-white">
           {[
             {
               title: "The Pattern",
@@ -460,12 +448,12 @@ function GiftShopSection() {
           ].map((item, i) => (
             <div
               key={item.title}
-              className={`p-5 sm:p-8 ${i > 0 ? "border-t-2 md:border-t-0 md:border-l-2 border-[#333]" : ""}`}
+              className={`p-5 sm:p-8 ${i > 0 ? "border-t-2 md:border-t-0 md:border-l-2 border-[var(--border-color)]" : ""}`}
             >
-              <h3 className="font-black text-sm sm:text-base mb-3 text-white tracking-tight">
+              <h3 className="font-black text-sm sm:text-base mb-3 tracking-tight">
                 {item.title}
               </h3>
-              <p className="text-xs sm:text-sm text-[#777] leading-relaxed">
+              <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
                 {item.body}
               </p>
             </div>
@@ -478,7 +466,7 @@ function GiftShopSection() {
 
 function Footer() {
   return (
-    <footer className="border-t-2 border-[#333] py-8 sm:py-12">
+    <footer className="border-t-2 border-[var(--border-color)] py-8 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
@@ -488,15 +476,15 @@ function Footer() {
                   YC
                 </span>
               </div>
-              <span className="font-bold text-sm text-white">.FAIL</span>
+              <span className="font-bold text-sm">.FAIL</span>
             </div>
-            <p className="text-[10px] sm:text-xs text-[#555] max-w-md leading-relaxed">
+            <p className="text-[10px] sm:text-xs text-[var(--text-dim)] max-w-md leading-relaxed">
               This is a satirical project. Not affiliated with Y Combinator.
               All information sourced from public records, court filings,
               and news reports. Pattern recognition, not prediction.
             </p>
           </div>
-          <div className="text-[10px] sm:text-xs text-[#444] md:text-right font-medium">
+          <div className="text-[10px] sm:text-xs text-[var(--text-dim)] md:text-right font-medium">
             <div className="mb-1">Admission is free. The losses were not.</div>
             <div>Built with regret and public filings.</div>
           </div>
