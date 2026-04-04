@@ -120,15 +120,20 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
           <div className="label-group" style={{ justifyContent: "center", marginBottom: "1.5rem" }}>
             <span className="pill-outline" style={{ borderColor: "var(--border-color)" }}>(OFFICIAL ARCHIVE)</span>
           </div>
-          {/* YC Shield */}
-          <div className="flex items-center justify-center" style={{ gap: "10px", marginBottom: "1rem" }}>
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="36" height="36" rx="6" fill="#000"/>
-              <path d="M10.5 9L18 21V27H18V27H18V21L25.5 9" stroke="#fff" strokeWidth="3.5" strokeLinecap="square" fill="none"/>
-            </svg>
-            <span className="text-mono" style={{ fontSize: "0.6rem", color: "var(--border-color)", letterSpacing: "0.05em" }}>
-              FEATURING STARTUPS<br />FUNDED BY Y COMBINATOR
-            </span>
+          {/* YC Badge */}
+          <div className="flex items-center justify-center" style={{ marginBottom: "1.25rem" }}>
+            <div className="yc-badge flex items-center" style={{ gap: "8px", background: "#000", borderRadius: "999px", padding: "6px 16px", border: "2px solid #333", cursor: "pointer" }}>
+              <span style={{ fontSize: "1rem", fontWeight: 400, color: "#888", fontFamily: "var(--font-sans)", textTransform: "none", letterSpacing: "0", lineHeight: 1 }}>
+                <span className="not-text">Not </span>Backed by
+              </span>
+              <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ borderRadius: "5px", flexShrink: 0 }}>
+                <path d="M47.9985 47.9994H0V0H47.9985V47.9994Z" fill="#FF6600"/>
+                <path d="M13.9012 11.7843H17.6595L22.4961 21.5325C23.203 22.9836 23.7984 24.3976 23.7984 24.3976C23.7984 24.3976 24.4313 23.021 25.175 21.5325L30.0868 11.7843H33.5843L25.2865 27.3746V37.309H22.1244V27.1884L13.9012 11.7843Z" fill="white"/>
+              </svg>
+              <span style={{ fontSize: "1rem", fontWeight: 700, color: "var(--accent)", fontFamily: "var(--font-sans)", textTransform: "none", letterSpacing: "0", lineHeight: 1 }}>
+                Combinator
+              </span>
+            </div>
           </div>
           <h1>YCOMBINATOR.FYI</h1>
           <p className="text-mono" style={{ fontSize: "0.8rem" }}>
@@ -167,7 +172,7 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
             className="pill-solid"
             style={{ padding: "12px 24px", fontSize: "1rem", width: "100%", justifyContent: "center", textDecoration: "none", marginTop: "8px" }}
           >
-            @NOTONKETAMINE ↗
+            <span style={{ textTransform: "none" }}>@NotOnKetamine</span> ↗
           </a>
         </div>
       </div>
@@ -384,39 +389,40 @@ export default function Home() {
           top: 0,
           zIndex: 50,
           background: "var(--bg)",
-          padding: "12px 16px",
+          padding: "10px 16px",
           margin: "-16px -16px 0",
           borderBottom: "2px solid #222",
         }}
       >
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center" style={{ width: "28px", height: "28px", background: "var(--accent)", borderRadius: "6px" }}>
-              <span style={{ color: "white", fontSize: "10px", fontWeight: 900 }}>YC</span>
-            </div>
-            <span style={{ fontWeight: 900, color: "white", fontSize: "1rem" }}>YCOMBINATOR.FYI</span>
+          <div className="flex items-center gap-2">
+            <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ borderRadius: "5px", flexShrink: 0 }}>
+              <path d="M47.9985 47.9994H0V0H47.9985V47.9994Z" fill="#FF6600"/>
+              <path d="M13.9012 11.7843H17.6595L22.4961 21.5325C23.203 22.9836 23.7984 24.3976 23.7984 24.3976C23.7984 24.3976 24.4313 23.021 25.175 21.5325L30.0868 11.7843H33.5843L25.2865 27.3746V37.309H22.1244V27.1884L13.9012 11.7843Z" fill="white"/>
+            </svg>
+            <span style={{ fontWeight: 900, color: "white", fontSize: "0.85rem", letterSpacing: "-0.02em" }}>YCOMBINATOR.FYI</span>
           </div>
           <div className="flex items-center gap-2">
             <a
               href="https://x.com/NotOnKetamine"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: "var(--accent)", fontSize: "0.7rem", fontWeight: 700, textDecoration: "none", fontFamily: "var(--font-mono)" }}
+              style={{ color: "var(--accent)", fontSize: "0.65rem", fontWeight: 700, textDecoration: "none", fontFamily: "var(--font-mono)" }}
             >
-              @NOTONKETAMINE
+              @NotOnKetamine
             </a>
             <button
               onClick={() => setSearchOpen(true)}
               className="flex items-center justify-center"
-              style={{ width: "28px", height: "28px", background: "#222", border: "2px solid #444", borderRadius: "8px", color: "var(--accent)", fontSize: "14px", cursor: "pointer" }}
+              style={{ width: "32px", height: "32px", background: "#222", border: "2px solid #333", borderRadius: "8px", color: "var(--accent)", fontSize: "14px", cursor: "pointer" }}
             >
               ⌕
             </button>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="pill-solid accent"
-              style={{ fontSize: "0.6rem", padding: "3px 10px" }}
+              className="flex items-center justify-center"
+              style={{ width: "32px", height: "32px", background: "var(--accent)", border: "none", borderRadius: "8px", color: "#000", fontSize: "16px", fontWeight: 900, cursor: "pointer" }}
             >
-              {sidebarOpen ? "CLOSE" : "MENU"}
+              {sidebarOpen ? "✕" : "☰"}
             </button>
           </div>
       </div>
