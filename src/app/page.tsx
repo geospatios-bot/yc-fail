@@ -150,12 +150,12 @@ function Nav() {
 
             {/* Twitter */}
             <a
-              href="https://x.com/vincentweisser"
+              href="https://x.com/NotOnKetamine"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[10px] sm:text-xs font-semibold tracking-wider text-[var(--yc-orange)] hover:underline uppercase"
             >
-              @vincentweisser
+              @NotOnKetamine
             </a>
           </div>
         </div>
