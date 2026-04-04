@@ -61,6 +61,10 @@ body {
   align-items: start;
 }
 
+.layout-grid > * {
+  min-width: 0;
+}
+
 @media (max-width: 1024px) {
   .layout-grid {
     grid-template-columns: 1fr;
@@ -273,6 +277,12 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   gap: var(--gap);
+  min-width: 0;
+}
+
+.exhibits > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .exhibit-card {
