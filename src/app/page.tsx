@@ -444,7 +444,13 @@ export default function Home() {
                 key={key}
                 onClick={() => setSort(key)}
                 className={sort === key ? "pill-solid accent" : "pill-outline"}
-                style={{ fontSize: "0.6rem", padding: "3px 10px", cursor: "pointer", transition: "all 0.15s" }}
+                style={{
+                  fontSize: "0.6rem",
+                  padding: "3px 10px",
+                  cursor: "pointer",
+                  transition: "all 0.15s",
+                  ...(sort !== key ? { color: "#999", borderColor: "#555" } : {}),
+                }}
               >
                 {label}
               </button>
