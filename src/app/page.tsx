@@ -40,15 +40,15 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
     : [];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh] sm:pt-[20vh]" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-md sidebar-backdrop" />
+    <div className="fixed inset-0 z-[100] flex items-center justify-center" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-xl sidebar-backdrop" />
       <div
-        className="relative w-full max-w-lg mx-4 overflow-hidden sidebar-slide"
-        style={{ background: "#111", border: "2px solid #333", borderRadius: "var(--radius-lg)" }}
+        className="relative w-full max-w-xl mx-4 overflow-hidden sidebar-slide"
+        style={{ background: "#0a0a0a", border: "2px solid var(--accent)", borderRadius: "var(--radius-md)", boxShadow: "0 0 60px rgba(255,102,0,0.15)" }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center px-5 py-4" style={{ borderBottom: "2px solid #333" }}>
-          <span style={{ color: "var(--accent)", marginRight: "12px", fontWeight: 900, fontSize: "1.2rem" }}>⌕</span>
+        <div className="flex items-center px-5 py-4" style={{ borderBottom: "2px solid #222" }}>
+          <span style={{ color: "var(--accent)", marginRight: "12px", fontWeight: 900, fontSize: "1.1rem" }}>⌕</span>
           <input
             ref={inputRef}
             type="text"
@@ -56,9 +56,9 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search exhibits..."
             className="flex-1 bg-transparent outline-none"
-            style={{ cursor: "text", color: "#fff", fontSize: "1rem", fontWeight: 700, fontFamily: "var(--font-mono)" }}
+            style={{ cursor: "text", color: "#fff", fontSize: "1.05rem", fontWeight: 600 }}
           />
-          <kbd style={{ fontSize: "0.6rem", padding: "3px 10px", borderRadius: "var(--radius-pill)", border: "2px solid #555", color: "#777", fontFamily: "var(--font-mono)", fontWeight: 800 }}>ESC</kbd>
+          <kbd style={{ fontSize: "0.6rem", padding: "3px 10px", borderRadius: "6px", border: "1px solid #444", color: "#666", fontFamily: "var(--font-mono)", fontWeight: 700, background: "#1a1a1a" }}>ESC</kbd>
         </div>
         {results.length > 0 && (
           <div style={{ maxHeight: "300px", overflowY: "auto" }}>
