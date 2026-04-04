@@ -348,25 +348,41 @@ export default function Home() {
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
 
       {/* Mobile header */}
-      <div className="flex lg:hidden items-center justify-between" style={{ marginBottom: "var(--gap)" }}>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center" style={{ width: "32px", height: "32px", background: "var(--accent)", borderRadius: "8px" }}>
-            <span style={{ color: "white", fontSize: "11px", fontWeight: 900 }}>YC</span>
+      <div className="flex lg:hidden flex-col" style={{ marginBottom: "var(--gap)", gap: "12px" }}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center" style={{ width: "32px", height: "32px", background: "var(--accent)", borderRadius: "8px" }}>
+              <span style={{ color: "white", fontSize: "11px", fontWeight: 900 }}>YC</span>
+            </div>
+            <span style={{ fontWeight: 900, color: "white", fontSize: "1.1rem" }}>.FAIL</span>
           </div>
-          <span style={{ fontWeight: 900, color: "white", fontSize: "1.1rem" }}>.FAIL</span>
+          <div className="flex items-center gap-2">
+            <a
+              href="https://x.com/NotOnKetamine"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pill-outline"
+              style={{ color: "var(--accent)", borderColor: "var(--accent)", fontSize: "0.6rem", textDecoration: "none" }}
+            >
+              @NOTONKETAMINE
+            </a>
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="pill-solid accent"
+              style={{ fontSize: "0.65rem" }}
+            >
+              {sidebarOpen ? "CLOSE" : "MENU"}
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setSearchOpen(true)} className="pill-outline" style={{ color: "white", borderColor: "rgba(255,255,255,0.4)", fontSize: "0.6rem" }}>
-            Search ⌘K
-          </button>
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="pill-solid accent"
-            style={{ fontSize: "0.65rem" }}
-          >
-            {sidebarOpen ? "CLOSE" : "MENU"}
-          </button>
-        </div>
+        <button
+          onClick={() => setSearchOpen(true)}
+          className="pill-solid"
+          style={{ width: "100%", justifyContent: "center", padding: "10px 16px", fontSize: "0.85rem", gap: "8px" }}
+        >
+          SEARCH EXHIBITS
+          <kbd style={{ fontSize: "0.65rem", opacity: 0.5, border: "1px solid rgba(255,255,255,0.3)", padding: "1px 6px", borderRadius: "4px" }}>⌘K</kbd>
+        </button>
       </div>
 
       {/* Mobile sidebar overlay */}
