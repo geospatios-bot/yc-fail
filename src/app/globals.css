@@ -37,27 +37,21 @@ body {
   color: var(--text);
 }
 
-/* Neobrutalist card */
+/* Exhibit card */
 .exhibit-card {
   background: var(--bg-card);
   border: 2px solid var(--border-color);
   position: relative;
   overflow: hidden;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.exhibit-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0 var(--border-color);
-}
-
-/* Status badge — brutalist */
+/* Status badge */
 .status-badge {
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.15em;
-  padding: 4px 10px;
+  padding: 3px 8px;
   text-transform: uppercase;
   border: 2px solid currentColor;
 }
@@ -87,33 +81,12 @@ body {
 
 .ticker-track {
   display: inline-flex;
-  animation: ticker 30s linear infinite;
-  gap: 2rem;
+  animation: ticker 35s linear infinite;
+  gap: 0;
 }
 
-.ticker-track:hover,
-.ticker-wrapper:hover .ticker-track {
+.ticker-track:hover {
   animation-play-state: paused;
-}
-
-/* Tombstone effect for dead companies */
-.tombstone {
-  position: relative;
-}
-
-.tombstone::after {
-  content: 'DEAD';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-12deg);
-  font-family: var(--font-mono);
-  font-size: 64px;
-  font-weight: 700;
-  color: rgba(0, 0, 0, 0.04);
-  pointer-events: none;
-  white-space: nowrap;
-  letter-spacing: 0.2em;
 }
 
 /* Pulse for fraud status */
@@ -136,42 +109,51 @@ body {
   color: var(--text-dim);
 }
 
-/* Section divider — brutalist */
-.section-divider {
-  border: none;
-  height: 2px;
-  background: var(--border-color);
-  margin: 3rem 0;
-}
-
-@media (min-width: 640px) {
-  .section-divider {
-    margin: 5rem 0;
-  }
-}
-
-/* Disable hover transforms on touch devices */
-@media (hover: none) {
-  .exhibit-card:hover {
-    transform: none;
-    box-shadow: none;
-  }
-}
-
 /* Nav */
 .nav-blur {
   backdrop-filter: blur(16px);
-  background: rgba(250, 247, 242, 0.9);
+  background: rgba(250, 247, 242, 0.92);
 }
 
-/* Stat number animation */
-@keyframes countUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Filter pill */
+.filter-pill {
+  border: 2px solid var(--border-color);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
 }
 
-.stat-animate {
-  animation: countUp 0.6s ease forwards;
+.filter-pill:hover,
+.filter-pill.active {
+  background: var(--border-color);
+  color: white;
+}
+
+.filter-pill .count {
+  font-size: 10px;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-weight: 700;
+}
+
+/* Autopsy block */
+.autopsy-block {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  background: #f5f2ed;
+  border: 1px solid #e0ddd8;
+  padding: 12px 16px;
 }
 
 /* Scrollbar */
@@ -189,4 +171,27 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--yc-orange);
+}
+
+/* Disable hover on touch */
+@media (hover: none) {
+  .filter-pill:hover {
+    background: transparent;
+    color: var(--text);
+  }
+  .filter-pill.active {
+    background: var(--border-color);
+    color: white;
+  }
+}
+
+/* Search modal */
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 15vh;
 }
