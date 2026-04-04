@@ -297,6 +297,7 @@ h1, h2, h3 {
 .exhibits > * {
   min-width: 0;
   max-width: 100%;
+  flex-shrink: 0;
 }
 
 .exhibit-card {
