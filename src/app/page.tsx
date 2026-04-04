@@ -115,7 +115,7 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
   return (
     <>
       {/* Logo block */}
-      <div className="block block--accent">
+      <div className="block block--accent" style={{ flexShrink: 0 }}>
         <div className="logo-block">
           <div className="label-group" style={{ justifyContent: "center", marginBottom: "1.5rem" }}>
             <span className="pill-outline" style={{ borderColor: "var(--border-color)" }}>(OFFICIAL ARCHIVE)</span>
@@ -178,7 +178,7 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
       </div>
 
       {/* Filter block */}
-      <div className="block">
+      <div className="block" style={{ flexShrink: 0 }}>
         <div className="block-inner">
           <div className="label-group">
             <span className="pill-outline">(FILTER EXHIBITS)</span>
@@ -449,12 +449,12 @@ export default function Home() {
       {/* Layout grid */}
       <div className="layout-grid" style={{ height: "calc(100vh - 48px)" }}>
         {/* Sidebar — desktop only */}
-        <aside className="hidden lg:flex flex-col" style={{ gap: "var(--gap)", overflowY: "auto", height: "100%", padding: "0 4px 24px 0" }}>
+        <aside className="hidden lg:flex flex-col scrollbar-hide" style={{ gap: "var(--gap)", overflowY: "auto", height: "100%", padding: "0 0 24px 0" }}>
           <SidebarContent onOpenSearch={() => setSearchOpen(true)} />
         </aside>
 
         {/* Main exhibits */}
-        <main className="exhibits" style={{ overflowY: "auto", height: "100%" }}>
+        <main className="exhibits scrollbar-hide" style={{ overflowY: "auto", height: "100%" }}>
           <FeaturedCard failure={featured} />
 
           {/* Sort bar */}
