@@ -37,11 +37,11 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
     : [];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] sm:pt-[15vh]" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
       <div
-        className="relative w-full max-w-lg mx-4 overflow-hidden"
-        style={{ background: "var(--surface-white)", border: "var(--border-w) solid var(--border-color)", borderRadius: "var(--radius-lg)" }}
+        className="relative w-full max-w-lg mx-3 sm:mx-4 overflow-hidden"
+        style={{ background: "var(--surface-white)", border: "var(--border-w) solid var(--border-color)", borderRadius: "var(--radius-md)" }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center px-5 py-4" style={{ borderBottom: "var(--border-w) solid var(--border-color)" }}>
@@ -349,7 +349,7 @@ export default function Home() {
 
       {/* Mobile sticky header */}
       <div
-        className="flex lg:hidden flex-col"
+        className="flex lg:hidden items-center justify-between"
         style={{
           position: "sticky",
           top: 0,
@@ -357,11 +357,9 @@ export default function Home() {
           background: "var(--bg)",
           padding: "12px 16px",
           margin: "-16px -16px 0",
-          gap: "10px",
           borderBottom: "2px solid #222",
         }}
       >
-        <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center" style={{ width: "28px", height: "28px", background: "var(--accent)", borderRadius: "6px" }}>
               <span style={{ color: "white", fontSize: "10px", fontWeight: 900 }}>YC</span>
@@ -378,6 +376,13 @@ export default function Home() {
               @NOTONKETAMINE
             </a>
             <button
+              onClick={() => setSearchOpen(true)}
+              className="flex items-center justify-center"
+              style={{ width: "28px", height: "28px", background: "#222", border: "2px solid #444", borderRadius: "8px", color: "var(--accent)", fontSize: "14px", cursor: "pointer" }}
+            >
+              ⌕
+            </button>
+            <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="pill-solid accent"
               style={{ fontSize: "0.6rem", padding: "3px 10px" }}
@@ -385,29 +390,6 @@ export default function Home() {
               {sidebarOpen ? "CLOSE" : "MENU"}
             </button>
           </div>
-        </div>
-        <button
-          onClick={() => setSearchOpen(true)}
-          className="flex items-center"
-          style={{
-            width: "100%",
-            padding: "10px 14px",
-            background: "#111",
-            border: "2px solid #333",
-            borderRadius: "var(--radius-pill)",
-            color: "#666",
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.8rem",
-            fontWeight: 700,
-            textTransform: "uppercase",
-            gap: "8px",
-            cursor: "pointer",
-          }}
-        >
-          <span style={{ color: "var(--accent)", fontSize: "1rem" }}>→</span>
-          Search exhibits...
-          <kbd style={{ marginLeft: "auto", fontSize: "0.6rem", color: "#555", border: "1px solid #333", padding: "1px 6px", borderRadius: "4px" }}>⌘K</kbd>
-        </button>
       </div>
       <div className="lg:hidden" style={{ height: "16px" }} />
 
