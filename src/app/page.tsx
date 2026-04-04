@@ -370,6 +370,16 @@ export default function Home() {
     return () => document.removeEventListener("keydown", h);
   }, []);
 
+  // Lock body scroll when mobile sidebar is open
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [sidebarOpen]);
+
   const featured = FAILURES[0]; // FTX
 
   const sortedExhibits = (() => {
@@ -396,13 +406,14 @@ export default function Home() {
       <div
         className="flex lg:hidden items-center justify-between"
         style={{
-          position: "sticky",
+          position: "fixed",
           top: 0,
-          zIndex: 50,
+          left: 0,
+          right: 0,
+          zIndex: 70,
           background: "var(--bg)",
           padding: "10px 16px",
-          margin: "-16px -16px 0",
-          borderBottom: "2px solid #222",
+          borderBottom: "none",
         }}
       >
           <div className="flex items-center gap-2">
@@ -437,12 +448,22 @@ export default function Home() {
             </button>
           </div>
       </div>
-      <div className="lg:hidden" style={{ height: "16px" }} />
+      <div className="lg:hidden" style={{ height: "30px" }} />
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
-        <div className="flex lg:hidden flex-col" style={{ marginBottom: "var(--gap)", gap: "var(--gap)" }}>
-          <SidebarContent onOpenSearch={() => { setSidebarOpen(false); setSearchOpen(true); }} />
+        <div
+          className="fixed inset-x-0 top-[56px] bottom-0 z-[60] lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        >
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm sidebar-backdrop" />
+          <div
+            className="absolute inset-0 flex flex-col sidebar-slide"
+            style={{ padding: "16px", gap: "var(--gap)", overflowY: "auto" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <SidebarContent onOpenSearch={() => { setSidebarOpen(false); setSearchOpen(true); }} />
+          </div>
         </div>
       )}
 
