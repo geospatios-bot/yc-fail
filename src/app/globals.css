@@ -45,6 +45,13 @@ body {
   overflow-x: hidden;
 }
 
+@media (min-width: 1025px) {
+  body {
+    overflow: hidden;
+    height: 100vh;
+  }
+}
+
 @media (max-width: 480px) {
   body {
     padding: 16px;
@@ -58,16 +65,23 @@ body {
   gap: var(--gap);
   max-width: 1600px;
   margin: 0 auto;
-  align-items: start;
+  height: calc(100vh - 48px);
 }
 
 .layout-grid > * {
   min-width: 0;
+  overflow-y: auto;
+  height: 100%;
 }
 
 @media (max-width: 1024px) {
   .layout-grid {
     grid-template-columns: 1fr;
+    height: auto;
+  }
+  .layout-grid > * {
+    height: auto;
+    overflow-y: visible;
   }
 }
 

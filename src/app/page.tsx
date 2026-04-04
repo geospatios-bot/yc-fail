@@ -447,14 +447,14 @@ export default function Home() {
       )}
 
       {/* Layout grid */}
-      <div className="layout-grid">
+      <div className="layout-grid" style={{ height: "calc(100vh - 48px)" }}>
         {/* Sidebar — desktop only */}
-        <aside className="hidden lg:flex flex-col sticky top-[var(--gap)]" style={{ gap: "var(--gap)" }}>
+        <aside className="hidden lg:flex flex-col" style={{ gap: "var(--gap)", overflowY: "auto", height: "100%", padding: "0 4px 24px 0" }}>
           <SidebarContent onOpenSearch={() => setSearchOpen(true)} />
         </aside>
 
         {/* Main exhibits */}
-        <main className="exhibits">
+        <main className="exhibits" style={{ overflowY: "auto", height: "100%" }}>
           <FeaturedCard failure={featured} />
 
           {/* Sort bar */}
