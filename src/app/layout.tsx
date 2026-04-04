@@ -22,19 +22,19 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "YC.FAIL — Museum of Unicorn Corpses",
+  title: "YCOMBINATOR.FYI — Museum of Unicorn Corpses",
   description:
     "A curated exhibition of Y Combinator's most spectacular failures, frauds, and flameouts. $30B+ in capital. Gone.",
   openGraph: {
-    title: "YC.FAIL — Museum of Unicorn Corpses",
+    title: "YCOMBINATOR.FYI — Museum of Unicorn Corpses",
     description:
       "A curated exhibition of Y Combinator's most spectacular failures, frauds, and flameouts.",
-    siteName: "YC.FAIL",
+    siteName: "YCOMBINATOR.FYI",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "YC.FAIL — Museum of Unicorn Corpses",
+    title: "YCOMBINATOR.FYI — Museum of Unicorn Corpses",
     description:
       "A curated exhibition of Y Combinator's most spectacular failures, frauds, and flameouts.",
   },

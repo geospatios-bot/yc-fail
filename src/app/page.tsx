@@ -120,7 +120,7 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
           <div className="label-group" style={{ justifyContent: "center", marginBottom: "2rem" }}>
             <span className="pill-outline" style={{ borderColor: "var(--border-color)" }}>(OFFICIAL ARCHIVE)</span>
           </div>
-          <h1>YC.FAIL</h1>
+          <h1>YCOMBINATOR.FYI</h1>
           <p className="text-mono" style={{ fontSize: "0.8rem" }}>
             A Museum of Unicorn Corpses.<br />Not affiliated with Y Combinator.
           </p>
@@ -383,7 +383,7 @@ export default function Home() {
             <div className="flex items-center justify-center" style={{ width: "28px", height: "28px", background: "var(--accent)", borderRadius: "6px" }}>
               <span style={{ color: "white", fontSize: "10px", fontWeight: 900 }}>YC</span>
             </div>
-            <span style={{ fontWeight: 900, color: "white", fontSize: "1rem" }}>.FAIL</span>
+            <span style={{ fontWeight: 900, color: "white", fontSize: "1rem" }}>YCOMBINATOR.FYI</span>
           </div>
           <div className="flex items-center gap-2">
             <a

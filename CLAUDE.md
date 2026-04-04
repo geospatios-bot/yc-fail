@@ -1,4 +1,4 @@
-# YC.FAIL — The Museum of Failure
+# YCOMBINATOR.FYI — The Museum of Failure
 
 ## Stack
 - **Framework**: Next.js 15+ (App Router, `"use client"` — single page app)
@@ -48,5 +48,5 @@ src/
 - Not affiliated with YC — disclaimer in footer
 
 ## Deploy
-- Target domain: yc.fail
+- Target domain: ycombinator.fyi
 - Deploy to Vercel from main branch
