@@ -232,13 +232,13 @@ h1, h2, h3 {
 }
 
 .logo-block h1 {
-  font-size: 3rem;
+  font-size: 1.8rem;
   margin-bottom: 1rem;
 }
 
 @media (min-width: 768px) {
   .logo-block h1 {
-    font-size: 4rem;
+    font-size: 2rem;
   }
 }
 

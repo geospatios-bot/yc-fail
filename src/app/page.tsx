@@ -142,7 +142,7 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
         </div>
 
         {/* Search + Twitter */}
-        <div className="block-inner" style={{ background: "var(--surface-white)", borderTop: "var(--border-w) solid var(--border-color)" }}>
+        <div className="block-inner" style={{ borderTop: "var(--border-w) solid var(--border-color)" }}>
           <button
             onClick={onOpenSearch}
             className="pill-solid"
@@ -154,7 +154,7 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
             href="https://x.com/NotOnKetamine"
             target="_blank"
             rel="noopener noreferrer"
-            className="pill-solid accent"
+            className="pill-solid"
             style={{ padding: "12px 24px", fontSize: "1rem", width: "100%", justifyContent: "center", textDecoration: "none", marginTop: "8px" }}
           >
             @NOTONKETAMINE ↗
@@ -422,7 +422,7 @@ export default function Home() {
       {/* Layout grid */}
       <div className="layout-grid">
         {/* Sidebar — desktop only */}
-        <aside className="hidden lg:flex flex-col sticky top-[var(--gap)]" style={{ gap: "var(--gap)", maxHeight: "calc(100vh - var(--gap) * 2)", overflowY: "auto" }}>
+        <aside className="hidden lg:flex flex-col sticky top-[var(--gap)]" style={{ gap: "var(--gap)" }}>
           <SidebarContent onOpenSearch={() => setSearchOpen(true)} />
         </aside>
 
