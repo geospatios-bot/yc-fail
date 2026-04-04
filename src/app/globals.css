@@ -1,25 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --font-mono: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
   --font-serif: "Instrument Serif", serif;
 }
 
 :root {
-  --bg: #FAF7F2;
-  --bg-card: #FFFFFF;
-  --text: #1a1a1a;
-  --text-muted: #666;
-  --text-dim: #999;
-  --yc-orange: #FF6600;
-  --fraud-red: #dc2626;
-  --dead-black: #000000;
-  --zombie-amber: #92400e;
-  --scandal-purple: #7c3aed;
-  --border-color: #1a1a1a;
+  --bg: #000000;
+  --surface-white: #FFFFFF;
+  --surface-gray: #E8E8E8;
+  --accent: #FF6600;
+  --border-w: 3px;
+  --border-color: #000000;
+  --radius-lg: 32px;
+  --radius-md: 16px;
+  --radius-pill: 999px;
+  --gap: 24px;
 }
 
 * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   cursor: default;
 }
 
@@ -28,32 +31,103 @@ a, button, [role="button"] {
 }
 
 ::selection {
-  background: var(--yc-orange);
+  background: var(--accent);
   color: #fff;
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
+  background-color: var(--bg);
+  color: var(--border-color);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  padding: var(--gap);
+  min-height: 100vh;
 }
 
-/* Exhibit card */
-.exhibit-card {
-  background: var(--bg-card);
-  border: 2px solid var(--border-color);
-  position: relative;
+/* Block base */
+.block {
+  background-color: var(--surface-white);
+  border: var(--border-w) solid var(--border-color);
+  border-radius: var(--radius-lg);
   overflow: hidden;
+  position: relative;
 }
 
-/* Status badge */
-.status-badge {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  padding: 3px 8px;
-  text-transform: uppercase;
+.block--accent {
+  background-color: var(--accent);
+}
+
+.block--dark {
+  background-color: #222;
+  color: var(--surface-white);
+}
+
+/* Pill badges */
+.pill-outline {
   border: 2px solid currentColor;
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.pill-solid {
+  background-color: var(--border-color);
+  color: var(--surface-white);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.pill-solid.accent {
+  background-color: var(--accent);
+  color: var(--border-color);
+}
+
+/* Status toggle */
+.status-toggle {
+  display: flex;
+  align-items: center;
+  background: var(--border-color);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  width: fit-content;
+}
+
+.toggle-pill {
+  background: var(--accent);
+  color: #000;
+  padding: 4px 16px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.toggle-empty {
+  padding: 4px 16px;
+  color: var(--surface-white);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  opacity: 0.5;
 }
 
 /* Redacted text */
@@ -61,6 +135,7 @@ body {
   background: var(--border-color);
   color: var(--border-color);
   padding: 1px 4px;
+  border-radius: 2px;
   transition: all 0.2s ease;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -70,90 +145,23 @@ body {
 .redacted:active,
 .redacted.revealed {
   color: #fff;
-  background: var(--yc-orange);
+  background: var(--accent);
 }
 
-/* Ticker */
-@keyframes ticker {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.ticker-track {
-  display: inline-flex;
-  animation: ticker 35s linear infinite;
-  gap: 0;
-}
-
-.ticker-track:hover {
-  animation-play-state: paused;
-}
-
-/* Pulse for fraud status */
-@keyframes fraudPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-.fraud-pulse {
-  animation: fraudPulse 2s ease-in-out infinite;
-}
-
-/* Museum label */
-.museum-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-
-/* Nav */
-.nav-blur {
-  backdrop-filter: blur(16px);
-  background: rgba(250, 247, 242, 0.92);
-}
-
-/* Filter pill */
-.filter-pill {
-  border: 2px solid var(--border-color);
-  border-radius: 999px;
-  padding: 8px 16px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  transition: all 0.15s ease;
+/* Data row */
+.data-row {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  cursor: pointer;
+  align-items: baseline;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.filter-pill:hover,
-.filter-pill.active {
-  background: var(--border-color);
-  color: white;
-}
-
-.filter-pill .count {
-  font-size: 10px;
-  border: 1.5px solid currentColor;
-  border-radius: 999px;
-  padding: 1px 8px;
-  font-weight: 700;
-}
-
-/* Autopsy block */
-.autopsy-block {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1.6;
-  background: #f5f2ed;
-  border: 1px solid #e0ddd8;
-  padding: 12px 16px;
+.data-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 /* Scrollbar */
@@ -166,32 +174,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #ccc;
+  background: #333;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--yc-orange);
-}
-
-/* Disable hover on touch */
-@media (hover: none) {
-  .filter-pill:hover {
-    background: transparent;
-    color: var(--text);
-  }
-  .filter-pill.active {
-    background: var(--border-color);
-    color: white;
-  }
-}
-
-/* Search modal */
-.search-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 15vh;
+  background: var(--accent);
 }

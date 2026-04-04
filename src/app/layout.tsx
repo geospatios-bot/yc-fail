@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Instrument_Serif } from "next/font/google";
+import { Inter, JetBrains_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
+const inter = Inter({
+  variable: "--font-sans",
+  subsets: ["latin"],
+  weight: ["400", "600", "800", "900"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "700", "800"],
 });
 
 const instrumentSerif = Instrument_Serif({
@@ -16,11 +22,11 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "YC.FAIL — The Museum of Failure",
+  title: "YC.FAIL — Museum of Unicorn Corpses",
   description:
     "A curated exhibition of Y Combinator's most spectacular failures, frauds, and flameouts. $30B+ in capital. Gone.",
   openGraph: {
-    title: "YC.FAIL — The Museum of Failure",
+    title: "YC.FAIL — Museum of Unicorn Corpses",
     description:
       "A curated exhibition of Y Combinator's most spectacular failures, frauds, and flameouts.",
     siteName: "YC.FAIL",
@@ -28,7 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "YC.FAIL — The Museum of Failure",
+    title: "YC.FAIL — Museum of Unicorn Corpses",
     description:
       "A curated exhibition of Y Combinator's most spectacular failures, frauds, and flameouts.",
   },
@@ -42,11 +48,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${instrumentSerif.variable} h-full antialiased`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} antialiased`}
     >
-      <body className="min-h-full flex flex-col font-[family-name:var(--font-mono)]">
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

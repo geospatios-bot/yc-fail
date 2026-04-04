@@ -1,15 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   FAILURES,
   STATUS_CONFIG,
   computeStats,
   type YCFailure,
-  type Status,
 } from "@/data/companies";
 
-/* ── Search Modal ───────────────────────────────────────── */
+/* ── Search Modal ────────────────────────────────────── */
 
 function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [query, setQuery] = useState("");
@@ -30,33 +29,31 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
 
   const q = query.toLowerCase();
   const results = q.length > 0
-    ? FAILURES.filter(
-        (f) =>
-          f.company.toLowerCase().includes(q) ||
-          f.founders.some((fn) => fn.toLowerCase().includes(q)) ||
-          f.sector.toLowerCase().includes(q) ||
-          f.status.toLowerCase().includes(q)
+    ? FAILURES.filter((f) =>
+        f.company.toLowerCase().includes(q) ||
+        f.founders.some((fn) => fn.toLowerCase().includes(q)) ||
+        f.sector.toLowerCase().includes(q)
       )
     : [];
 
   return (
-    <div className="search-overlay" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div
-        className="relative w-full max-w-lg mx-4 bg-white border-2 border-[var(--border-color)]"
+        className="relative w-full max-w-lg mx-4 bg-white border-[3px] border-black rounded-[var(--radius-lg)] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center border-b-2 border-[var(--border-color)] px-4 py-3">
-          <span className="text-[var(--text-dim)] mr-3 text-sm">→</span>
+        <div className="flex items-center border-b-[3px] border-black px-5 py-4">
+          <span className="text-[var(--accent)] mr-3 font-black">→</span>
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search exhibits..."
-            className="flex-1 bg-transparent outline-none text-sm font-medium placeholder:text-[var(--text-dim)]"
+            className="flex-1 bg-transparent outline-none text-sm font-semibold placeholder:text-gray-400 font-[family-name:var(--font-sans)]"
           />
-          <kbd className="text-[10px] font-semibold text-[var(--text-dim)] border border-[#ddd] px-1.5 py-0.5 tracking-wider">ESC</kbd>
+          <kbd className="text-[10px] font-bold text-gray-400 border-2 border-gray-300 rounded-full px-2 py-0.5 font-[family-name:var(--font-mono)]">ESC</kbd>
         </div>
         {results.length > 0 && (
           <div className="max-h-[300px] overflow-y-auto">
@@ -70,24 +67,22 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
                     document.getElementById(`exhibit-${f.id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
                   }, 100);
                 }}
-                className="w-full flex items-center justify-between px-4 py-3 hover:bg-[#FFF3EB] active:bg-[#FFF3EB] transition-colors border-b border-[#eee] last:border-0 text-left"
+                className="w-full flex items-center justify-between px-5 py-3 hover:bg-[#FFF3EB] active:bg-[#FFF3EB] transition-colors border-b border-gray-200 last:border-0 text-left"
               >
                 <div>
-                  <div className="font-bold text-sm">{f.company}</div>
-                  <div className="text-[10px] text-[var(--text-dim)] tracking-wider uppercase mt-0.5">
+                  <div className="font-black text-sm uppercase">{f.company}</div>
+                  <div className="text-[10px] text-gray-400 font-[family-name:var(--font-mono)] font-bold uppercase mt-0.5">
                     {f.batch} / {f.sector}
                   </div>
                 </div>
-                <span className="status-badge text-[9px]" style={{ color: STATUS_CONFIG[f.status].color, borderColor: STATUS_CONFIG[f.status].color }}>
-                  {f.status}
-                </span>
+                <span className="pill-solid accent text-[9px]">{f.status}</span>
               </button>
             ))}
           </div>
         )}
         {q.length > 0 && results.length === 0 && (
-          <div className="px-4 py-6 text-center text-sm text-[var(--text-dim)]">
-            No exhibits found. Maybe they got away with it.
+          <div className="px-5 py-8 text-center text-sm text-gray-400 font-semibold">
+            No corpses found. Maybe they got away with it.
           </div>
         )}
       </div>
@@ -95,246 +90,238 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
   );
 }
 
-/* ── Ticker ─────────────────────────────────────────────── */
+/* ── Sidebar ─────────────────────────────────────────── */
 
-function Ticker({ items, speed = 35 }: { items: string[]; speed?: number }) {
-  const doubled = [...items, ...items];
-  return (
-    <div className="overflow-hidden border-b-2 border-[var(--border-color)] bg-white">
-      <div className="ticker-track whitespace-nowrap py-1.5" style={{ animationDuration: `${speed}s` }}>
-        {doubled.map((item, i) => (
-          <span key={i} className="text-[10px] tracking-[0.15em] text-[var(--text-dim)] font-semibold uppercase px-4">
-            {item}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ── Exhibit Card ───────────────────────────────────────── */
-
-function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <div id={`exhibit-${failure.id}`} className="exhibit-card">
-      {/* Header */}
-      <div className="p-4 sm:p-5">
-        <div className="flex items-start justify-between gap-2 mb-3">
-          <div className="text-[10px] font-bold tracking-[0.15em] text-[var(--yc-orange)] uppercase">
-            EXH-{String(index + 1).padStart(3, "0")} // {failure.batch !== "—" ? failure.batch : "ADJ"}
-          </div>
-          <span
-            className="text-[9px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-sm"
-            style={{ background: STATUS_CONFIG[failure.status].color, color: "#fff" }}
-          >
-            {failure.sector}
-          </span>
-        </div>
-        <h3 className="text-xl sm:text-2xl font-black tracking-tight uppercase mb-1">
-          {failure.company}
-        </h3>
-        <div className="text-[11px] text-[var(--text-dim)] font-medium mb-4">
-          {failure.founders.join(" / ")}
-        </div>
-
-        {/* Original pitch */}
-        <div className="mb-4">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--border-color)]" />
-            <span className="text-[10px] font-bold tracking-[0.15em] uppercase">Original Pitch</span>
-          </div>
-          <p className="text-sm text-[var(--text-muted)] leading-relaxed pl-3.5 border-l-2 border-[#e5e5e5]">
-            &ldquo;{failure.oneLiner}&rdquo;
-          </p>
-        </div>
-
-        {/* Dotted separator */}
-        <div className="border-t border-dotted border-[#ccc] my-4" />
-
-        {/* Autopsy report */}
-        <div className="mb-4">
-          <div className="text-[10px] font-bold tracking-[0.15em] uppercase mb-2">Autopsy Report</div>
-          <div className="autopsy-block">
-            <p className="text-[12px] leading-relaxed">
-              {failure.description}{" "}
-              <span className="redacted" onClick={(e) => e.currentTarget.classList.toggle("revealed")}>
-                {failure.redactedText}
-              </span>{" "}
-              {failure.descriptionAfter}
-            </p>
-          </div>
-        </div>
-
-        {/* Financials */}
-        <div className="flex border-2 border-[var(--border-color)]">
-          <div className="flex-1 p-3 border-r-2 border-[var(--border-color)]">
-            <div className="text-[9px] font-bold tracking-[0.15em] uppercase text-[var(--text-dim)]">Raised</div>
-            <div className="font-black text-base mt-0.5">{failure.raised}</div>
-          </div>
-          {failure.valuation && (
-            <div className="flex-1 p-3 border-r-2 border-[var(--border-color)]">
-              <div className="text-[9px] font-bold tracking-[0.15em] uppercase text-[var(--text-dim)]">Valuation</div>
-              <div className="font-black text-base mt-0.5">{failure.valuation}</div>
-            </div>
-          )}
-          <div className="flex-1 p-3">
-            <div className="text-[9px] font-bold tracking-[0.15em] uppercase text-[var(--text-dim)]">
-              {failure.yearDied ? "Lived" : "Since"}
-            </div>
-            <div className="font-black text-base mt-0.5">
-              {failure.yearDied ? `${failure.yearFounded}–${failure.yearDied}` : String(failure.yearFounded)}
-            </div>
-          </div>
-        </div>
-
-        {/* Body count */}
-        {failure.bodyCount && (
-          <div className="mt-3 bg-[#FFF3EB] border-2 border-[var(--yc-orange)] px-3 py-2">
-            <span className="text-[10px] font-bold text-[var(--yc-orange)] tracking-wider uppercase">
-              DAMAGE: {failure.bodyCount}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* Sources toggle */}
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full px-4 sm:px-5 py-2.5 text-[10px] tracking-[0.2em] uppercase text-[var(--text-dim)] hover:text-[var(--yc-orange)] border-t-2 border-[var(--border-color)] transition-colors flex items-center justify-center gap-2 font-bold"
-      >
-        {expanded ? "Close" : "Sources"}
-        <span className="transition-transform inline-block" style={{ transform: expanded ? "rotate(180deg)" : "rotate(0)" }}>↓</span>
-      </button>
-
-      {expanded && (
-        <div className="px-4 sm:px-5 pb-4 border-t-2 border-[var(--border-color)] bg-[var(--bg)]">
-          <div className="pt-3 space-y-2">
-            {failure.sources.map((source, i) => (
-              <a
-                key={i}
-                href={source.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-2 text-[11px] text-[var(--text-muted)] hover:text-[var(--yc-orange)] transition-colors"
-              >
-                <span className="text-[var(--yc-orange)] font-bold shrink-0">→</span>
-                <span className="underline underline-offset-2 break-words min-w-0">{source.label}</span>
-                <span className="text-[9px] tracking-[0.15em] text-[var(--text-dim)] ml-auto shrink-0 border border-[var(--border-color)] px-1.5 py-0.5 uppercase">
-                  {source.type}
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ── Sidebar ────────────────────────────────────────────── */
-
-function Sidebar({
-  activeFilter,
-  onFilter,
-  sidebarOpen,
-  onCloseSidebar,
-}: {
-  activeFilter: Status | "ALL";
-  onFilter: (f: Status | "ALL") => void;
-  sidebarOpen: boolean;
-  onCloseSidebar: () => void;
-}) {
+function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
   const stats = computeStats();
-  const filters: { label: string; value: Status | "ALL"; count: number }[] = [
-    { label: "All Autopsies", value: "ALL", count: FAILURES.length },
-    { label: "Fraud", value: "FRAUD", count: stats.totalFraud },
-    { label: "Scandal", value: "SCANDAL", count: stats.totalScandal },
-    { label: "Dead", value: "DEAD", count: stats.totalDead },
-    { label: "Zombie", value: "ZOMBIE", count: stats.totalZombie },
-  ];
+
+  const sectors = FAILURES.reduce((acc, f) => {
+    acc[f.sector] = (acc[f.sector] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const topSectors = Object.entries(sectors)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 4);
 
   return (
     <>
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={onCloseSidebar} />
-      )}
-
-      <aside
-        className={`
-          fixed top-0 left-0 z-50 h-full w-72 bg-[var(--bg)] border-r-2 border-[var(--border-color)] overflow-y-auto
-          transition-transform duration-200
-          lg:sticky lg:top-[52px] lg:h-[calc(100vh-52px)] lg:translate-x-0 lg:z-auto
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-        `}
-      >
-        <div className="p-5">
-          {/* Mobile close */}
-          <div className="flex items-center justify-between mb-6 lg:hidden">
-            <span className="font-black text-lg">YC.FAIL</span>
-            <button onClick={onCloseSidebar} className="text-xl font-bold">×</button>
+      {/* Logo block */}
+      <div className="block block--accent">
+        <div className="p-6 sm:p-8 text-center">
+          <div className="flex justify-center mb-6">
+            <span className="pill-outline" style={{ borderColor: "var(--border-color)" }}>(OFFICIAL ARCHIVE)</span>
           </div>
+          <h1 className="text-[4rem] font-black uppercase leading-[0.9] tracking-tighter mb-4">
+            YC.FAIL
+          </h1>
+          <p className="font-[family-name:var(--font-mono)] text-[0.8rem] font-bold uppercase">
+            A Museum of Unicorn Corpses.<br />Not affiliated with Y Combinator.
+          </p>
+        </div>
 
-          {/* W24 Archive badge */}
-          <div className="hidden lg:flex items-center gap-2 mb-6">
-            <span className="font-black text-2xl">YC.FAIL</span>
-            <span className="text-[9px] font-bold tracking-wider bg-[var(--yc-orange)] text-white px-2 py-0.5 uppercase">
-              Archive
-            </span>
+        {/* Stat grid */}
+        <div className="grid grid-cols-2 border-t-[3px] border-black">
+          {[
+            { value: stats.totalRaised, label: "Capital Incinerated" },
+            { value: stats.totalCompanies, label: "Corpses Logged" },
+            { value: `${stats.totalFraud + stats.totalScandal}`, label: "Fraud & Scandal" },
+            { value: "0", label: "Lessons Learned" },
+          ].map((s, i) => (
+            <div
+              key={s.label}
+              className={`p-4 sm:p-5 text-center border-b-[3px] border-black ${i % 2 === 0 ? "border-r-[3px]" : ""}`}
+            >
+              <div className="font-[family-name:var(--font-mono)] text-xl sm:text-2xl font-extrabold mb-1">{s.value}</div>
+              <div className="text-[0.7rem] font-extrabold uppercase">{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Search + Twitter */}
+        <div className="bg-white border-t-[3px] border-black p-4 flex flex-col gap-3">
+          <button
+            onClick={onOpenSearch}
+            className="pill-solid w-full justify-center py-3 text-sm gap-2 hover:bg-[#333] transition-colors"
+          >
+            SEARCH EXHIBITS
+            <kbd className="hidden sm:inline text-[9px] border border-white/30 px-1.5 py-0.5 rounded-full ml-1 font-normal">⌘K</kbd>
+          </button>
+          <a
+            href="https://x.com/NotOnKetamine"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pill-solid accent w-full justify-center py-3 text-sm no-underline hover:brightness-110 transition-all"
+          >
+            @NOTONKETAMINE ↗
+          </a>
+        </div>
+      </div>
+
+      {/* Filter block */}
+      <div className="block">
+        <div className="p-6">
+          <div className="flex gap-2 flex-wrap mb-4">
+            <span className="pill-outline">(FILTER EXHIBITS)</span>
           </div>
-
-          {/* Curator Filters */}
-          <div className="mb-6">
-            <div className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--text-dim)] mb-3">
-              Curator Filters
+          <h3 className="text-xl font-black uppercase mb-4">Categories</h3>
+          {topSectors.map(([sector, count]) => (
+            <div key={sector} className="data-row">
+              <span className="font-[family-name:var(--font-mono)] text-[0.85rem] font-bold uppercase">{sector}</span>
+              <span className="pill-solid accent">{count}</span>
             </div>
-            <div className="space-y-2">
-              {filters.map((f) => (
-                <button
-                  key={f.value}
-                  onClick={() => { onFilter(f.value); onCloseSidebar(); }}
-                  className={`filter-pill w-full ${activeFilter === f.value ? "active" : ""}`}
-                >
-                  <span>{f.label}</span>
-                  <span className="count">{f.count}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* System Telemetry */}
-          <div className="border-t-2 border-[var(--border-color)] pt-4">
-            <div className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--text-dim)] mb-3">
-              System Telemetry
-            </div>
-            <div className="space-y-1.5 font-mono text-[11px]">
-              <div className="flex justify-between">
-                <span className="text-[var(--text-dim)]">Capital Incinerated:</span>
-                <span className="font-bold text-[var(--yc-orange)]">{stats.totalRaised}+</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[var(--text-dim)]">Total Exhibits:</span>
-                <span className="font-bold">{stats.totalCompanies}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[var(--text-dim)]">Database Status:</span>
-                <span className="font-bold text-[var(--yc-orange)]">EXPANDING</span>
-              </div>
-            </div>
+          ))}
+          <div className="data-row">
+            <span className="font-[family-name:var(--font-mono)] text-[0.85rem] font-bold uppercase">ALL</span>
+            <span className="pill-solid">{FAILURES.length}</span>
           </div>
         </div>
-      </aside>
+      </div>
     </>
   );
 }
 
-/* ── Main Page ──────────────────────────────────────────── */
+/* ── Exhibit Card ────────────────────────────────────── */
+
+function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) {
+  const config = STATUS_CONFIG[failure.status];
+  const isAccentMeta = index % 3 === 1;
+  const isDead = failure.status === "DEAD" || failure.status === "FRAUD";
+
+  return (
+    <div id={`exhibit-${failure.id}`} className="block">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px]">
+        {/* Content */}
+        <div className="p-6 sm:p-8 lg:border-r-[3px] border-black">
+          <div className="flex gap-2 flex-wrap mb-4">
+            <span className="pill-outline">(BATCH {failure.batch !== "—" ? failure.batch : "ADJ"})</span>
+            <span className="pill-outline">(EXHIBIT {String(index + 1).padStart(3, "0")})</span>
+          </div>
+          <h2 className="text-[clamp(2rem,4vw,3rem)] font-black uppercase leading-[0.9] tracking-tighter mb-2">
+            {failure.company}
+          </h2>
+          <p className="font-[family-name:var(--font-mono)] text-[var(--accent)] text-base sm:text-lg font-bold uppercase mb-6">
+            {failure.oneLiner}
+          </p>
+
+          <div className="h-[3px] bg-black w-full my-5" />
+
+          <h3 className="text-lg font-black uppercase mb-3">Autopsy Report:</h3>
+          <p className="text-base font-semibold leading-relaxed">
+            {failure.description}{" "}
+            <span className="redacted" onClick={(e) => e.currentTarget.classList.toggle("revealed")}>
+              {failure.redactedText}
+            </span>{" "}
+            {failure.descriptionAfter}
+          </p>
+
+          {failure.bodyCount && (
+            <div className="mt-4 inline-block">
+              <span className="pill-solid accent py-1.5 px-4 text-xs">
+                DAMAGE: {failure.bodyCount}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Meta sidebar */}
+        <div className={`p-5 sm:p-6 flex flex-col gap-5 ${isAccentMeta ? "bg-[var(--accent)]" : "bg-[var(--surface-gray)]"}`}>
+          <div>
+            <div className="font-[family-name:var(--font-mono)] text-[0.7rem] font-bold uppercase text-[#666] mb-2">Status</div>
+            <div className={`status-toggle ${isAccentMeta ? "!bg-black/10" : ""}`}>
+              <span className={`toggle-pill ${isDead ? "" : "!bg-transparent !text-white/50"}`}>
+                {failure.status}
+              </span>
+              {isDead && <span className="toggle-empty">ALIVE</span>}
+            </div>
+          </div>
+
+          <div className={`h-[3px] w-full ${isAccentMeta ? "bg-black/20" : "bg-black"}`} />
+
+          <div>
+            <div className={`data-row ${isAccentMeta ? "!border-black/20" : ""}`}>
+              <span className="font-[family-name:var(--font-mono)] text-[0.75rem] font-bold uppercase">Capital Raised</span>
+              <span className="font-[family-name:var(--font-mono)] text-base font-bold">{failure.raised}</span>
+            </div>
+            {failure.valuation && (
+              <div className={`data-row ${isAccentMeta ? "!border-black/20" : ""}`}>
+                <span className="font-[family-name:var(--font-mono)] text-[0.75rem] font-bold uppercase">Peak Value</span>
+                <span className="font-[family-name:var(--font-mono)] text-base font-bold">{failure.valuation}</span>
+              </div>
+            )}
+            <div className={`data-row ${isAccentMeta ? "!border-black/20" : ""}`}>
+              <span className="font-[family-name:var(--font-mono)] text-[0.75rem] font-bold uppercase">Lifespan</span>
+              <span className="font-[family-name:var(--font-mono)] text-base font-bold">
+                {failure.yearDied
+                  ? `${failure.yearDied - failure.yearFounded} YRS`
+                  : `${new Date().getFullYear() - failure.yearFounded}+ YRS`}
+              </span>
+            </div>
+          </div>
+
+          {/* Sources */}
+          {failure.sources.length > 0 && (
+            <>
+              <div className={`h-[3px] w-full ${isAccentMeta ? "bg-black/20" : "bg-black"}`} />
+              <div>
+                <div className="font-[family-name:var(--font-mono)] text-[0.65rem] font-bold uppercase text-[#666] mb-2">Sources</div>
+                {failure.sources.slice(0, 2).map((s, i) => (
+                  <a
+                    key={i}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-[0.7rem] font-semibold underline underline-offset-2 mb-1 truncate hover:text-[var(--accent)] transition-colors"
+                  >
+                    → {s.label}
+                  </a>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Featured Card ───────────────────────────────────── */
+
+function FeaturedCard({ failure }: { failure: YCFailure }) {
+  return (
+    <div className="block block--dark">
+      <div className="p-8 sm:p-12">
+        <div className="flex gap-2 flex-wrap mb-4">
+          <span className="pill-outline" style={{ borderColor: "white", color: "white" }}>(FEATURED FAILURE)</span>
+          <span className="pill-outline" style={{ color: "var(--accent)", borderColor: "var(--accent)" }}>MUSEUM CHOICE</span>
+        </div>
+        <h2 className="font-[family-name:var(--font-serif)] text-[clamp(3rem,6vw,5rem)] font-normal italic text-white leading-[0.9] tracking-tight my-4">
+          {failure.company}
+        </h2>
+        <p className="font-[family-name:var(--font-mono)] text-[var(--accent)] text-lg font-bold uppercase mb-4">
+          {failure.oneLiner}
+        </p>
+        <div className="h-[3px] bg-white w-full my-6" />
+        <p className="text-lg font-semibold leading-relaxed text-white/90 max-w-2xl">
+          {failure.description}{" "}
+          <span className="redacted" onClick={(e) => e.currentTarget.classList.toggle("revealed")}>
+            {failure.redactedText}
+          </span>{" "}
+          {failure.descriptionAfter}
+        </p>
+        {/* Big arrow */}
+        <svg className="w-16 sm:w-20 mt-8" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" strokeWidth="8" strokeLinecap="square" strokeLinejoin="miter">
+          <path d="M50 10 v80 M20 60 l30 30 l30 -30" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+/* ── Main Page ───────────────────────────────────────── */
 
 export default function Home() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<Status | "ALL">("ALL");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -345,168 +332,73 @@ export default function Home() {
     return () => document.removeEventListener("keydown", h);
   }, []);
 
-  const filtered = useMemo(
-    () => activeFilter === "ALL" ? FAILURES : FAILURES.filter((f) => f.status === activeFilter),
-    [activeFilter]
-  );
-
-  const sectionTitle = activeFilter === "ALL"
-    ? "All Exhibits"
-    : `${STATUS_CONFIG[activeFilter].label} Wing`;
-
-  const tickerItems1 = FAILURES.map((f) => `${f.company} // ${f.raised} // ${f.status}`);
-  const tickerItems2 = [
-    "ARCHIVE OF PIVOTS",
-    "POST-MORTEM REPORTS",
-    "WARNING: HIGH VOLTAGE CAPITAL INCINERATION ZONE",
-    "ARCHIVE OF PIVOTS",
-    "POST-MORTEM REPORTS",
-  ];
+  const featured = FAILURES[0]; // FTX
+  const exhibits = FAILURES.slice(1);
 
   return (
     <>
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      {/* Nav */}
-      <nav className="sticky top-0 z-30 nav-blur border-b-2 border-[var(--border-color)]">
-        <div className="px-4 sm:px-6 h-[52px] flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button
-              className="lg:hidden text-lg font-bold"
-              onClick={() => setSidebarOpen(true)}
-            >
-              ☰
-            </button>
-            <a href="#" className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-[var(--yc-orange)] flex items-center justify-center">
-                <span className="text-white text-xs font-black">YC</span>
-              </div>
-              <span className="font-bold text-sm tracking-tight">.FAIL</span>
-            </a>
+      {/* Mobile header */}
+      <div className="lg:hidden flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-[var(--accent)] rounded-lg flex items-center justify-center">
+            <span className="text-white text-xs font-black">YC</span>
           </div>
-
-          <div className="flex items-center gap-3 sm:gap-4">
-            <button
-              onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-2 border-2 border-[var(--border-color)] px-3 py-1.5 hover:border-[var(--yc-orange)] transition-colors"
-            >
-              <span className="text-xs text-[var(--text-dim)]">Search...</span>
-              <kbd className="hidden sm:inline text-[9px] font-semibold text-[var(--text-dim)] border border-[#ccc] px-1 py-0.5">⌘K</kbd>
-            </button>
-            <a
-              href="https://x.com/NotOnKetamine"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[10px] sm:text-xs font-bold tracking-wider text-[var(--yc-orange)] hover:underline uppercase"
-            >
-              @NotOnKetamine
-            </a>
-          </div>
+          <span className="font-black text-white text-lg">.FAIL</span>
         </div>
-      </nav>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="pill-outline text-white border-white/40 text-[9px]"
+          >
+            Search ⌘K
+          </button>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="pill-solid text-[10px] py-1.5"
+            style={{ background: "var(--accent)", color: "#000", borderColor: "var(--accent)" }}
+          >
+            {sidebarOpen ? "CLOSE" : "MENU"}
+          </button>
+        </div>
+      </div>
 
-      {/* Double ticker */}
-      <Ticker items={tickerItems1} speed={40} />
-      <Ticker items={tickerItems2} speed={25} />
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div className="lg:hidden mb-6 space-y-4">
+          <SidebarContent onOpenSearch={() => { setSidebarOpen(false); setSearchOpen(true); }} />
+        </div>
+      )}
 
-      {/* Layout: sidebar + main */}
-      <div className="flex">
-        <Sidebar
-          activeFilter={activeFilter}
-          onFilter={setActiveFilter}
-          sidebarOpen={sidebarOpen}
-          onCloseSidebar={() => setSidebarOpen(false)}
-        />
+      {/* Layout grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-[var(--gap)] max-w-[1600px] mx-auto items-start">
+        {/* Sidebar — desktop only */}
+        <aside className="hidden lg:flex flex-col gap-[var(--gap)] sticky top-[var(--gap)]">
+          <SidebarContent onOpenSearch={() => setSearchOpen(true)} />
+        </aside>
 
-        <main className="flex-1 min-w-0">
-          {/* Section header */}
-          <div className="border-b-2 border-[var(--border-color)] px-4 sm:px-6 py-4 flex items-baseline justify-between">
-            <h2 className="font-[family-name:var(--font-serif)] text-2xl sm:text-3xl italic">
-              {sectionTitle}
-            </h2>
-            <div className="text-[10px] font-bold tracking-wider text-[var(--text-dim)] uppercase">
-              Displaying {filtered.length} artifact{filtered.length !== 1 ? "s" : ""}
-            </div>
-          </div>
+        {/* Main exhibits */}
+        <main className="flex flex-col gap-[var(--gap)]">
+          <FeaturedCard failure={featured} />
 
-          {/* Exhibit grid */}
-          <div className="p-4 sm:p-6">
-            <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
-              {filtered.map((failure, i) => (
-                <ExhibitCard key={failure.id} failure={failure} index={FAILURES.indexOf(failure)} />
-              ))}
-            </div>
-          </div>
-
-          {/* Cemetery */}
-          <section id="graveyard" className="bg-[var(--border-color)] text-white py-12 sm:py-16">
-            <div className="px-4 sm:px-6">
-              <div className="text-[10px] font-bold tracking-[0.2em] text-[var(--yc-orange)] uppercase mb-3">
-                Permanent Collection
-              </div>
-              <h2 className="font-[family-name:var(--font-serif)] text-3xl sm:text-4xl italic mb-4">
-                The <span className="text-[var(--yc-orange)]">Cemetery</span>
-              </h2>
-              <p className="text-sm text-[#999] max-w-xl mb-8 leading-relaxed">
-                YC-backed companies that raised millions, shipped products nobody wanted, and quietly 404&apos;d into the void.
-              </p>
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 border-2 border-[#333]">
-                {[
-                  "Tutorspree", "Meteor", "Exec", "Moki.tv", "Gobble", "Zidisha",
-                  "Virool", "Backplane", "Lollipuff", "Bufferbox", "Shoptiques", "Cherry",
-                  "Sprig", "Munchery", "Bento", "Washio", "Zirtual", "Prim",
-                  "OMGPop", "Socialcam", "Cloudkick", "Scoopler", "Heyzap", "Lanyrd",
-                ].map((name) => (
-                  <div key={name} className="border border-[#333] p-3 text-center hover:bg-[var(--yc-orange)] hover:text-black transition-all group">
-                    <div className="text-[10px] font-bold text-[#666] group-hover:text-black tracking-wide">{name}</div>
-                    <div className="text-[9px] text-[#444] group-hover:text-black/60 mt-1 font-semibold tracking-[0.2em]">R.I.P.</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Gift Shop */}
-          <section id="gift-shop" className="py-12 sm:py-16">
-            <div className="px-4 sm:px-6">
-              <div className="text-[10px] font-bold tracking-[0.2em] text-[var(--yc-orange)] uppercase mb-3">Before You Leave</div>
-              <h2 className="font-[family-name:var(--font-serif)] text-3xl sm:text-4xl italic mb-6">
-                The Gift Shop
-              </h2>
-              <div className="grid gap-0 md:grid-cols-3 border-2 border-[var(--border-color)] bg-white">
-                {[
-                  { title: "The Pattern", body: "Raise too much, too fast. Scale before product-market fit. Lie about metrics. Get caught. Blame the market." },
-                  { title: "The Enablers", body: "Demo Day creates FOMO. Partners invest, then fund the next batch. Nobody checks on batch -3. The factory never stops." },
-                  { title: "The Survivors", body: "For every FTX, there's an Airbnb. But survivorship bias is a hell of a drug. You're looking at the museum, not the map." },
-                ].map((item, i) => (
-                  <div key={item.title} className={`p-5 sm:p-6 ${i > 0 ? "border-t-2 md:border-t-0 md:border-l-2 border-[var(--border-color)]" : ""}`}>
-                    <h3 className="font-black text-sm mb-2 tracking-tight">{item.title}</h3>
-                    <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.body}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
+          {exhibits.map((failure, i) => (
+            <ExhibitCard
+              key={failure.id}
+              failure={failure}
+              index={i + 1}
+            />
+          ))}
 
           {/* Footer */}
-          <footer className="border-t-2 border-[var(--border-color)] py-8">
-            <div className="px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-5 h-5 bg-[var(--yc-orange)] flex items-center justify-center">
-                    <span className="text-white text-[9px] font-black">YC</span>
-                  </div>
-                  <span className="font-bold text-xs">.FAIL</span>
-                </div>
-                <p className="text-[10px] text-[var(--text-dim)] max-w-sm leading-relaxed">
-                  Satirical project. Not affiliated with Y Combinator. All information from public records and court filings.
-                </p>
-              </div>
-              <div className="text-[10px] text-[var(--text-dim)] sm:text-right font-medium">
-                <div>Admission is free. The losses were not.</div>
-              </div>
-            </div>
-          </footer>
+          <div className="py-6 text-center">
+            <p className="font-[family-name:var(--font-mono)] text-[#666] text-sm font-bold uppercase">
+              End of Directory. More corpses added daily.
+            </p>
+            <p className="font-[family-name:var(--font-mono)] text-[#444] text-xs mt-2">
+              Satirical project. Not affiliated with Y Combinator. All information from public records.
+            </p>
+          </div>
         </main>
       </div>
     </>
