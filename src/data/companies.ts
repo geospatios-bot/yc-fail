@@ -303,6 +303,27 @@ export const FAILURES: YCFailure[] = [
       { label: "WSJ: Quibi Shuts Down After Six Months", url: "https://www.wsj.com/articles/quibi-weighs-shutting-down-as-problems-mount-11603301946", type: "article" },
     ],
   },
+  {
+    id: "rippling",
+    company: "Rippling",
+    founders: ["Parker Conrad", "Prasanna Sankar"],
+    batch: "W17",
+    sector: "HR TECH",
+    raised: "$1.85B",
+    valuation: "$16.8B",
+    status: "SCANDAL",
+    yearFounded: 2016,
+    oneLiner: "YC's HR darling caught in a spy thriller with Deel",
+    description: "Parker Conrad's redemption arc after Zenefits hit a plot twist when Rippling sued competitor Deel for",
+    redactedText: "planting an undercover spy inside Rippling who was paid €5,000/month by Deel's CEO to steal trade secrets",
+    descriptionAfter: ". The DOJ opened a criminal investigation. Deel allegedly ran the same playbook at crypto HR startup Toku. YC uses Rippling for their own HR — awkward.",
+    bodyCount: "DOJ criminal investigation opened",
+    sources: [
+      { label: "CNBC: Rippling Sues Deel Over Corporate Espionage", url: "https://www.cnbc.com/2025/03/17/startup-rippling-sues-competitor-deel-claiming-a-spy-stole-sales-data.html", type: "article" },
+      { label: "SF Standard: New Espionage Scandal Embroils Deel", url: "https://sfstandard.com/2025/04/29/another-startup-accuses-deel-of-trying-to-steal-trade-secrets/", type: "article" },
+      { label: "TechCrunch: Rippling Raises $450M, Reveals YC Is a Customer", url: "https://techcrunch.com/2025/05/09/rippling-raises-450m-at-a-16-8b-valuation-reveals-yc-is-a-customer/", type: "article" },
+    ],
+  },
 ];
 
 // Stats computed from data

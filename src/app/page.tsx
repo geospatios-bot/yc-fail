@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   FAILURES,
   STATUS_CONFIG,
@@ -8,40 +8,159 @@ import {
   type YCFailure,
 } from "@/data/companies";
 
-function Nav() {
+function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [query, setQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => inputRef.current?.focus(), 50);
+    } else {
+      setQuery("");
+    }
+  }, [open]);
+
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    if (open) document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  const results = query.length > 0
+    ? FAILURES.filter(
+        (f) =>
+          f.company.toLowerCase().includes(query.toLowerCase()) ||
+          f.founders.some((fn) => fn.toLowerCase().includes(query.toLowerCase())) ||
+          f.sector.toLowerCase().includes(query.toLowerCase()) ||
+          f.status.toLowerCase().includes(query.toLowerCase())
+      )
+    : [];
+
   return (
-    <nav className="sticky top-0 z-50 nav-blur border-b-2 border-[var(--border-color)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-12 sm:h-14 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-[var(--yc-orange)] flex items-center justify-center">
-            <span className="text-white text-xs font-black">YC</span>
-          </div>
-          <span className="font-bold text-sm tracking-tight">
-            .FAIL
-          </span>
-        </a>
-        <div className="flex items-center gap-4 sm:gap-8 text-[10px] sm:text-xs tracking-[0.2em] uppercase text-[var(--text-dim)]">
-          <a
-            href="#exhibits"
-            className="hover:text-[var(--yc-orange)] transition-colors"
-          >
-            Exhibits
-          </a>
-          <a
-            href="#graveyard"
-            className="hidden sm:inline hover:text-[var(--yc-orange)] transition-colors"
-          >
-            Cemetery
-          </a>
-          <a
-            href="#gift-shop"
-            className="hover:text-[var(--yc-orange)] transition-colors"
-          >
-            Exit
-          </a>
+    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+      <div
+        className="relative w-full max-w-lg mx-4 bg-white border-2 border-[var(--border-color)] shadow-[4px_4px_0_var(--border-color)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center border-b-2 border-[var(--border-color)] px-4 py-3">
+          <span className="text-[var(--text-dim)] mr-3 text-sm">→</span>
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search exhibits..."
+            className="flex-1 bg-transparent outline-none text-sm font-medium placeholder:text-[var(--text-dim)]"
+          />
+          <kbd className="text-[10px] font-semibold text-[var(--text-dim)] border border-[#ddd] px-1.5 py-0.5 tracking-wider">
+            ESC
+          </kbd>
         </div>
+        {results.length > 0 && (
+          <div className="max-h-[300px] overflow-y-auto">
+            {results.map((f) => (
+              <a
+                key={f.id}
+                href={`#exhibits`}
+                onClick={onClose}
+                className="flex items-center justify-between px-4 py-3 hover:bg-[#FFF3EB] transition-colors border-b border-[#eee] last:border-0"
+              >
+                <div>
+                  <div className="font-bold text-sm">{f.company}</div>
+                  <div className="text-[10px] text-[var(--text-dim)] tracking-wider uppercase mt-0.5">
+                    {f.batch} / {f.sector}
+                  </div>
+                </div>
+                <span
+                  className="status-badge text-[9px]"
+                  style={{ color: STATUS_CONFIG[f.status].color, borderColor: STATUS_CONFIG[f.status].color }}
+                >
+                  {f.status}
+                </span>
+              </a>
+            ))}
+          </div>
+        )}
+        {query.length > 0 && results.length === 0 && (
+          <div className="px-4 py-6 text-center text-sm text-[var(--text-dim)]">
+            No exhibits found. Maybe they got away with it.
+          </div>
+        )}
       </div>
-    </nav>
+    </div>
+  );
+}
+
+function Nav() {
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, []);
+
+  return (
+    <>
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <nav className="sticky top-0 z-50 nav-blur border-b-2 border-[var(--border-color)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-12 sm:h-14 flex items-center justify-between">
+          <a href="#" className="flex items-center gap-2">
+            <div className="w-7 h-7 bg-[var(--yc-orange)] flex items-center justify-center">
+              <span className="text-white text-xs font-black">YC</span>
+            </div>
+            <span className="font-bold text-sm tracking-tight">
+              .FAIL
+            </span>
+          </a>
+
+          <div className="flex items-center gap-3 sm:gap-6">
+            <div className="hidden sm:flex items-center gap-6 text-[10px] sm:text-xs tracking-[0.2em] uppercase text-[var(--text-dim)]">
+              <a href="#exhibits" className="hover:text-[var(--yc-orange)] transition-colors">
+                Exhibits
+              </a>
+              <a href="#graveyard" className="hover:text-[var(--yc-orange)] transition-colors">
+                Cemetery
+              </a>
+              <a href="#gift-shop" className="hover:text-[var(--yc-orange)] transition-colors">
+                Exit
+              </a>
+            </div>
+
+            {/* Search trigger */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="flex items-center gap-2 border-2 border-[var(--border-color)] px-3 py-1.5 hover:border-[var(--yc-orange)] transition-colors"
+            >
+              <span className="text-xs text-[var(--text-dim)]">Search...</span>
+              <kbd className="hidden sm:inline text-[9px] font-semibold text-[var(--text-dim)] border border-[#ccc] px-1 py-0.5">
+                ⌘K
+              </kbd>
+            </button>
+
+            {/* Twitter */}
+            <a
+              href="https://x.com/vincentweisser"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] sm:text-xs font-semibold tracking-wider text-[var(--yc-orange)] hover:underline uppercase"
+            >
+              @vincentweisser
+            </a>
+          </div>
+        </div>
+      </nav>
+    </>
   );
 }
 
