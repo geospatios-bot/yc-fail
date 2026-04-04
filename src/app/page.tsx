@@ -382,6 +382,191 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
   );
 }
 
+/* ── Timeline Card (Option A) ───────────────────────── */
+
+const TIMELINE_EVENTS = [
+  { year: "2005–2012", era: "GOLDEN ERA", color: "#22c55e", events: ["Dropbox, Airbnb, Stripe, Reddit", "PG vets every company personally"], marker: false },
+  { year: "2013–2018", era: "GROWTH ERA", color: "#eab308", events: ["Batch sizes grow 2→4x", "Zenefits fraud (2015)", "Flexport CEO ousted"], marker: false },
+  { year: "2019–2022", era: "SCALE ERA", color: "#f97316", events: ["400+ companies/year", "Quality dilution begins", "FTX collapses ($8B fraud)"], marker: false },
+  { year: "2023", era: "GARRY TAN ERA", color: "#dc2626", events: ["Garry becomes President", "37K LOC/day claim", "Central copies Warp"], marker: true },
+  { year: "2024", era: "", color: "#dc2626", events: ["PearAI forks open source", "Warp affiliate scandal", "GDPmaxxing goes mainstream"], marker: false },
+  { year: "2025", era: "", color: "#dc2626", events: ["GStack controversy", "Batch duplicates everywhere", "Investors start flagging YC"], marker: false },
+  { year: "2026", era: "", color: "#dc2626", events: ["Delve expelled (fraud)", "'Generational fumble'", "ycombinator.fyi launches"], marker: false },
+];
+
+function TimelineCard() {
+  return (
+    <div className="block block--dark" style={{ overflow: "hidden" }}>
+      <div className="block-inner" style={{ padding: "2rem 1.5rem" }}>
+        <div className="label-group">
+          <span className="pill-outline" style={{ borderColor: "#555", color: "#999" }}>(EXHIBIT)</span>
+          <span className="pill-outline" style={{ color: "var(--accent)", borderColor: "var(--accent)" }}>TIMELINE</span>
+        </div>
+        <h2 className="text-xl" style={{ color: "#fff", marginBottom: "0.5rem" }}>The Decline of YC</h2>
+        <p className="text-mono" style={{ color: "#666", fontSize: "0.75rem", marginBottom: "2rem" }}>
+          FROM BEST INCUBATOR IN THE WORLD TO RED FLAG FOR INVESTORS
+        </p>
+
+        <div style={{ position: "relative", paddingLeft: "20px" }}>
+          {/* Vertical line */}
+          <div style={{ position: "absolute", left: "6px", top: "4px", bottom: "4px", width: "2px", background: "linear-gradient(to bottom, #22c55e, #eab308, #f97316, #dc2626)" }} />
+
+          {TIMELINE_EVENTS.map((evt, i) => (
+            <div key={i} style={{ position: "relative", marginBottom: i < TIMELINE_EVENTS.length - 1 ? "1.5rem" : 0, paddingLeft: "24px" }}>
+              {/* Dot */}
+              <div style={{
+                position: "absolute", left: "-17px", top: "4px",
+                width: evt.marker ? "14px" : "10px",
+                height: evt.marker ? "14px" : "10px",
+                borderRadius: "50%",
+                background: evt.color,
+                border: evt.marker ? "2px solid #fff" : "none",
+                boxShadow: evt.marker ? `0 0 12px ${evt.color}` : "none",
+              }} />
+
+              <div className="flex items-baseline gap-3" style={{ flexWrap: "wrap" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: "0.85rem", color: evt.color, minWidth: "80px" }}>
+                  {evt.year}
+                </span>
+                {evt.era && (
+                  <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: "0.6rem", color: "#555", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                    {evt.era}
+                  </span>
+                )}
+              </div>
+              <div style={{ marginTop: "4px" }}>
+                {evt.events.map((e, j) => (
+                  <div key={j} style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem", color: "#888", fontWeight: 600, lineHeight: 1.6 }}>
+                    → {e}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Decline Chart (Option B) ───────────────────────── */
+
+const CHART_DATA = [
+  { year: "2012", batch: 65, incidents: 0 },
+  { year: "2013", batch: 75, incidents: 0 },
+  { year: "2014", batch: 85, incidents: 0 },
+  { year: "2015", batch: 110, incidents: 1 },
+  { year: "2016", batch: 130, incidents: 0 },
+  { year: "2017", batch: 150, incidents: 0 },
+  { year: "2018", batch: 190, incidents: 1 },
+  { year: "2019", batch: 200, incidents: 1 },
+  { year: "2020", batch: 250, incidents: 1 },
+  { year: "2021", batch: 320, incidents: 1 },
+  { year: "2022", batch: 400, incidents: 2 },
+  { year: "2023", batch: 260, incidents: 2 },
+  { year: "2024", batch: 280, incidents: 4 },
+  { year: "2025", batch: 300, incidents: 3 },
+  { year: "2026", batch: 160, incidents: 3 },
+];
+
+function DeclineChart() {
+  const maxBatch = Math.max(...CHART_DATA.map(d => d.batch));
+  const maxIncidents = Math.max(...CHART_DATA.map(d => d.incidents));
+  const garryIndex = CHART_DATA.findIndex(d => d.year === "2023");
+
+  return (
+    <div className="block" style={{ overflow: "hidden" }}>
+      <div className="block-inner" style={{ padding: "2rem 1.5rem" }}>
+        <div className="label-group">
+          <span className="pill-outline">(EXHIBIT)</span>
+          <span className="pill-outline" style={{ color: "var(--accent)", borderColor: "var(--accent)" }}>DATA</span>
+        </div>
+        <h2 className="text-xl" style={{ marginBottom: "0.5rem" }}>YC Batch Size vs. Incidents</h2>
+        <p className="text-mono" style={{ fontSize: "0.75rem", color: "#999", marginBottom: "1.5rem" }}>
+          MORE COMPANIES, LESS VETTING, MORE PROBLEMS
+        </p>
+
+        {/* Legend */}
+        <div className="flex items-center gap-4" style={{ marginBottom: "1rem" }}>
+          <div className="flex items-center gap-1">
+            <div style={{ width: "12px", height: "12px", background: "#333", borderRadius: "2px" }} />
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.6rem", fontWeight: 700, color: "#666" }}>BATCH SIZE</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div style={{ width: "12px", height: "12px", background: "var(--accent)", borderRadius: "50%" }} />
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.6rem", fontWeight: 700, color: "#666" }}>INCIDENTS</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div style={{ width: "12px", height: "2px", background: "#dc2626" }} />
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.6rem", fontWeight: 700, color: "#666" }}>GARRY TAN ERA</span>
+          </div>
+        </div>
+
+        {/* Chart */}
+        <div style={{ position: "relative", height: "200px", display: "flex", alignItems: "flex-end", gap: "3px", padding: "0 0 24px" }}>
+          {/* Garry Tan era highlight */}
+          <div style={{
+            position: "absolute",
+            left: `${(garryIndex / CHART_DATA.length) * 100}%`,
+            right: 0,
+            top: 0,
+            bottom: "24px",
+            background: "rgba(220, 38, 38, 0.06)",
+            borderLeft: "2px dashed #dc2626",
+            zIndex: 0,
+          }}>
+            <span style={{
+              position: "absolute", top: "4px", left: "6px",
+              fontFamily: "var(--font-mono)", fontSize: "0.55rem", fontWeight: 800,
+              color: "#dc2626", textTransform: "uppercase", whiteSpace: "nowrap",
+            }}>
+              Garry Tan →
+            </span>
+          </div>
+
+          {CHART_DATA.map((d, i) => {
+            const barHeight = (d.batch / maxBatch) * 160;
+            const incidentHeight = d.incidents > 0 ? (d.incidents / maxIncidents) * 160 : 0;
+            return (
+              <div key={d.year} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", position: "relative", zIndex: 1 }}>
+                {/* Incident dot */}
+                {d.incidents > 0 && (
+                  <div style={{
+                    position: "absolute",
+                    bottom: `${barHeight + 30}px`,
+                    width: `${8 + d.incidents * 4}px`,
+                    height: `${8 + d.incidents * 4}px`,
+                    borderRadius: "50%",
+                    background: "var(--accent)",
+                    opacity: 0.9,
+                  }} />
+                )}
+                {/* Batch bar */}
+                <div style={{
+                  width: "100%",
+                  height: `${barHeight}px`,
+                  background: i >= garryIndex ? "#dc2626" : "#333",
+                  borderRadius: "2px 2px 0 0",
+                  opacity: i >= garryIndex ? 0.7 : 0.4,
+                }} />
+                {/* Year label */}
+                <span style={{
+                  fontFamily: "var(--font-mono)", fontSize: "0.45rem", fontWeight: 700,
+                  color: "#666", marginTop: "4px",
+                  transform: "rotate(-45deg)", transformOrigin: "center",
+                  whiteSpace: "nowrap",
+                }}>
+                  {d.year}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── Main Page ───────────────────────────────────────── */
 
 export default function Home() {
@@ -551,10 +736,16 @@ export default function Home() {
             />
           ))}
 
+          {/* ── Option A: Editorial Timeline ──────────── */}
+          <TimelineCard />
+
+          {/* ── Option B: Data Chart ──────────────────── */}
+          <DeclineChart />
+
           {/* Footer */}
           <div style={{ background: "transparent", padding: "2rem 0", textAlign: "center" }}>
             <p className="text-mono" style={{ color: "#666" }}>
-              End of Directory. More corpses added daily.
+              End of Directory. More exhibits added daily.
             </p>
             <p className="text-mono" style={{ color: "#444", fontSize: "0.7rem", marginTop: "0.5rem" }}>
               Satirical project. Not affiliated with Y Combinator. All information from public records.
