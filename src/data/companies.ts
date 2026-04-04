@@ -21,10 +21,10 @@ export interface YCFailure {
 }
 
 export const STATUS_CONFIG: Record<Status, { label: string; color: string; bg: string }> = {
-  FRAUD: { label: "FRAUD", color: "#dc2626", bg: "#fef2f2" },
-  DEAD: { label: "DEAD", color: "#000000", bg: "#f5f5f5" },
-  ZOMBIE: { label: "ZOMBIE", color: "#854d0e", bg: "#fefce8" },
-  SCANDAL: { label: "SCANDAL", color: "#9333ea", bg: "#faf5ff" },
+  FRAUD: { label: "FRAUD", color: "#ef4444", bg: "transparent" },
+  DEAD: { label: "DEAD", color: "#ffffff", bg: "transparent" },
+  ZOMBIE: { label: "ZOMBIE", color: "#eab308", bg: "transparent" },
+  SCANDAL: { label: "SCANDAL", color: "#a855f7", bg: "transparent" },
 };
 
 export const FAILURES: YCFailure[] = [

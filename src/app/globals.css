@@ -6,18 +6,21 @@
 }
 
 :root {
-  --bg: #FAFAF9;
-  --text: #1a1a1a;
+  --bg: #0a0a0a;
+  --bg-surface: #141414;
+  --bg-card: #161616;
+  --text: #f5f5f5;
+  --text-muted: #737373;
+  --text-dim: #525252;
   --yc-orange: #FF6600;
-  --yc-orange-light: #FFF3EB;
-  --dead-black: #000000;
-  --fraud-red: #dc2626;
-  --zombie-amber: #854d0e;
-  --scandal-purple: #9333ea;
-  --border: 1px solid #e5e5e5;
-  --border-heavy: 1.5px solid #1a1a1a;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08);
-  --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+  --yc-orange-dark: #cc5200;
+  --fraud-red: #ef4444;
+  --dead-black: #ffffff;
+  --zombie-amber: #eab308;
+  --scandal-purple: #a855f7;
+  --border: 2px solid #333;
+  --border-thick: 3px solid #FF6600;
+  --shadow: none;
 }
 
 * {
@@ -28,25 +31,27 @@ a, button, [role="button"] {
   cursor: pointer;
 }
 
+::selection {
+  background: var(--yc-orange);
+  color: #000;
+}
+
 body {
   background: var(--bg);
   color: var(--text);
 }
 
-/* Exhibit card */
+/* Neobrutalist card */
 .exhibit-card {
-  background: white;
-  border: var(--border);
-  border-radius: 2px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--bg-card);
+  border: 2px solid #333;
+  transition: border-color 0.2s ease;
   position: relative;
   overflow: hidden;
 }
 
 .exhibit-card:hover {
   border-color: var(--yc-orange);
-  box-shadow: var(--shadow-hover);
-  transform: translateY(-2px);
 }
 
 .exhibit-card::before {
@@ -54,36 +59,34 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 3px;
+  width: 4px;
+  height: 100%;
   background: var(--yc-orange);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-  transform-origin: left;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .exhibit-card:hover::before {
-  transform: scaleX(1);
+  opacity: 1;
 }
 
-/* Status badge */
+/* Status badge — brutalist */
 .status-badge {
   font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  padding: 3px 8px;
-  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 4px 10px;
   text-transform: uppercase;
+  border: 2px solid currentColor;
 }
 
 /* Redacted text */
 .redacted {
-  background: #1a1a1a;
-  color: #1a1a1a;
+  background: var(--yc-orange);
+  color: var(--yc-orange);
   padding: 1px 4px;
-  border-radius: 1px;
-  transition: all 0.3s ease;
+  transition: color 0.2s ease;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -91,8 +94,7 @@ body {
 .redacted:hover,
 .redacted:active,
 .redacted.revealed {
-  color: #fff;
-  background: var(--yc-orange);
+  color: #000;
 }
 
 /* Ticker */
@@ -103,23 +105,13 @@ body {
 
 .ticker-track {
   display: inline-flex;
-  animation: ticker 40s linear infinite;
-  gap: 3rem;
+  animation: ticker 30s linear infinite;
+  gap: 2rem;
 }
 
 .ticker-track:hover,
 .ticker-wrapper:hover .ticker-track {
   animation-play-state: paused;
-}
-
-/* Stats counter */
-@keyframes countUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.stat-card {
-  animation: countUp 0.6s ease forwards;
 }
 
 /* Tombstone effect for dead companies */
@@ -128,23 +120,24 @@ body {
 }
 
 .tombstone::after {
-  content: 'R.I.P.';
+  content: 'DEAD';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-12deg);
-  font-family: var(--font-serif);
-  font-size: 48px;
-  font-style: italic;
-  color: rgba(0, 0, 0, 0.06);
+  font-family: var(--font-mono);
+  font-size: 64px;
+  font-weight: 700;
+  color: rgba(255, 102, 0, 0.04);
   pointer-events: none;
   white-space: nowrap;
+  letter-spacing: 0.2em;
 }
 
 /* Pulse for fraud status */
 @keyframes fraudPulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+  50% { opacity: 0.7; }
 }
 
 .fraud-pulse {
@@ -155,60 +148,72 @@ body {
 .museum-label {
   font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.15em;
+  font-weight: 600;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #999;
+  color: var(--text-dim);
 }
 
-/* Section divider */
+/* Section divider — brutalist */
 .section-divider {
   border: none;
-  height: 1px;
-  background: linear-gradient(to right, transparent, #d4d4d4, transparent);
-  margin: 2rem 0;
+  height: 2px;
+  background: #333;
+  margin: 3rem 0;
 }
 
 @media (min-width: 640px) {
   .section-divider {
-    margin: 4rem 0;
+    margin: 5rem 0;
   }
 }
 
 /* Disable hover transforms on touch devices */
 @media (hover: none) {
   .exhibit-card:hover {
-    transform: none;
-    box-shadow: var(--shadow);
+    border-color: #333;
   }
-}
-
-/* Hero gradient */
-.hero-gradient {
-  background: linear-gradient(
-    180deg,
-    #FFF3EB 0%,
-    var(--bg) 100%
-  );
-}
-
-/* Scroll fade in */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in-up {
-  animation: fadeInUp 0.6s ease forwards;
 }
 
 /* Nav */
 .nav-blur {
-  backdrop-filter: blur(12px);
-  background: rgba(250, 250, 249, 0.85);
+  backdrop-filter: blur(16px);
+  background: rgba(10, 10, 10, 0.9);
+}
+
+/* Noise grain overlay */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Stat number animation */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-animate {
+  animation: countUp 0.6s ease forwards;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--yc-orange);
 }
