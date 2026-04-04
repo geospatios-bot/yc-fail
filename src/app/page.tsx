@@ -5,8 +5,11 @@ import {
   FAILURES,
   STATUS_CONFIG,
   computeStats,
+  parseRaised,
   type YCFailure,
 } from "@/data/companies";
+
+type SortKey = "default" | "recent" | "biggest" | "oldest" | "a-z";
 
 /* ── Search Modal ────────────────────────────────────── */
 
@@ -331,6 +334,7 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
 export default function Home() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sort, setSort] = useState<SortKey>("default");
 
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
@@ -341,7 +345,22 @@ export default function Home() {
   }, []);
 
   const featured = FAILURES[0]; // FTX
-  const exhibits = FAILURES.slice(1);
+
+  const sortedExhibits = (() => {
+    const list = FAILURES.slice(1);
+    switch (sort) {
+      case "recent":
+        return [...list].sort((a, b) => (b.yearDied ?? b.yearFounded) - (a.yearDied ?? a.yearFounded));
+      case "biggest":
+        return [...list].sort((a, b) => parseRaised(b.raised) - parseRaised(a.raised));
+      case "oldest":
+        return [...list].sort((a, b) => a.yearFounded - b.yearFounded);
+      case "a-z":
+        return [...list].sort((a, b) => a.company.localeCompare(b.company));
+      default:
+        return list;
+    }
+  })();
 
   return (
     <>
@@ -411,7 +430,28 @@ export default function Home() {
         <main className="exhibits">
           <FeaturedCard failure={featured} />
 
-          {exhibits.map((failure, i) => (
+          {/* Sort bar */}
+          <div className="flex items-center gap-2 flex-wrap" style={{ padding: "0.5rem 0" }}>
+            <span className="text-mono" style={{ fontSize: "0.65rem", color: "#666", marginRight: "4px" }}>SORT:</span>
+            {([
+              ["default", "DEFAULT"],
+              ["recent", "RECENT"],
+              ["biggest", "BIGGEST"],
+              ["oldest", "OLDEST"],
+              ["a-z", "A → Z"],
+            ] as [SortKey, string][]).map(([key, label]) => (
+              <button
+                key={key}
+                onClick={() => setSort(key)}
+                className={sort === key ? "pill-solid accent" : "pill-outline"}
+                style={{ fontSize: "0.6rem", padding: "3px 10px", cursor: "pointer", transition: "all 0.15s" }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {sortedExhibits.map((failure, i) => (
             <ExhibitCard
               key={failure.id}
               failure={failure}

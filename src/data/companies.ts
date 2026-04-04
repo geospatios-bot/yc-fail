@@ -326,6 +326,14 @@ export const FAILURES: YCFailure[] = [
   },
 ];
 
+/** Parse "$1.8B" / "$200M" / "$10B+ (via GM)" into a raw number */
+export function parseRaised(s: string): number {
+  const num = parseFloat(s.replace(/[^0-9.]/g, ""));
+  if (isNaN(num)) return 0;
+  const multiplier = s.includes("B") ? 1_000_000_000 : 1_000_000;
+  return num * multiplier;
+}
+
 // Stats computed from data
 export function computeStats() {
   const totalRaised = FAILURES.reduce((sum, f) => {
