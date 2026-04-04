@@ -484,6 +484,29 @@ h1, h2, h3 {
   flex-shrink: 0;
 }
 
+/* ── Copy link button ──────────────────────────────── */
+.copy-link-btn {
+  border: 2px solid currentColor;
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.copy-link-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+}
+
 /* ── Search modal (cmd-k) ─────────────────────────── */
 .search-modal {
   position: absolute;

@@ -206,6 +206,27 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
 
 /* ── Featured Card ───────────────────────────────────── */
 
+function CopyLinkButton({ id, dark }: { id: string; dark?: boolean }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    const url = `${window.location.origin}/#${id}`;
+    navigator.clipboard.writeText(url);
+    window.history.replaceState(null, "", `#${id}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <button
+      onClick={handleCopy}
+      className="copy-link-btn"
+      style={dark ? { borderColor: "#555", color: "#999" } : undefined}
+      title="Copy link to this exhibit"
+    >
+      {copied ? "✓ COPIED" : "⌗ LINK"}
+    </button>
+  );
+}
+
 function FeaturedCard({ failure }: { failure: YCFailure }) {
   return (
     <div id={`exhibit-${failure.id}`} className="block block--dark">
@@ -213,6 +234,7 @@ function FeaturedCard({ failure }: { failure: YCFailure }) {
         <div className="label-group">
           <span className="pill-outline">(FEATURED FAILURE)</span>
           <span className="pill-outline" style={{ color: "var(--accent)", borderColor: "var(--accent)" }}>MUSEUM CHOICE</span>
+          <CopyLinkButton id={failure.id} dark />
         </div>
         <div className="flex items-center gap-4" style={{ margin: "1rem 0" }}>
           {failure.domain && (
@@ -259,6 +281,7 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
         <div className="label-group">
           <span className="pill-outline">(BATCH {failure.batch !== "—" ? failure.batch : "ADJ"})</span>
           <span className="pill-outline">(EXHIBIT {String(index + 1).padStart(3, "0")})</span>
+          <CopyLinkButton id={failure.id} />
         </div>
         <h2 className="text-xl" style={{ marginBottom: "1rem" }}>{failure.company}</h2>
         <p className="text-mono" style={{ color: "var(--accent)", fontSize: "1.2rem", marginBottom: "2rem" }}>
