@@ -64,11 +64,17 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
         {results.length > 0 && (
           <div className="max-h-[300px] overflow-y-auto">
             {results.map((f) => (
-              <a
+              <button
                 key={f.id}
-                href={`#exhibits`}
-                onClick={onClose}
-                className="flex items-center justify-between px-4 py-3 hover:bg-[#FFF3EB] transition-colors border-b border-[#eee] last:border-0"
+                type="button"
+                onClick={() => {
+                  onClose();
+                  setTimeout(() => {
+                    const el = document.getElementById(`exhibit-${f.id}`);
+                    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+                  }, 100);
+                }}
+                className="w-full flex items-center justify-between px-4 py-3 hover:bg-[#FFF3EB] active:bg-[#FFF3EB] transition-colors border-b border-[#eee] last:border-0 text-left"
               >
                 <div>
                   <div className="font-bold text-sm">{f.company}</div>
@@ -82,7 +88,7 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
                 >
                   {f.status}
                 </span>
-              </a>
+              </button>
             ))}
           </div>
         )}
@@ -278,7 +284,7 @@ function ExhibitCard({
   const isDead = failure.status === "DEAD";
 
   return (
-    <div className={`exhibit-card ${isDead ? "tombstone" : ""}`}>
+    <div id={`exhibit-${failure.id}`} className={`exhibit-card ${isDead ? "tombstone" : ""}`}>
       {/* Header */}
       <div className="p-4 sm:p-6 pb-0">
         <div className="flex items-start justify-between gap-2 mb-3 sm:mb-4">
@@ -306,22 +312,22 @@ function ExhibitCard({
 
       {/* Financials bar */}
       <div className="mx-4 sm:mx-6 border-2 border-[var(--border-color)] mb-3 sm:mb-4">
-        <div className="grid grid-cols-2 sm:grid-cols-3 divide-x-2 divide-[var(--border-color)]">
-          <div className="p-2.5 sm:p-3">
+        <div className="flex flex-wrap">
+          <div className="w-1/2 sm:flex-1 p-2.5 sm:p-3 border-r-2 border-[var(--border-color)]">
             <div className="museum-label text-[9px]">RAISED</div>
             <div className="font-black text-sm sm:text-base mt-1">
               {failure.raised}
             </div>
           </div>
           {failure.valuation && (
-            <div className="p-2.5 sm:p-3">
+            <div className="w-1/2 sm:flex-1 p-2.5 sm:p-3 sm:border-r-2 sm:border-[var(--border-color)]">
               <div className="museum-label text-[9px]">PEAK VALUATION</div>
               <div className="font-black text-sm sm:text-base mt-1">
                 {failure.valuation}
               </div>
             </div>
           )}
-          <div className="p-2.5 sm:p-3">
+          <div className={`${failure.valuation ? "w-full border-t-2" : "w-1/2"} sm:w-auto sm:flex-1 sm:border-t-0 border-[var(--border-color)] p-2.5 sm:p-3`}>
             <div className="museum-label text-[9px]">
               {failure.yearDied ? "LIVED" : "STATUS"}
             </div>
