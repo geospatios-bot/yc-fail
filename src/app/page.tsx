@@ -40,25 +40,25 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
     : [];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] sm:pt-[15vh]" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh] sm:pt-[20vh]" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-md sidebar-backdrop" />
       <div
-        className="relative w-full max-w-lg mx-3 sm:mx-4 overflow-hidden"
-        style={{ background: "var(--surface-white)", border: "var(--border-w) solid var(--border-color)", borderRadius: "var(--radius-md)" }}
+        className="relative w-full max-w-lg mx-4 overflow-hidden sidebar-slide"
+        style={{ background: "#111", border: "2px solid #333", borderRadius: "var(--radius-lg)" }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center px-5 py-4" style={{ borderBottom: "var(--border-w) solid var(--border-color)" }}>
-          <span style={{ color: "var(--accent)", marginRight: "12px", fontWeight: 900 }}>→</span>
+        <div className="flex items-center px-5 py-4" style={{ borderBottom: "2px solid #333" }}>
+          <span style={{ color: "var(--accent)", marginRight: "12px", fontWeight: 900, fontSize: "1.2rem" }}>⌕</span>
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search exhibits..."
-            className="flex-1 bg-transparent outline-none text-body"
-            style={{ cursor: "text" }}
+            className="flex-1 bg-transparent outline-none"
+            style={{ cursor: "text", color: "#fff", fontSize: "1rem", fontWeight: 700, fontFamily: "var(--font-mono)" }}
           />
-          <kbd className="pill-outline" style={{ fontSize: "0.6rem", padding: "2px 8px" }}>ESC</kbd>
+          <kbd style={{ fontSize: "0.6rem", padding: "3px 10px", borderRadius: "var(--radius-pill)", border: "2px solid #555", color: "#777", fontFamily: "var(--font-mono)", fontWeight: 800 }}>ESC</kbd>
         </div>
         {results.length > 0 && (
           <div style={{ maxHeight: "300px", overflowY: "auto" }}>
@@ -73,13 +73,13 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
                   }, 100);
                 }}
                 className="w-full flex items-center justify-between px-5 py-3 text-left"
-                style={{ borderBottom: "1px solid #e5e5e5", transition: "background 0.15s" }}
-                onMouseEnter={(e) => e.currentTarget.style.background = "#FFF3EB"}
+                style={{ borderBottom: "1px solid #222", transition: "background 0.15s" }}
+                onMouseEnter={(e) => e.currentTarget.style.background = "#1a1a1a"}
                 onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
               >
                 <div>
-                  <div style={{ fontWeight: 900, fontSize: "0.9rem", textTransform: "uppercase" }}>{f.company}</div>
-                  <div className="text-mono" style={{ fontSize: "0.65rem", color: "#999", marginTop: "2px" }}>
+                  <div style={{ fontWeight: 900, fontSize: "0.9rem", textTransform: "uppercase", color: "#fff" }}>{f.company}</div>
+                  <div style={{ fontSize: "0.65rem", color: "#666", marginTop: "2px", fontFamily: "var(--font-mono)", fontWeight: 700, textTransform: "uppercase" }}>
                     {f.batch} / {f.sector}
                   </div>
                 </div>
@@ -89,7 +89,7 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
           </div>
         )}
         {q.length > 0 && results.length === 0 && (
-          <div className="text-body" style={{ padding: "2rem", textAlign: "center", color: "#999" }}>
+          <div style={{ padding: "2rem", textAlign: "center", color: "#555", fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "0.85rem", textTransform: "uppercase" }}>
             No corpses found. Maybe they got away with it.
           </div>
         )}
