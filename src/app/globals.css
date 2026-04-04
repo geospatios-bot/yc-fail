@@ -85,9 +85,12 @@ body {
   border-radius: 1px;
   transition: all 0.3s ease;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.redacted:hover {
+.redacted:hover,
+.redacted:active,
+.redacted.revealed {
   color: #fff;
   background: var(--yc-orange);
 }
@@ -162,7 +165,21 @@ body {
   border: none;
   height: 1px;
   background: linear-gradient(to right, transparent, #d4d4d4, transparent);
-  margin: 4rem 0;
+  margin: 2rem 0;
+}
+
+@media (min-width: 640px) {
+  .section-divider {
+    margin: 4rem 0;
+  }
+}
+
+/* Disable hover transforms on touch devices */
+@media (hover: none) {
+  .exhibit-card:hover {
+    transform: none;
+    box-shadow: var(--shadow);
+  }
 }
 
 /* Hero gradient */
