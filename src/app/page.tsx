@@ -73,6 +73,7 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
                   type="button"
                   onClick={() => {
                     onClose();
+                    window.history.replaceState(null, "", `#${f.id}`);
                     setTimeout(() => {
                       document.getElementById(`exhibit-${f.id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
                     }, 100);
@@ -207,7 +208,7 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
 
 function FeaturedCard({ failure }: { failure: YCFailure }) {
   return (
-    <div className="block block--dark">
+    <div id={`exhibit-${failure.id}`} className="block block--dark">
       <div className="block-inner--hero">
         <div className="label-group">
           <span className="pill-outline">(FEATURED FAILURE)</span>
@@ -371,6 +372,17 @@ export default function Home() {
     };
     document.addEventListener("keydown", h);
     return () => document.removeEventListener("keydown", h);
+  }, []);
+
+  // Scroll to company on page load if URL has hash
+  useEffect(() => {
+    const hash = window.location.hash.replace("#", "");
+    if (hash) {
+      setTimeout(() => {
+        const el = document.getElementById(`exhibit-${hash}`);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+    }
   }, []);
 
   // Lock body scroll when mobile sidebar is open
