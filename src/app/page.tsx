@@ -413,7 +413,7 @@ export default function Home() {
           zIndex: 70,
           background: "var(--bg)",
           padding: "10px 16px",
-          borderBottom: "none",
+          borderBottom: "2px solid #333",
         }}
       >
           <div className="flex items-center gap-2">
@@ -448,12 +448,12 @@ export default function Home() {
             </button>
           </div>
       </div>
-      <div className="lg:hidden" style={{ height: "30px" }} />
+      <div className="lg:hidden" style={{ height: "38px" }} />
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-x-0 top-[56px] bottom-0 z-[60] lg:hidden"
+          className="fixed inset-x-0 top-[54px] bottom-0 z-[60] lg:hidden"
           onClick={() => setSidebarOpen(false)}
         >
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm sidebar-backdrop" />
