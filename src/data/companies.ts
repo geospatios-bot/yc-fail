@@ -16,6 +16,7 @@ export interface YCFailure {
   redactedText: string;
   descriptionAfter: string;
   bodyCount?: string; // employees laid off, users affected, etc.
+  domain?: string; // company domain for logo via Google favicon API
   imageUrl?: string;
   sources: { label: string; url: string; type: "article" | "twitter" | "video" | "sec" }[];
 }
@@ -28,6 +29,28 @@ export const STATUS_CONFIG: Record<Status, { label: string; color: string; bg: s
 };
 
 export const FAILURES: YCFailure[] = [
+  {
+    id: "delve",
+    company: "Delve",
+    founders: ["Selin Kocalar", "Karun Kaushik"],
+    batch: "W24",
+    sector: "COMPLIANCE / AI",
+    raised: "$32M",
+    valuation: "$300M",
+    status: "SCANDAL",
+    yearFounded: 2024,
+    oneLiner: "Kicked out of YC. 493+ fabricated audit reports.",
+    description: "Claimed to automate SOC 2 and ISO compliance auditing with AI. Whistleblower revealed",
+    redactedText: "the platform auto-generated identical passing audit reports with keyboard-mashed test data before clients even uploaded anything",
+    descriptionAfter: ". CEO was caught on tape asking an auditor 'does your firm actually look at our platform?' Insight Partners scrubbed their $32M investment blog post. Also accused of taking an open source tool and passing it off as proprietary. YC officially expelled Delve from the program in 2026.",
+    bodyCount: "493+ fabricated reports",
+    domain: "delve.co",
+    sources: [
+      { label: "TechCrunch: Delve Whistleblower Strikes Again", url: "https://techcrunch.com/2026/03/30/delve-whistleblower-strikes-again-with-alleged-receipts-about-fake-compliance/", type: "article" },
+      { label: "Inc: The Delve Scandal", url: "https://www.inc.com/ben-sherry/the-delve-scandal-a-y-combinator-darling-just-got-hit-with-a-bombshell-fraud-accusation/", type: "article" },
+      { label: "TechCrunch: Insight Partners Scrubs Investment Post", url: "https://techcrunch.com/2026/03/23/insight-partners-scrubs-investment-post-amid-fake-allegations/", type: "article" },
+    ],
+  },
   {
     id: "ftx",
     company: "FTX",
@@ -44,6 +67,7 @@ export const FAILURES: YCFailure[] = [
     redactedText: "$8 billion in customer deposits to his hedge fund Alameda Research",
     descriptionAfter: "while sleeping on a beanbag in a Bahamas penthouse. Sentenced to 25 years. YC quietly scrubbed him from their website.",
     bodyCount: "1M+ customers affected",
+    domain: "ftx.com",
     sources: [
       { label: "DOJ: SBF Sentenced to 25 Years", url: "https://www.justice.gov/usao-sdny/pr/samuel-bankman-fried-sentenced-25-years-his-orchestration-multiple-fraudulent-schemes", type: "article" },
       { label: "YC's page on FTX (deleted)", url: "https://web.archive.org/web/2022/https://www.ycombinator.com/companies/ftx", type: "article" },
@@ -65,6 +89,7 @@ export const FAILURES: YCFailure[] = [
     redactedText: "95% of those users were automated bots the company created itself",
     descriptionAfter: ". Board shut it down in 2023. Shafi charged with securities fraud. The 'IRL' app was anything but.",
     bodyCount: "~95% fake users",
+    domain: "irl.com",
     sources: [
       { label: "SEC: IRL Fraud Charges", url: "https://www.sec.gov/newsroom/press-releases/2023-168", type: "sec" },
       { label: "NYT: Social App IRL Shuts Down", url: "https://www.nytimes.com/2023/06/27/technology/irl-app-shut-down.html", type: "article" },
@@ -85,6 +110,7 @@ export const FAILURES: YCFailure[] = [
     redactedText: "dragged a pedestrian 20 feet and executives initially withheld the footage from regulators",
     descriptionAfter: ". California pulled their license. GM wrote off the entire investment. The future of autonomous driving became a $10B bonfire.",
     bodyCount: "2,500+ laid off",
+    domain: "getcruise.com",
     sources: [
       { label: "NYT: Cruise Withheld Footage of Pedestrian Dragging", url: "https://www.nytimes.com/2023/11/03/technology/cruise-general-motors-self-driving.html", type: "article" },
       { label: "Reuters: GM Shuts Down Cruise", url: "https://www.reuters.com/business/autos-transportation/gm-close-cruise-robotaxi-business-2024-12-10/", type: "article" },
@@ -105,6 +131,7 @@ export const FAILURES: YCFailure[] = [
     redactedText: "the 'AI' was a room full of offshore accountants manually doing the work",
     descriptionAfter: ". Customers reported tax filing errors and missing transactions. Quietly shut down in 2020 during COVID, blaming the pandemic.",
     bodyCount: "Hundreds of SMBs affected",
+    domain: "scalefactor.com",
     sources: [
       { label: "Forbes: ScaleFactor Shuts Down", url: "https://www.forbes.com/sites/jeffkauflin/2020/07/27/scalefactor-is-shutting-down-after-raising-100m/", type: "article" },
     ],
@@ -124,6 +151,7 @@ export const FAILURES: YCFailure[] = [
     redactedText: "law is hard and AI couldn't replace lawyers",
     descriptionAfter: ". Pivoted three times, laid off all attorneys, then shut down entirely. The legal industry remained undisrupted.",
     bodyCount: "100+ employees laid off",
+    domain: "atrium.co",
     sources: [
       { label: "TechCrunch: Atrium Shuts Down", url: "https://techcrunch.com/2020/03/03/legal-tech-startup-atrium-shuts-down/", type: "article" },
     ],
@@ -144,6 +172,7 @@ export const FAILURES: YCFailure[] = [
     redactedText: "they hemorrhaged cash on factories they couldn't fill and projects they couldn't finish",
     descriptionAfter: ". Filed for bankruptcy in 2021 with $1.6B in debt. SoftBank lost over $1B. Turns out buildings are harder than apps.",
     bodyCount: "8,000+ employees",
+    domain: "katerra.com",
     sources: [
       { label: "WSJ: Katerra Files for Bankruptcy", url: "https://www.wsj.com/articles/katerra-files-for-bankruptcy-11622583594", type: "article" },
     ],
@@ -163,6 +192,7 @@ export const FAILURES: YCFailure[] = [
     redactedText: "they were subsidizing every cleaning at a loss to juice the metrics",
     descriptionAfter: ". Hit with worker misclassification lawsuits. Shut down in 2015. Adora went on to become a YC partner. Failing up, YC style.",
     bodyCount: "Thousands of cleaners reclassified",
+    domain: "homejoy.com",
     sources: [
       { label: "Forbes: Why Homejoy Failed", url: "https://www.forbes.com/sites/ellenhuet/2015/07/23/what-really-killed-homejoy/", type: "article" },
     ],
@@ -182,6 +212,7 @@ export const FAILURES: YCFailure[] = [
     redactedText: "the board replaced Ryan Petersen with a former Amazon exec, who lasted 6 months before Petersen staged a comeback coup",
     descriptionAfter: ". Post-coup, Petersen laid off 20% of the company and pivoted strategy. Valuation cratered from $8B. The boxes keep moving, but nobody knows where this ship is headed.",
     bodyCount: "600+ laid off",
+    domain: "flexport.com",
     sources: [
       { label: "Forbes: Flexport's Chaotic Leadership", url: "https://www.forbes.com/sites/kenrickcai/2023/09/14/flexport-ceo-ryan-petersen-returns/", type: "article" },
     ],
@@ -202,6 +233,7 @@ export const FAILURES: YCFailure[] = [
     redactedText: "'community-adjusted EBITDA' and spent $13 on every $1 of revenue",
     descriptionAfter: ". IPO collapsed, Neumann ousted, filed for bankruptcy in 2023. Then Neumann raised $350M for a new startup. Silicon Valley's memory is 18 months.",
     bodyCount: "8,000+ laid off",
+    domain: "wework.com",
     sources: [
       { label: "Bloomberg: WeWork Files for Bankruptcy", url: "https://www.bloomberg.com/news/articles/2023-11-06/wework-files-for-bankruptcy-after-failed-office-sharing-bet", type: "article" },
     ],
@@ -221,6 +253,7 @@ export const FAILURES: YCFailure[] = [
     redactedText: "IPO'd at a $10B valuation — a 75% haircut from peak",
     descriptionAfter: ". Still relies on gig workers with no benefits. Mehta cashed out $1.1B. The groceries got delivered; the returns did not.",
     bodyCount: "600,000+ gig workers",
+    domain: "instacart.com",
     sources: [
       { label: "CNBC: Instacart IPO Valuation Drop", url: "https://www.cnbc.com/2023/09/19/instacart-ipo-stock.html", type: "article" },
     ],
@@ -239,29 +272,9 @@ export const FAILURES: YCFailure[] = [
     redactedText: "hosted jailbait subreddits for years, enabled election interference, and CEO Steve Huffman secretly edited user comments in the database",
     descriptionAfter: ". IPO'd in 2024 at $6.4B. The moderators who kept the site running? They work for free.",
     bodyCount: "100K+ unpaid moderators",
+    domain: "reddit.com",
     sources: [
       { label: "The Verge: Reddit CEO Edited User Comments", url: "https://www.theverge.com/2016/11/23/13739026/reddit-ceo-steve-huffman-edit-comments", type: "article" },
-    ],
-  },
-  {
-    id: "delve",
-    company: "Delve",
-    founders: ["Selin Kocalar", "Karun Kaushik"],
-    batch: "W24",
-    sector: "COMPLIANCE / AI",
-    raised: "$32M",
-    valuation: "$300M",
-    status: "SCANDAL",
-    yearFounded: 2024,
-    oneLiner: "Fake compliance as a service. 493+ fabricated audit reports.",
-    description: "Claimed to automate SOC 2 and ISO compliance auditing with AI. Whistleblower revealed",
-    redactedText: "the platform auto-generated identical passing audit reports with keyboard-mashed test data before clients even uploaded anything",
-    descriptionAfter: ". CEO was caught on tape asking an auditor 'does your firm actually look at our platform?' Insight Partners scrubbed their $32M investment blog post. Also accused of taking an open source tool and passing it off as proprietary.",
-    bodyCount: "493+ fabricated reports",
-    sources: [
-      { label: "TechCrunch: Delve Whistleblower Strikes Again", url: "https://techcrunch.com/2026/03/30/delve-whistleblower-strikes-again-with-alleged-receipts-about-fake-compliance/", type: "article" },
-      { label: "Inc: The Delve Scandal", url: "https://www.inc.com/ben-sherry/the-delve-scandal-a-y-combinator-darling-just-got-hit-with-a-bombshell-fraud-accusation/", type: "article" },
-      { label: "TechCrunch: Insight Partners Scrubs Investment Post", url: "https://techcrunch.com/2026/03/23/insight-partners-scrubs-investment-post-amid-fake-allegations/", type: "article" },
     ],
   },
   {
@@ -278,6 +291,7 @@ export const FAILURES: YCFailure[] = [
     redactedText: "forked Continue.dev's open source code editor, mass-replaced all 'Continue' references with 'PearAI', and slapped on a fake license written by ChatGPT",
     descriptionAfter: ". The 'Pear Enterprise License' became a meme. YC had to publish a blog post 'correcting the record.' Founders apologized and pivoted. The license was generated by AI. The irony was not lost.",
     bodyCount: "YC's reputation took the hit",
+    domain: "trypear.ai",
     sources: [
       { label: "TechCrunch: YC Criticized for Backing Cloned Startup", url: "https://techcrunch.com/2024/09/30/y-combinator-is-being-criticized-after-it-backed-an-ai-startup-that-admits-it-basically-cloned-another-ai-startup/", type: "article" },
       { label: "YC: Correcting the Record", url: "https://www.ycombinator.com/blog/correcting-the-record", type: "article" },
@@ -299,6 +313,7 @@ export const FAILURES: YCFailure[] = [
     redactedText: "nobody wanted to watch premium content on a phone they couldn't even screenshot",
     descriptionAfter: ". Shut down after 6 months. $1.75B for a 6-month experiment. At least they had Turnstile.",
     bodyCount: "$1.75B incinerated",
+    domain: "quibi.com",
     sources: [
       { label: "WSJ: Quibi Shuts Down After Six Months", url: "https://www.wsj.com/articles/quibi-weighs-shutting-down-as-problems-mount-11603301946", type: "article" },
     ],
@@ -318,6 +333,7 @@ export const FAILURES: YCFailure[] = [
     redactedText: "planting an undercover spy inside Rippling who was paid €5,000/month by Deel's CEO to steal trade secrets",
     descriptionAfter: ". The DOJ opened a criminal investigation. Deel allegedly ran the same playbook at crypto HR startup Toku. YC uses Rippling for their own HR — awkward.",
     bodyCount: "DOJ criminal investigation opened",
+    domain: "rippling.com",
     sources: [
       { label: "CNBC: Rippling Sues Deel Over Corporate Espionage", url: "https://www.cnbc.com/2025/03/17/startup-rippling-sues-competitor-deel-claiming-a-spy-stole-sales-data.html", type: "article" },
       { label: "SF Standard: New Espionage Scandal Embroils Deel", url: "https://sfstandard.com/2025/04/29/another-startup-accuses-deel-of-trying-to-steal-trade-secrets/", type: "article" },

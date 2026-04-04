@@ -11,6 +11,65 @@ import {
 
 type SortKey = "default" | "recent" | "biggest" | "oldest" | "a-z";
 
+/* ── Company Logo ───────────────────────────────────── */
+
+function CompanyLogo({ domain, company, size = 36, dark = false }: { domain?: string; company: string; size?: number; dark?: boolean }) {
+  const [failed, setFailed] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const bg = dark ? "#333" : "#eee";
+
+  useEffect(() => {
+    if (!domain) return;
+    const img = imgRef.current;
+    if (img && img.complete && img.naturalWidth <= 32) {
+      setFailed(true);
+    }
+  }, [domain]);
+
+  const letterFallback = (
+    <div
+      style={{
+        width: size,
+        height: size,
+        borderRadius: size > 40 ? "10px" : "8px",
+        background: "var(--accent)",
+        color: "#000",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontWeight: 900,
+        fontSize: size * 0.45,
+        fontFamily: "var(--font-mono)",
+        flexShrink: 0,
+      }}
+    >
+      {company.charAt(0)}
+    </div>
+  );
+
+  if (!domain || failed) return letterFallback;
+
+  return (
+    <img
+      ref={imgRef}
+      src={`https://www.google.com/s2/favicons?domain=${domain}&sz=128`}
+      alt={`${company} logo`}
+      width={size}
+      height={size}
+      onError={() => setFailed(true)}
+      onLoad={(e) => {
+        if (e.currentTarget.naturalWidth <= 32) setFailed(true);
+      }}
+      style={{
+        borderRadius: size > 40 ? "10px" : "8px",
+        background: bg,
+        flexShrink: 0,
+        objectFit: "contain",
+      }}
+    />
+  );
+}
+
 /* ── Search Modal ────────────────────────────────────── */
 
 function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -210,9 +269,12 @@ function FeaturedCard({ failure }: { failure: YCFailure }) {
           <span className="pill-outline">(FEATURED FAILURE)</span>
           <span className="pill-outline" style={{ color: "var(--accent)", borderColor: "var(--accent)" }}>MUSEUM CHOICE</span>
         </div>
-        <h2 className="text-hero" style={{ margin: "1rem 0", fontFamily: "var(--font-serif)", fontStyle: "italic", fontWeight: 400, letterSpacing: "-0.02em" }}>
-          {failure.company}
-        </h2>
+        <div className="flex items-center gap-4" style={{ margin: "1rem 0" }}>
+          <CompanyLogo domain={failure.domain} company={failure.company} size={48} dark />
+          <h2 className="text-hero" style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontWeight: 400, letterSpacing: "-0.02em" }}>
+            {failure.company}
+          </h2>
+        </div>
         <p className="text-mono" style={{ color: "var(--accent)", fontSize: "1.2rem", marginBottom: "2rem" }}>
           {failure.oneLiner}
         </p>
@@ -245,7 +307,10 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
           <span className="pill-outline">(BATCH {failure.batch !== "—" ? failure.batch : "ADJ"})</span>
           <span className="pill-outline">(EXHIBIT {String(index + 1).padStart(3, "0")})</span>
         </div>
-        <h2 className="text-xl" style={{ marginBottom: "1rem" }}>{failure.company}</h2>
+        <div className="flex items-center gap-3" style={{ marginBottom: "1rem" }}>
+          <CompanyLogo domain={failure.domain} company={failure.company} size={36} />
+          <h2 className="text-xl">{failure.company}</h2>
+        </div>
         <p className="text-mono" style={{ color: "var(--accent)", fontSize: "1.2rem", marginBottom: "2rem" }}>
           {failure.oneLiner}
         </p>
