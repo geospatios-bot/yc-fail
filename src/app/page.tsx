@@ -347,29 +347,40 @@ export default function Home() {
     <>
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      {/* Mobile header */}
-      <div className="flex lg:hidden flex-col" style={{ marginBottom: "var(--gap)", gap: "12px" }}>
+      {/* Mobile sticky header */}
+      <div
+        className="flex lg:hidden flex-col"
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+          background: "var(--bg)",
+          padding: "12px 16px",
+          margin: "-16px -16px 0",
+          gap: "10px",
+          borderBottom: "2px solid #222",
+        }}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center" style={{ width: "32px", height: "32px", background: "var(--accent)", borderRadius: "8px" }}>
-              <span style={{ color: "white", fontSize: "11px", fontWeight: 900 }}>YC</span>
+            <div className="flex items-center justify-center" style={{ width: "28px", height: "28px", background: "var(--accent)", borderRadius: "6px" }}>
+              <span style={{ color: "white", fontSize: "10px", fontWeight: 900 }}>YC</span>
             </div>
-            <span style={{ fontWeight: 900, color: "white", fontSize: "1.1rem" }}>.FAIL</span>
+            <span style={{ fontWeight: 900, color: "white", fontSize: "1rem" }}>.FAIL</span>
           </div>
           <div className="flex items-center gap-2">
             <a
               href="https://x.com/NotOnKetamine"
               target="_blank"
               rel="noopener noreferrer"
-              className="pill-outline"
-              style={{ color: "var(--accent)", borderColor: "var(--accent)", fontSize: "0.6rem", textDecoration: "none" }}
+              style={{ color: "var(--accent)", fontSize: "0.7rem", fontWeight: 700, textDecoration: "none", fontFamily: "var(--font-mono)" }}
             >
               @NOTONKETAMINE
             </a>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="pill-solid accent"
-              style={{ fontSize: "0.65rem" }}
+              style={{ fontSize: "0.6rem", padding: "3px 10px" }}
             >
               {sidebarOpen ? "CLOSE" : "MENU"}
             </button>
@@ -377,13 +388,28 @@ export default function Home() {
         </div>
         <button
           onClick={() => setSearchOpen(true)}
-          className="pill-solid"
-          style={{ width: "100%", justifyContent: "center", padding: "10px 16px", fontSize: "0.85rem", gap: "8px" }}
+          className="flex items-center"
+          style={{
+            width: "100%",
+            padding: "10px 14px",
+            background: "#111",
+            border: "2px solid #333",
+            borderRadius: "var(--radius-pill)",
+            color: "#666",
+            fontFamily: "var(--font-mono)",
+            fontSize: "0.8rem",
+            fontWeight: 700,
+            textTransform: "uppercase",
+            gap: "8px",
+            cursor: "pointer",
+          }}
         >
-          SEARCH EXHIBITS
-          <kbd style={{ fontSize: "0.65rem", opacity: 0.5, border: "1px solid rgba(255,255,255,0.3)", padding: "1px 6px", borderRadius: "4px" }}>⌘K</kbd>
+          <span style={{ color: "var(--accent)", fontSize: "1rem" }}>→</span>
+          Search exhibits...
+          <kbd style={{ marginLeft: "auto", fontSize: "0.6rem", color: "#555", border: "1px solid #333", padding: "1px 6px", borderRadius: "4px" }}>⌘K</kbd>
         </button>
       </div>
+      <div className="lg:hidden" style={{ height: "16px" }} />
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
