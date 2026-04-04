@@ -141,7 +141,7 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
           </div>
           <h1>YCOMBINATOR.FYI</h1>
           <p className="text-mono" style={{ fontSize: "0.8rem" }}>
-            A Museum of Unicorn Corpses.<br />Not affiliated with Y Combinator.
+            What Y Combinator doesn&apos;t put on Demo Day slides.<br />Not affiliated with Y Combinator.
           </p>
         </div>
 
@@ -149,9 +149,9 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
         <div className="stat-grid">
           {[
             { value: stats.totalRaised, label: "Capital Incinerated" },
-            { value: stats.totalCompanies, label: "Corpses Logged" },
+            { value: stats.totalCompanies, label: "Exhibits Filed" },
             { value: `${stats.totalFraud + stats.totalScandal}`, label: "Fraud & Scandal" },
-            { value: "0", label: "Lessons Learned" },
+            { value: `${stats.totalCopycat + stats.totalGrift}`, label: "Copycats & Grifts" },
           ].map((s) => (
             <div key={s.label} className="stat-cell">
               <div className="stat-value">{s.value}</div>
@@ -325,7 +325,7 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
               {failure.status}
             </span>
             <span className="toggle-empty" style={isAccentMeta ? { color: "var(--border-color)" } : undefined}>
-              {failure.status === "DEAD" || failure.status === "FRAUD" ? "ALIVE" : "OK"}
+              {failure.status === "DEAD" || failure.status === "FRAUD" ? "ALIVE" : failure.status === "COPYCAT" ? "ORIGINAL" : failure.status === "GRIFT" ? "LEGIT" : "OK"}
             </span>
           </div>
         </div>

@@ -1,4 +1,4 @@
-export type Status = "FRAUD" | "DEAD" | "ZOMBIE" | "SCANDAL";
+export type Status = "FRAUD" | "DEAD" | "ZOMBIE" | "SCANDAL" | "COPYCAT" | "GRIFT";
 
 export interface YCFailure {
   id: string;
@@ -26,6 +26,8 @@ export const STATUS_CONFIG: Record<Status, { label: string; color: string; bg: s
   DEAD: { label: "DEAD", color: "#000000", bg: "transparent" },
   ZOMBIE: { label: "ZOMBIE", color: "#92400e", bg: "transparent" },
   SCANDAL: { label: "SCANDAL", color: "#7c3aed", bg: "transparent" },
+  COPYCAT: { label: "COPYCAT", color: "#0891b2", bg: "transparent" },
+  GRIFT: { label: "GRIFT", color: "#e11d48", bg: "transparent" },
 };
 
 export const FAILURES: YCFailure[] = [
@@ -284,7 +286,7 @@ export const FAILURES: YCFailure[] = [
     batch: "W24",
     sector: "AI / DEVTOOLS",
     raised: "$1.25M",
-    status: "SCANDAL",
+    status: "COPYCAT",
     yearFounded: 2024,
     oneLiner: "Forked an open-source code editor, slapped their name on it, called it a startup.",
     description: "On Day 1 of YC Demo Day, the internet noticed that PearAI had",
@@ -347,7 +349,7 @@ export const FAILURES: YCFailure[] = [
     batch: "S24",
     sector: "PAYROLL / HR",
     raised: "$8.6M",
-    status: "SCANDAL",
+    status: "COPYCAT",
     yearFounded: 2023,
     yearDied: 2026,
     oneLiner: "Signed up as a Warp customer, stole the playbook, launched a clone",
@@ -359,6 +361,25 @@ export const FAILURES: YCFailure[] = [
       { label: "Ayush Sharma: 'gg no re' Thread on Central Copying Warp", url: "https://x.com/ayushswrites", type: "twitter" },
       { label: "TechCrunch: YC Often Backs Startups That Duplicate Other YC Companies", url: "https://techcrunch.com/2024/11/22/y-combinator-often-backs-startups-that-duplicate-other-yc-companies-data-shows-its-not-just-ai-code-editors/", type: "article" },
       { label: "TechCrunch: Warp Disavows Affiliate Who Posted About White Superiority", url: "https://techcrunch.com/2024/09/07/payroll-startup-warp-disavows-affiliate-who-posted-about-white-superiority/", type: "article" },
+    ],
+  },
+  {
+    id: "gdpmaxxing",
+    company: "GDPmaxxing",
+    founders: ["Every B2B YC Batch"],
+    batch: "—",
+    sector: "SYSTEMIC",
+    raised: "$0",
+    status: "GRIFT",
+    yearFounded: 2012,
+    oneLiner: "YC companies selling to each other to fake ARR before fundraising",
+    description: "An open secret in Silicon Valley: YC B2B startups form revenue rings, becoming each other's customers to",
+    redactedText: "inflate ARR to $1M+ within 30 days of batch, making metrics look real enough to raise a Series A from investors who don't ask where the revenue comes from",
+    descriptionAfter: ". Paul Graham acknowledged it happens: 'If they form rings to do this, that's bad, and the partners crack down hard on it.' Critics call it the 'YC Ponzi scheme.' Someone even created a satirical startup called 'ShadowARR' — 'We help YC-backed companies swap revenue with each other. Indistinguishable from real customers!' The joke hit too close to home.",
+    sources: [
+      { label: "@samhogan: The YC B2B SaaS Playbook (3.5K likes)", url: "https://x.com/samhogan", type: "twitter" },
+      { label: "@blakeandersonw: ShadowARR Satire (350+ likes)", url: "https://x.com/blakeandersonw", type: "twitter" },
+      { label: "HN: 90% of B2B YC Companies Have 50% Revenue From Other YC Companies", url: "https://news.ycombinator.com/item?id=38502012", type: "article" },
     ],
   },
 ];
@@ -385,6 +406,8 @@ export function computeStats() {
     totalDead: FAILURES.filter((f) => f.status === "DEAD").length,
     totalZombie: FAILURES.filter((f) => f.status === "ZOMBIE").length,
     totalScandal: FAILURES.filter((f) => f.status === "SCANDAL").length,
+    totalCopycat: FAILURES.filter((f) => f.status === "COPYCAT").length,
+    totalGrift: FAILURES.filter((f) => f.status === "GRIFT").length,
     totalRaised: `$${(totalRaised / 1_000_000_000).toFixed(1)}B`,
   };
 }

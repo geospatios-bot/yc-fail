@@ -22,21 +22,21 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "YCOMBINATOR.FYI — Museum of Unicorn Corpses",
+  title: "YCOMBINATOR.FYI — The Unofficial YC Record",
   description:
-    "A curated exhibition of Y Combinator's most spectacular failures, frauds, and flameouts. $30B+ in capital. Gone.",
+    "What Y Combinator doesn't put on Demo Day slides. Fraud, copycats, grifts, and failures — all sourced, all public record.",
   openGraph: {
-    title: "YCOMBINATOR.FYI — Museum of Unicorn Corpses",
+    title: "YCOMBINATOR.FYI — The Unofficial YC Record",
     description:
-      "A curated exhibition of Y Combinator's most spectacular failures, frauds, and flameouts.",
+      "What Y Combinator doesn't put on Demo Day slides. Fraud, copycats, grifts, and failures.",
     siteName: "YCOMBINATOR.FYI",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "YCOMBINATOR.FYI — Museum of Unicorn Corpses",
+    title: "YCOMBINATOR.FYI — The Unofficial YC Record",
     description:
-      "A curated exhibition of Y Combinator's most spectacular failures, frauds, and flameouts.",
+      "What Y Combinator doesn't put on Demo Day slides. Fraud, copycats, grifts, and failures.",
   },
 };
 
