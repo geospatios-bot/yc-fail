@@ -40,15 +40,15 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
     : [];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/90 backdrop-blur-xl sidebar-backdrop" />
+    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[20vh]" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60" style={{ backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }} />
       <div
-        className="relative w-full max-w-xl mx-4 overflow-hidden sidebar-slide"
-        style={{ background: "#0a0a0a", border: "2px solid var(--accent)", borderRadius: "var(--radius-md)", boxShadow: "0 0 60px rgba(255,102,0,0.15)" }}
+        className="relative w-full max-w-2xl mx-6 overflow-hidden"
+        style={{ background: "#111", border: "1px solid #333", borderRadius: "12px", boxShadow: "0 25px 50px rgba(0,0,0,0.5)" }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center px-5 py-4" style={{ borderBottom: "2px solid #222" }}>
-          <span style={{ color: "var(--accent)", marginRight: "12px", fontWeight: 900, fontSize: "1.1rem" }}>⌕</span>
+        <div className="flex items-center gap-3 px-4 py-3" style={{ borderBottom: "1px solid #222" }}>
+          <span style={{ color: "#666", fontSize: "1rem" }}>⌕</span>
           <input
             ref={inputRef}
             type="text"
@@ -56,9 +56,9 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search exhibits..."
             className="flex-1 bg-transparent outline-none"
-            style={{ cursor: "text", color: "#fff", fontSize: "1.05rem", fontWeight: 600 }}
+            style={{ cursor: "text", color: "#fff", fontSize: "0.95rem", fontWeight: 400 }}
           />
-          <kbd style={{ fontSize: "0.6rem", padding: "3px 10px", borderRadius: "6px", border: "1px solid #444", color: "#666", fontFamily: "var(--font-mono)", fontWeight: 700, background: "#1a1a1a" }}>ESC</kbd>
+          <kbd style={{ fontSize: "0.55rem", padding: "2px 6px", borderRadius: "4px", border: "1px solid #333", color: "#555", fontFamily: "var(--font-mono)", fontWeight: 600, background: "#1a1a1a" }}>ESC</kbd>
         </div>
         {results.length > 0 && (
           <div style={{ maxHeight: "300px", overflowY: "auto" }}>
@@ -72,15 +72,15 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
                     document.getElementById(`exhibit-${f.id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
                   }, 100);
                 }}
-                className="w-full flex items-center justify-between px-5 py-3 text-left"
-                style={{ borderBottom: "1px solid #222", transition: "background 0.15s" }}
+                className="w-full flex items-center justify-between px-4 py-3 text-left"
+                style={{ borderBottom: "1px solid #1a1a1a", transition: "background 0.15s" }}
                 onMouseEnter={(e) => e.currentTarget.style.background = "#1a1a1a"}
                 onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
               >
                 <div>
-                  <div style={{ fontWeight: 900, fontSize: "0.9rem", textTransform: "uppercase", color: "#fff" }}>{f.company}</div>
-                  <div style={{ fontSize: "0.65rem", color: "#666", marginTop: "2px", fontFamily: "var(--font-mono)", fontWeight: 700, textTransform: "uppercase" }}>
-                    {f.batch} / {f.sector}
+                  <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#fff" }}>{f.company}</div>
+                  <div style={{ fontSize: "0.65rem", color: "#555", marginTop: "2px", fontFamily: "var(--font-mono)", fontWeight: 500 }}>
+                    {f.batch} · {f.sector}
                   </div>
                 </div>
                 <span className="pill-solid accent" style={{ fontSize: "0.6rem" }}>{f.status}</span>
@@ -89,7 +89,7 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
           </div>
         )}
         {q.length > 0 && results.length === 0 && (
-          <div style={{ padding: "2rem", textAlign: "center", color: "#555", fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "0.85rem", textTransform: "uppercase" }}>
+          <div style={{ padding: "2rem", textAlign: "center", color: "#444", fontSize: "0.85rem", fontWeight: 400 }}>
             No corpses found. Maybe they got away with it.
           </div>
         )}
