@@ -483,3 +483,120 @@ h1, h2, h3 {
 .layout-grid > aside > * {
   flex-shrink: 0;
 }
+
+/* ── Search modal (cmd-k) ─────────────────────────── */
+.search-modal {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 48px);
+  max-width: 560px;
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.03),
+    0 16px 70px rgba(0,0,0,0.6);
+  animation: searchIn 0.15s ease-out;
+}
+
+@keyframes searchIn {
+  from { opacity: 0; transform: translateX(-50%) scale(0.98); }
+  to   { opacity: 1; transform: translateX(-50%) scale(1); }
+}
+
+.search-modal-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.search-modal-input input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: text;
+}
+
+.search-modal-input input::placeholder {
+  color: #555;
+}
+
+.search-modal-input kbd {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #555;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 5px;
+  padding: 3px 7px;
+  line-height: 1;
+}
+
+.search-modal-results {
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.search-modal-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.1s;
+  border-bottom: 1px solid #1e1e1e;
+}
+
+.search-modal-result:last-child {
+  border-bottom: none;
+}
+
+.search-modal-result:hover {
+  background: #1e1e1e;
+}
+
+.search-result-name {
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #eee;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.search-result-meta {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #555;
+  margin-left: 10px;
+  font-weight: 600;
+}
+
+.search-result-status {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.search-modal-empty {
+  padding: 32px 20px;
+  text-align: center;
+  color: #444;
+  font-size: 0.85rem;
+}

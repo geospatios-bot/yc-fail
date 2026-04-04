@@ -40,57 +40,60 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
     : [];
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[20vh]" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/60" style={{ backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }} />
+    <div
+      className="fixed inset-0 z-[100]"
+      onClick={onClose}
+      style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
+    >
       <div
-        className="relative w-full max-w-2xl mx-6 overflow-hidden"
-        style={{ background: "#111", border: "1px solid #333", borderRadius: "12px", boxShadow: "0 25px 50px rgba(0,0,0,0.5)" }}
+        className="search-modal"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center gap-3 px-4 py-3" style={{ borderBottom: "1px solid #222" }}>
-          <span style={{ color: "#666", fontSize: "1rem" }}>⌕</span>
+        {/* Input row */}
+        <div className="search-modal-input">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2.5" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search exhibits..."
-            className="flex-1 bg-transparent outline-none"
-            style={{ cursor: "text", color: "#fff", fontSize: "0.95rem", fontWeight: 400 }}
           />
-          <kbd style={{ fontSize: "0.55rem", padding: "2px 6px", borderRadius: "4px", border: "1px solid #333", color: "#555", fontFamily: "var(--font-mono)", fontWeight: 600, background: "#1a1a1a" }}>ESC</kbd>
+          <kbd>ESC</kbd>
         </div>
+
+        {/* Results */}
         {results.length > 0 && (
-          <div style={{ maxHeight: "300px", overflowY: "auto" }}>
-            {results.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                onClick={() => {
-                  onClose();
-                  setTimeout(() => {
-                    document.getElementById(`exhibit-${f.id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
-                  }, 100);
-                }}
-                className="w-full flex items-center justify-between px-4 py-3 text-left"
-                style={{ borderBottom: "1px solid #1a1a1a", transition: "background 0.15s" }}
-                onMouseEnter={(e) => e.currentTarget.style.background = "#1a1a1a"}
-                onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-              >
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: "0.85rem", color: "#fff" }}>{f.company}</div>
-                  <div style={{ fontSize: "0.65rem", color: "#555", marginTop: "2px", fontFamily: "var(--font-mono)", fontWeight: 500 }}>
-                    {f.batch} · {f.sector}
+          <div className="search-modal-results">
+            {results.map((f) => {
+              const cfg = STATUS_CONFIG[f.status];
+              return (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    setTimeout(() => {
+                      document.getElementById(`exhibit-${f.id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }, 100);
+                  }}
+                  className="search-modal-result"
+                >
+                  <div>
+                    <span className="search-result-name">{f.company}</span>
+                    <span className="search-result-meta">{f.batch} · {f.sector}</span>
                   </div>
-                </div>
-                <span className="pill-solid accent" style={{ fontSize: "0.6rem" }}>{f.status}</span>
-              </button>
-            ))}
+                  <span className="search-result-status" style={{ color: cfg.color }}>{f.status}</span>
+                </button>
+              );
+            })}
           </div>
         )}
+
+        {/* Empty state */}
         {q.length > 0 && results.length === 0 && (
-          <div style={{ padding: "2rem", textAlign: "center", color: "#444", fontSize: "0.85rem", fontWeight: 400 }}>
-            No corpses found. Maybe they got away with it.
+          <div className="search-modal-empty">
+            No corpses match that query.
           </div>
         )}
       </div>
