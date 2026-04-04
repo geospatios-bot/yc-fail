@@ -187,7 +187,7 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
 function FeaturedCard({ failure }: { failure: YCFailure }) {
   return (
     <div className="block block--dark">
-      <div className="block-inner" style={{ padding: "4rem 3rem" }}>
+      <div className="block-inner--hero">
         <div className="label-group">
           <span className="pill-outline">(FEATURED FAILURE)</span>
           <span className="pill-outline" style={{ color: "var(--accent)", borderColor: "var(--accent)" }}>MUSEUM CHOICE</span>

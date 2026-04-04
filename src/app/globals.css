@@ -88,7 +88,23 @@ body {
 }
 
 .block-inner {
-  padding: 2rem;
+  padding: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .block-inner {
+    padding: 2rem;
+  }
+}
+
+.block-inner--hero {
+  padding: 2rem 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .block-inner--hero {
+    padding: 4rem 3rem;
+  }
 }
 
 /* Divider */
@@ -187,13 +203,25 @@ h1, h2, h3 {
 }
 
 .logo-block {
-  padding: 2rem 1.5rem;
+  padding: 1.5rem 1rem;
   text-align: center;
 }
 
+@media (min-width: 768px) {
+  .logo-block {
+    padding: 2rem 1.5rem;
+  }
+}
+
 .logo-block h1 {
-  font-size: 4rem;
+  font-size: 3rem;
   margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .logo-block h1 {
+    font-size: 4rem;
+  }
 }
 
 .stat-grid {
@@ -245,8 +273,14 @@ h1, h2, h3 {
 }
 
 .exhibit-content {
-  padding: 3rem;
+  padding: 1.5rem;
   border-right: var(--border-w) solid var(--border-color);
+}
+
+@media (min-width: 768px) {
+  .exhibit-content {
+    padding: 3rem;
+  }
 }
 
 @media (max-width: 1200px) {
@@ -258,10 +292,16 @@ h1, h2, h3 {
 
 .exhibit-meta {
   background-color: var(--surface-gray);
-  padding: 3rem 2rem;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .exhibit-meta {
+    padding: 3rem 2rem;
+  }
 }
 
 .exhibit-meta.accent-bg {
