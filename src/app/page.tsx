@@ -40,7 +40,7 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div
-        className="relative w-full max-w-lg mx-4 block overflow-hidden"
+        className="relative w-full max-w-lg mx-4 overflow-hidden"
         style={{ background: "var(--surface-white)", border: "var(--border-w) solid var(--border-color)", borderRadius: "var(--radius-lg)" }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -348,14 +348,14 @@ export default function Home() {
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
 
       {/* Mobile header */}
-      <div className="lg:hidden" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--gap)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div style={{ width: "32px", height: "32px", background: "var(--accent)", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div className="flex lg:hidden items-center justify-between" style={{ marginBottom: "var(--gap)" }}>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center" style={{ width: "32px", height: "32px", background: "var(--accent)", borderRadius: "8px" }}>
             <span style={{ color: "white", fontSize: "11px", fontWeight: 900 }}>YC</span>
           </div>
           <span style={{ fontWeight: 900, color: "white", fontSize: "1.1rem" }}>.FAIL</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <div className="flex items-center gap-2">
           <button onClick={() => setSearchOpen(true)} className="pill-outline" style={{ color: "white", borderColor: "rgba(255,255,255,0.4)", fontSize: "0.6rem" }}>
             Search ⌘K
           </button>
@@ -371,7 +371,7 @@ export default function Home() {
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
-        <div className="lg:hidden" style={{ marginBottom: "var(--gap)", display: "flex", flexDirection: "column", gap: "var(--gap)" }}>
+        <div className="flex lg:hidden flex-col" style={{ marginBottom: "var(--gap)", gap: "var(--gap)" }}>
           <SidebarContent onOpenSearch={() => { setSidebarOpen(false); setSearchOpen(true); }} />
         </div>
       )}
@@ -379,7 +379,7 @@ export default function Home() {
       {/* Layout grid */}
       <div className="layout-grid">
         {/* Sidebar — desktop only */}
-        <aside className="sidebar hidden lg:flex">
+        <aside className="hidden lg:flex flex-col sticky top-[var(--gap)]" style={{ gap: "var(--gap)" }}>
           <SidebarContent onOpenSearch={() => setSearchOpen(true)} />
         </aside>
 

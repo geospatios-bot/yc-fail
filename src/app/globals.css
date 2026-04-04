@@ -182,7 +182,6 @@ h1, h2, h3 {
 .sidebar {
   position: sticky;
   top: var(--gap);
-  display: flex;
   flex-direction: column;
   gap: var(--gap);
 }
