@@ -340,6 +340,27 @@ export const FAILURES: YCFailure[] = [
       { label: "TechCrunch: Rippling Raises $450M, Reveals YC Is a Customer", url: "https://techcrunch.com/2025/05/09/rippling-raises-450m-at-a-16-8b-valuation-reveals-yc-is-a-customer/", type: "article" },
     ],
   },
+  {
+    id: "central",
+    company: "Central",
+    founders: ["Nilay Modi", "Pranav Kashyap", "Josh Wymer"],
+    batch: "S24",
+    sector: "PAYROLL / HR",
+    raised: "$8.6M",
+    status: "SCANDAL",
+    yearFounded: 2023,
+    yearDied: 2026,
+    oneLiner: "Signed up as a Warp customer, stole the playbook, launched a clone",
+    description: "Central's CEO signed up as a customer of fellow YC company Warp in 2023 under 'Central Business Applications Inc.' Spent six months asking how tax compliance works, what registered agents are, how multi-state filings work — then churned and launched",
+    redactedText: "an identical payroll startup with Warp's exact marketing copy, down to the tagline 'designed for founders, not HR'",
+    descriptionAfter: ". YC funded them anyway in S24, despite Warp already being in the portfolio. Central got acqui-hired by Mercury in April 2026. Warp CEO Ayush Sharma publicly called them out: 'gg no re.'",
+    bodyCount: "Acqui-hired by Mercury",
+    sources: [
+      { label: "Ayush Sharma: 'gg no re' Thread on Central Copying Warp", url: "https://x.com/ayushswrites", type: "twitter" },
+      { label: "TechCrunch: YC Often Backs Startups That Duplicate Other YC Companies", url: "https://techcrunch.com/2024/11/22/y-combinator-often-backs-startups-that-duplicate-other-yc-companies-data-shows-its-not-just-ai-code-editors/", type: "article" },
+      { label: "TechCrunch: Warp Disavows Affiliate Who Posted About White Superiority", url: "https://techcrunch.com/2024/09/07/payroll-startup-warp-disavows-affiliate-who-posted-about-white-superiority/", type: "article" },
+    ],
+  },
 ];
 
 /** Parse "$1.8B" / "$200M" / "$10B+ (via GM)" into a raw number */
