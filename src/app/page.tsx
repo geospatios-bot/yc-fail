@@ -469,7 +469,7 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
 
 export default function Home() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const [sort, setSort] = useState<SortKey>("severity");
+  const [sort, setSort] = useState<SortKey>("recent");
   const [filter, setFilter] = useState<string | null>(null);
   const [eraFilter, setEraFilter] = useState<Era | null>(null);
 
