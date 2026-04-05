@@ -237,7 +237,18 @@ function CopyLinkButton({ id, dark }: { id: string; dark?: boolean }) {
 function FeaturedCard({ failure }: { failure: YCFailure }) {
   return (
     <div id={`exhibit-${failure.id}`} className="block block--dark">
-      <div className="block-inner--hero">
+      {/* Hero image */}
+      {failure.imageUrl && (
+        <div style={{ position: "relative", width: "100%", height: "280px", overflow: "hidden" }}>
+          <img
+            src={failure.imageUrl}
+            alt={`${failure.company} team`}
+            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%", filter: "grayscale(100%) contrast(1.1)", opacity: 0.4 }}
+          />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 30%, #222 100%)" }} />
+        </div>
+      )}
+      <div className="block-inner--hero" style={failure.imageUrl ? { marginTop: "-80px", position: "relative" } : undefined}>
         <div className="label-group">
           <span className="pill-outline">(FEATURED FAILURE)</span>
           <span className="pill-outline" style={{ color: "var(--accent)", borderColor: "var(--accent)" }}>MUSEUM CHOICE</span>

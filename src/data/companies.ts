@@ -47,6 +47,7 @@ export const FAILURES: YCFailure[] = [
     descriptionAfter: ". CEO was caught on tape asking an auditor 'does your firm actually look at our platform?' Focused on selling to other YC companies who trusted the YC brand — the circular trust network weaponized. Insight Partners scrubbed their $32M investment blog post. YC officially expelled Delve in 2026. Investor Adam Cochran called it proof that YC has 'no technical acumen to evaluate claims' under Garry Tan's leadership.",
     bodyCount: "493+ fabricated reports",
     domain: "delve.co",
+    imageUrl: "/images/delve-hero.jpeg",
     sources: [
       { label: "TechCrunch: Delve Whistleblower Strikes Again", url: "https://techcrunch.com/2026/03/30/delve-whistleblower-strikes-again-with-alleged-receipts-about-fake-compliance/", type: "article" },
       { label: "Inc: The Delve Scandal", url: "https://www.inc.com/ben-sherry/the-delve-scandal-a-y-combinator-darling-just-got-hit-with-a-bombshell-fraud-accusation/", type: "article" },
