@@ -125,8 +125,9 @@ function SidebarContent({ onOpenSearch, activeFilter, onFilter }: { onOpenSearch
           <div className="label-group" style={{ justifyContent: "center", marginBottom: "1.5rem" }}>
             <span className="pill-outline" style={{ borderColor: "var(--border-color)" }}>(OFFICIAL ARCHIVE)</span>
           </div>
+          <h1>YCOMBINATOR.FYI</h1>
           {/* YC Badge */}
-          <div className="flex items-center justify-center" style={{ marginBottom: "1.25rem" }}>
+          <div className="flex items-center justify-center" style={{ marginTop: "1.25rem" }}>
             <div className="yc-badge flex items-center" style={{ gap: "8px", background: "#000", borderRadius: "999px", padding: "6px 16px", border: "2px solid #333", cursor: "pointer" }}>
               <span style={{ fontSize: "1rem", fontWeight: 400, color: "#888", fontFamily: "var(--font-sans)", textTransform: "none", letterSpacing: "0", lineHeight: 1 }}>
                 <span className="not-text">Not </span>Backed by
@@ -140,10 +141,6 @@ function SidebarContent({ onOpenSearch, activeFilter, onFilter }: { onOpenSearch
               </span>
             </div>
           </div>
-          <h1>YCOMBINATOR.FYI</h1>
-          <p className="text-mono" style={{ fontSize: "0.8rem" }}>
-            What Y Combinator doesn&apos;t put on Demo Day slides.
-          </p>
         </div>
 
         {/* Stat grid */}
@@ -190,24 +187,24 @@ function SidebarContent({ onOpenSearch, activeFilter, onFilter }: { onOpenSearch
           </div>
           <h3 className="text-lg" style={{ marginBottom: "1rem" }}>Categories</h3>
           {topSectors.map(([sector, count]) => (
-            <button
+            <div
               key={sector}
               className="data-row"
               onClick={() => onFilter(activeFilter === sector ? null : sector)}
-              style={{ cursor: "pointer", background: "none", border: "none", width: "100%", textAlign: "left", opacity: activeFilter && activeFilter !== sector ? 0.4 : 1, transition: "opacity 0.15s" }}
+              style={{ cursor: "pointer", opacity: activeFilter && activeFilter !== sector ? 0.4 : 1, transition: "opacity 0.15s" }}
             >
               <span className="text-mono">{sector}</span>
-              <span className={activeFilter === sector ? "pill-solid accent" : "pill-solid accent"}>{count}</span>
-            </button>
+              <span className="pill-solid accent">{count}</span>
+            </div>
           ))}
-          <button
+          <div
             className="data-row"
             onClick={() => onFilter(null)}
-            style={{ cursor: "pointer", background: "none", border: "none", width: "100%", textAlign: "left", opacity: activeFilter ? 0.4 : 1, transition: "opacity 0.15s" }}
+            style={{ cursor: "pointer", opacity: activeFilter ? 0.4 : 1, transition: "opacity 0.15s" }}
           >
             <span className="text-mono">ALL</span>
             <span className="pill-solid">{FAILURES.length}</span>
-          </button>
+          </div>
         </div>
       </div>
     </>
@@ -282,6 +279,8 @@ function FeaturedCard({ failure }: { failure: YCFailure }) {
 /* ── Exhibit Card ────────────────────────────────────── */
 
 function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) {
+  const isAccent = failure.status === "FRAUD" || failure.status === "SCANDAL";
+
   return (
     <div id={`exhibit-${failure.id}`} className="block exhibit-card">
       {/* Content */}
@@ -316,36 +315,42 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
         )}
       </div>
 
-      {/* Meta sidebar */}
-      <div className="exhibit-meta">
+      {/* Meta sidebar — orange for FRAUD/SCANDAL, gray for others */}
+      <div className={`exhibit-meta ${isAccent ? "accent-bg" : ""}`}>
         <div>
-          <div className="text-mono" style={{ color: "#666", fontSize: "0.7rem", marginBottom: "0.5rem" }}>
+          <div className="text-mono" style={{ color: isAccent ? "var(--border-color)" : "#666", fontSize: "0.7rem", marginBottom: "0.5rem" }}>
             STATUS
           </div>
-          <div className="status-toggle">
-            <span className="toggle-pill" style={{ background: "var(--accent)", color: "#000" }}>
+          <div className="status-toggle" style={isAccent ? { background: "rgba(0,0,0,0.1)" } : undefined}>
+            <span
+              className="toggle-pill"
+              style={isAccent
+                ? { background: "var(--border-color)", color: "var(--surface-white)" }
+                : { background: "var(--accent)", color: "#000" }
+              }
+            >
               {failure.status}
             </span>
-            <span className="toggle-empty">
+            <span className="toggle-empty" style={isAccent ? { color: "var(--border-color)" } : undefined}>
               {failure.status === "DEAD" || failure.status === "FRAUD" ? "ALIVE" : failure.status === "COPYCAT" ? "ORIGINAL" : failure.status === "GRIFT" ? "LEGIT" : "OK"}
             </span>
           </div>
         </div>
 
-        <div className="divider" style={{ margin: 0 }} />
+        <div className="divider" style={{ margin: 0, background: isAccent ? "rgba(0,0,0,0.2)" : undefined }} />
 
         <div>
-          <div className="data-row">
+          <div className="data-row" style={isAccent ? { borderColor: "rgba(0,0,0,0.2)" } : undefined}>
             <span className="text-mono" style={{ fontSize: "0.75rem" }}>Capital Raised</span>
             <span className="text-mono" style={{ fontSize: "1rem" }}>{failure.raised}</span>
           </div>
           {failure.valuation && (
-            <div className="data-row">
+            <div className="data-row" style={isAccent ? { borderColor: "rgba(0,0,0,0.2)" } : undefined}>
               <span className="text-mono" style={{ fontSize: "0.75rem" }}>Peak Value</span>
               <span className="text-mono" style={{ fontSize: "1rem" }}>{failure.valuation}</span>
             </div>
           )}
-          <div className="data-row">
+          <div className="data-row" style={isAccent ? { borderColor: "rgba(0,0,0,0.2)" } : undefined}>
             <span className="text-mono" style={{ fontSize: "0.75rem" }}>Lifespan</span>
             <span className="text-mono" style={{ fontSize: "1rem" }}>
               {failure.yearDied
@@ -358,9 +363,9 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
         {/* Sources */}
         {failure.sources.length > 0 && (
           <>
-            <div className="divider" style={{ margin: 0 }} />
+            <div className="divider" style={{ margin: 0, background: isAccent ? "rgba(0,0,0,0.2)" : undefined }} />
             <div>
-              <div className="text-mono" style={{ fontSize: "0.65rem", color: "#666", marginBottom: "0.5rem" }}>
+              <div className="text-mono" style={{ fontSize: "0.65rem", color: isAccent ? "var(--border-color)" : "#666", marginBottom: "0.5rem" }}>
                 SOURCES
               </div>
               {failure.sources.slice(0, 2).map((s, i) => (
