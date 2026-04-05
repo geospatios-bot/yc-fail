@@ -2,40 +2,98 @@
 
 import { useState, useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
-import { PRESIDENTS, getPresident } from "@/data/eras";
+import { FAILURES } from "@/data/companies";
+import { PRESIDENTS, getEra } from "@/data/eras";
 
-/* ── Real YC Data ───────────────────────────────────── */
+/* ── Derive scandal data from FAILURES ─────────────── */
 
-const CHART_DATA = [
-  { year: 2005, batch: 11, incidents: [] as string[] },
-  { year: 2006, batch: 18, incidents: [] as string[] },
-  { year: 2007, batch: 32, incidents: [] as string[] },
-  { year: 2008, batch: 43, incidents: [] as string[] },
-  { year: 2009, batch: 42, incidents: [] as string[] },
-  { year: 2010, batch: 62, incidents: [] as string[] },
-  { year: 2011, batch: 106, incidents: [] as string[] },
-  { year: 2012, batch: 148, incidents: [] as string[] },
-  { year: 2013, batch: 98, incidents: [] as string[] },
-  { year: 2014, batch: 155, incidents: [] as string[] },
-  { year: 2015, batch: 217, incidents: ["Zenefits fraud — fake insurance licenses"] },
-  { year: 2016, batch: 230, incidents: [] as string[] },
-  { year: 2017, batch: 242, incidents: ["IRL launches (95% bot users revealed later)"] },
-  { year: 2018, batch: 279, incidents: ["Katerra hemorrhaging cash ($2B)"] },
-  { year: 2019, batch: 350, incidents: ["FTX founded — $8B fraud begins"] },
-  { year: 2020, batch: 371, incidents: ["ScaleFactor shuts ($100M)", "Atrium shuts ($75M)", "Quibi dies in 6 months ($1.75B)"] },
-  { year: 2021, batch: 727, incidents: ["Katerra bankruptcy ($2B)", "727 companies — all-time peak"] },
-  { year: 2022, batch: 654, incidents: ["FTX collapses — $8B stolen", "W22: 414 per batch record"] },
-  { year: 2023, batch: 511, incidents: ["Cruise cover-up exposed", "IRL shut down by SEC", "Flexport CEO coup", "Garry Tan takes over"] },
-  { year: 2024, batch: 610, incidents: ["PearAI forks open-source", "Central clones Warp", "Rippling–Deel spy scandal", "4 batches/year begins"] },
-  { year: 2025, batch: 630, incidents: ["GStack controversy", "Batch duplicates rampant", "Investors flag YC as red flag"] },
-  { year: 2026, batch: 196, incidents: ["Delve expelled — 493 fake audits", "'Generational fumble' — Cochran", "ycombinator.fyi launches"] },
-];
+// Real YC batch sizes by year (from YC blog, YCDB, TechCrunch)
+const BATCH_SIZES: Record<number, number> = {
+  2005: 11, 2006: 18, 2007: 32, 2008: 43, 2009: 42,
+  2010: 62, 2011: 106, 2012: 148, 2013: 98, 2014: 155,
+  2015: 217, 2016: 230, 2017: 242, 2018: 279, 2019: 350,
+  2020: 371, 2021: 727, 2022: 654, 2023: 511, 2024: 610,
+  2025: 630, 2026: 196,
+};
 
-// Derived data
-const maxBatch = Math.max(...CHART_DATA.map(d => d.batch));
-const maxIncidents = Math.max(...CHART_DATA.map(d => d.incidents.length));
+// Group failures by era
+type EraKey = "pg" | "altman" | "ralston" | "tan";
+const ERA_LABELS: Record<EraKey, string> = {
+  pg: "Paul Graham", altman: "Sam Altman", ralston: "Geoff Ralston", tan: "Garry Tan",
+};
+const ERA_YEARS: Record<EraKey, [number, number]> = {
+  pg: [2005, 2014], altman: [2014, 2019], ralston: [2019, 2023], tan: [2023, 2027],
+};
+const ERA_COLORS: Record<EraKey, string> = {
+  pg: "#22c55e", altman: "#eab308", ralston: "#f97316", tan: "#dc2626",
+};
 
-/* ── Animated Counter ───────────────────────────────── */
+// Get the year a scandal surfaced (yearDied > last timeline event > yearFounded)
+function getScandalYear(f: typeof FAILURES[number]): number {
+  if (f.yearDied) return f.yearDied;
+  if (f.timeline && f.timeline.length > 0) {
+    const lastYear = Math.max(...f.timeline.map(t => parseInt(t.date)));
+    if (!isNaN(lastYear)) return lastYear;
+  }
+  return f.yearFounded;
+}
+
+function getScandalEra(f: typeof FAILURES[number]): EraKey {
+  const year = getScandalYear(f);
+  if (year < 2014) return "pg";
+  if (year < 2019) return "altman";
+  if (year < 2023) return "ralston";
+  return "tan";
+}
+
+function getEraStats(era: EraKey) {
+  const [start, end] = ERA_YEARS[era];
+  const years = Math.min(end, 2026) - start; // years of presidency
+  const companies = Object.entries(BATCH_SIZES)
+    .filter(([y]) => Number(y) >= start && Number(y) < end)
+    .reduce((s, [, v]) => s + v, 0);
+  const scandals = FAILURES.filter(f => getScandalEra(f) === era);
+  const fraudCount = scandals.filter(f => f.status === "FRAUD" || f.status === "SCANDAL").length;
+  const totalCount = scandals.length;
+  return {
+    companies,
+    years,
+    totalExhibits: totalCount,
+    fraudScandals: fraudCount,
+    exhibitsPerYear: years > 0 ? totalCount / years : 0,
+    scandalRate: companies > 0 ? (totalCount / companies) * 100 : 0,
+    fraudRate: companies > 0 ? (fraudCount / companies) * 100 : 0,
+  };
+}
+
+const eraKeys: EraKey[] = ["pg", "altman", "ralston", "tan"];
+const eraStats = Object.fromEntries(eraKeys.map(k => [k, getEraStats(k)])) as Record<EraKey, ReturnType<typeof getEraStats>>;
+const maxExhibitsPerYear = Math.max(...eraKeys.map(k => eraStats[k].exhibitsPerYear));
+
+// Per-year data for the detailed chart (using scandal year)
+const YEARS = Object.keys(BATCH_SIZES).map(Number).sort();
+const yearData = YEARS.map(year => {
+  const batch = BATCH_SIZES[year];
+  const yearFailures = FAILURES.filter(f => getScandalYear(f) === year);
+  const incidents = yearFailures.map(f => `${f.company} (${f.status})`);
+  return { year, batch, incidents, count: yearFailures.length };
+});
+const maxBatch = Math.max(...yearData.map(d => d.batch));
+
+// Overall stats
+const totalCompanies = Object.values(BATCH_SIZES).reduce((s, v) => s + v, 0);
+const totalExhibits = FAILURES.length;
+
+// Pre-Tan vs Tan comparison (by exhibits per year)
+const preTanExhibits = FAILURES.filter(f => getScandalEra(f) !== "tan").length;
+const preTanYears = 2023 - 2005; // 18 years
+const tanExhibits = FAILURES.filter(f => getScandalEra(f) === "tan").length;
+const tanYears = Math.min(2026, 2027) - 2023; // ~3 years
+const preTanPerYear = preTanYears > 0 ? preTanExhibits / preTanYears : 0;
+const tanPerYear = tanYears > 0 ? tanExhibits / tanYears : 0;
+const rateMultiplier = preTanPerYear > 0 ? (tanPerYear / preTanPerYear).toFixed(1) : "∞";
+
+/* ── Animated Counter ──────────────────────────────── */
 
 function AnimatedStat({ value, suffix = "" }: { value: string; suffix?: string }) {
   const [display, setDisplay] = useState("0");
@@ -53,7 +111,7 @@ function AnimatedStat({ value, suffix = "" }: { value: string; suffix?: string }
         const start = performance.now();
         const tick = (now: number) => {
           const t = Math.min((now - start) / duration, 1);
-          const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
+          const eased = 1 - Math.pow(1 - t, 3);
           const current = Math.round(num * eased);
           setDisplay(value.includes(".") ? (num * eased).toFixed(value.split(".")[1]?.length || 1) : current.toLocaleString());
           if (t < 1) requestAnimationFrame(tick);
@@ -68,21 +126,21 @@ function AnimatedStat({ value, suffix = "" }: { value: string; suffix?: string }
   return <div ref={ref} className="stat-value">{display}{suffix}</div>;
 }
 
-/* ── Page ────────────────────────────────────────────── */
+/* ── Page ───────────────────────────────────────────── */
 
 export default function TimelinePage() {
   const [hovered, setHovered] = useState<number | null>(null);
   const [visible, setVisible] = useState(false);
+  const [eraVisible, setEraVisible] = useState(false);
   const chartRef = useRef<HTMLDivElement>(null);
+  const eraRef = useRef<HTMLDivElement>(null);
 
-  // Unlock body scroll
   useEffect(() => {
     document.body.style.overflow = "auto";
     document.body.style.height = "auto";
     return () => { document.body.style.overflow = ""; document.body.style.height = ""; };
   }, []);
 
-  // Animate bars on scroll into view
   useEffect(() => {
     const el = chartRef.current;
     if (!el) return;
@@ -93,23 +151,23 @@ export default function TimelinePage() {
     return () => observer.disconnect();
   }, []);
 
-  // Computed stats
-  const totalCompanies = CHART_DATA.reduce((s, d) => s + d.batch, 0);
-  const totalIncidents = CHART_DATA.reduce((s, d) => s + d.incidents.length, 0);
-  const garryStart = CHART_DATA.findIndex(d => d.year === 2023);
-  const garryData = CHART_DATA.filter(d => d.year >= 2023);
-  const preGarryData = CHART_DATA.filter(d => d.year < 2023);
-  const garryRate = (garryData.reduce((s, d) => s + d.incidents.length, 0) / garryData.reduce((s, d) => s + d.batch, 0)) * 100;
-  const preGarryRate = (preGarryData.reduce((s, d) => s + d.incidents.length, 0) / preGarryData.reduce((s, d) => s + d.batch, 0)) * 100;
-  const rateMultiplier = (garryRate / preGarryRate).toFixed(1);
+  useEffect(() => {
+    const el = eraRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setEraVisible(true); observer.disconnect(); }
+    }, { threshold: 0.2 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
       <Navbar />
 
-      <div style={{ maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "var(--gap)", padding: "var(--gap) 0" }}>
+      <div style={{ maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "var(--gap)", padding: "var(--gap) 16px" }}>
 
-        {/* Hero callout */}
+        {/* Hero */}
         <div className="block block--accent">
           <div className="block-inner" style={{ textAlign: "center", padding: "2.5rem 1.5rem" }}>
             <div className="label-group" style={{ justifyContent: "center" }}>
@@ -120,70 +178,165 @@ export default function TimelinePage() {
               The Decline of YC
             </h1>
             <p className="text-mono" style={{ fontSize: "0.85rem", color: "rgba(0,0,0,0.5)", marginTop: "0.75rem" }}>
-              {rateMultiplier}x HIGHER INCIDENT RATE UNDER GARRY TAN
+              {rateMultiplier}x MORE SCANDALS PER YEAR UNDER GARRY TAN
             </p>
           </div>
         </div>
 
-        {/* Main chart */}
+        {/* ── ERA COMPARISON — The Main Chart ──────────── */}
         <div className="block" style={{ overflow: "visible" }}>
           <div className="block-inner">
             <div className="label-group">
               <span className="pill-outline">(EXHIBIT)</span>
-              <span className="pill-solid accent">BATCH SIZE VS INCIDENTS</span>
+              <span className="pill-solid accent">SCANDAL FREQUENCY BY YC PRESIDENT</span>
             </div>
             <p className="text-mono" style={{ fontSize: "0.7rem", color: "#999", marginBottom: "1.5rem" }}>
-              GRAY = COMPANIES FUNDED · ORANGE = DOCUMENTED INCIDENTS · HOVER FOR DETAILS
+              DOCUMENTED EXHIBITS PER YEAR OF PRESIDENCY
             </p>
 
-            {/* Chart area */}
-            <div ref={chartRef} style={{ position: "relative", height: "300px", display: "flex", alignItems: "flex-end", gap: "2px", padding: "0 0 32px" }}>
+            <div ref={eraRef} style={{ display: "flex", alignItems: "flex-end", gap: "16px", height: "280px", padding: "0 0 40px" }}>
+              {eraKeys.map((era, i) => {
+                const stats = eraStats[era];
+                const barHeight = maxExhibitsPerYear > 0 ? (stats.exhibitsPerYear / maxExhibitsPerYear) * 220 : 0;
+                const color = ERA_COLORS[era];
+                const isTan = era === "tan";
+                const [start, end] = ERA_YEARS[era];
 
-              {/* Presidential era bands */}
-              {PRESIDENTS.map(p => {
-                const startIdx = CHART_DATA.findIndex(d => d.year === p.start);
-                const endIdx = p.end > 2026 ? CHART_DATA.length : CHART_DATA.findIndex(d => d.year === p.end);
-                if (startIdx < 0) return null;
-                const left = (startIdx / CHART_DATA.length) * 100;
-                const width = ((Math.min(endIdx, CHART_DATA.length) - startIdx) / CHART_DATA.length) * 100;
                 return (
-                  <div key={p.name} style={{
-                    position: "absolute",
-                    left: `${left}%`, width: `${width}%`,
-                    top: 0, bottom: "32px",
-                    background: `${p.color}08`,
-                    borderLeft: `2px solid ${p.color}20`,
-                    zIndex: 0, pointerEvents: "none",
-                  }}>
+                  <div key={era} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", position: "relative" }}>
+                    {/* Rate label above bar */}
                     <div style={{
-                      position: "absolute", top: "6px", left: "8px",
-                      pointerEvents: "none",
+                      fontFamily: "var(--font-mono)", fontSize: isTan ? "1.4rem" : "1rem",
+                      fontWeight: 800, color: isTan ? "#dc2626" : color,
+                      marginBottom: "8px",
+                      opacity: eraVisible ? 1 : 0,
+                      transform: eraVisible ? "translateY(0)" : "translateY(10px)",
+                      transition: `all 0.5s ease-out ${i * 150 + 400}ms`,
                     }}>
+                      {stats.exhibitsPerYear.toFixed(1)}/yr
+                    </div>
+
+                    {/* Bar */}
+                    <div style={{
+                      width: "100%", maxWidth: "140px",
+                      height: `${barHeight}px`,
+                      background: isTan ? "linear-gradient(to top, #dc2626, #ef4444)" : color,
+                      borderRadius: "6px 6px 0 0",
+                      opacity: isTan ? 0.9 : 0.3,
+                      transform: eraVisible ? "scaleY(1)" : "scaleY(0)",
+                      transformOrigin: "bottom",
+                      transition: `transform 0.6s ease-out ${i * 150}ms`,
+                      position: "relative",
+                    }}>
+                      {/* Exhibit count inside bar */}
+                      {barHeight > 30 && (
+                        <div style={{
+                          position: "absolute", bottom: "8px", left: 0, right: 0, textAlign: "center",
+                          fontFamily: "var(--font-mono)", fontSize: "0.6rem", fontWeight: 700,
+                          color: isTan ? "#fff" : "rgba(0,0,0,0.4)",
+                        }}>
+                          {stats.totalExhibits} exhibits
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Label below */}
+                    <div style={{ marginTop: "12px", textAlign: "center" }}>
                       <div style={{
-                        fontFamily: "var(--font-mono)", fontSize: "0.6rem", fontWeight: 800,
-                        color: p.color, opacity: 0.8, textTransform: "uppercase", whiteSpace: "nowrap",
-                        lineHeight: 1,
+                        fontFamily: "var(--font-sans)", fontSize: "0.8rem",
+                        fontWeight: isTan ? 700 : 500, color: isTan ? "#dc2626" : "#999",
                       }}>
-                        {p.name}
+                        {ERA_LABELS[era]}
                       </div>
                       <div style={{
-                        fontFamily: "var(--font-mono)", fontSize: "0.45rem", fontWeight: 700,
-                        color: p.color, opacity: 0.5, whiteSpace: "nowrap",
-                        marginTop: "2px",
+                        fontFamily: "var(--font-mono)", fontSize: "0.6rem",
+                        color: "#666", marginTop: "2px",
                       }}>
-                        {p.start}–{p.end > 2026 ? "NOW" : p.end}
+                        {start}–{end > 2026 ? "now" : end} · {stats.years} yrs · {stats.companies.toLocaleString()} cos
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Pre-Tan average line callout */}
+            <div style={{
+              background: "#fef2f2", border: "2px solid #dc2626", borderRadius: "var(--radius-md)",
+              padding: "12px 16px", marginTop: "8px",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+            }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem", fontWeight: 700, color: "#dc2626" }}>
+                GARRY TAN ERA: {eraStats.tan.exhibitsPerYear.toFixed(1)} exhibits/yr vs {preTanPerYear.toFixed(1)}/yr pre-Tan average — {rateMultiplier}x increase
+              </span>
+            </div>
+          </div>
+
+          {/* Stats grid */}
+          <div className="stat-grid">
+            <div className="stat-cell">
+              <AnimatedStat value={totalCompanies.toLocaleString()} />
+              <div className="stat-label">Companies Funded</div>
+            </div>
+            <div className="stat-cell">
+              <AnimatedStat value={String(totalExhibits)} />
+              <div className="stat-label" style={{ color: "var(--accent)" }}>Documented Exhibits</div>
+            </div>
+            <div className="stat-cell">
+              <AnimatedStat value={preTanPerYear.toFixed(1)} suffix="/yr" />
+              <div className="stat-label">2005–2022 Scandal Freq</div>
+            </div>
+            <div className="stat-cell">
+              <div className="stat-value" style={{ color: "#dc2626" }}>{tanPerYear.toFixed(1)}/yr</div>
+              <div className="stat-label" style={{ color: "#dc2626" }}>Garry Tan Era Freq</div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── YEARLY TIMELINE — Detail Chart ──────────── */}
+        <div className="block" style={{ overflow: "visible" }}>
+          <div className="block-inner">
+            <div className="label-group">
+              <span className="pill-outline">(EXHIBIT)</span>
+              <span className="pill-solid accent">BATCH SIZE BY YEAR</span>
+            </div>
+            <p className="text-mono" style={{ fontSize: "0.7rem", color: "#999", marginBottom: "1.5rem" }}>
+              COMPANIES FUNDED PER YEAR · ORANGE = YEARS WITH DOCUMENTED EXHIBITS · HOVER FOR DETAILS
+            </p>
+
+            <div ref={chartRef} style={{ position: "relative", height: "300px", display: "flex", alignItems: "flex-end", gap: "2px", padding: "0 0 32px" }}>
+              {/* Era background bands */}
+              {PRESIDENTS.map(p => {
+                const startIdx = yearData.findIndex(d => d.year === p.start);
+                const endIdx = p.end > 2026 ? yearData.length : yearData.findIndex(d => d.year === p.end);
+                if (startIdx < 0) return null;
+                const left = (startIdx / yearData.length) * 100;
+                const width = ((Math.min(endIdx, yearData.length) - startIdx) / yearData.length) * 100;
+                return (
+                  <div key={p.name} style={{
+                    position: "absolute", left: `${left}%`, width: `${width}%`,
+                    top: 0, bottom: "32px",
+                    background: `${p.color}08`, borderLeft: `2px solid ${p.color}20`,
+                    zIndex: 0, pointerEvents: "none",
+                  }}>
+                    <div style={{ position: "absolute", top: "6px", left: "8px", pointerEvents: "none" }}>
+                      <div style={{
+                        fontFamily: "var(--font-mono)", fontSize: "0.55rem", fontWeight: 700,
+                        color: p.color, opacity: 0.7, textTransform: "uppercase", whiteSpace: "nowrap",
+                      }}>
+                        {p.label}
                       </div>
                     </div>
                   </div>
                 );
               })}
 
-              {CHART_DATA.map((d, i) => {
+              {yearData.map((d, i) => {
                 const batchHeight = (d.batch / maxBatch) * 240;
-                const incidentHeight = d.incidents.length > 0 ? Math.max((d.incidents.length / maxIncidents) * 240, 8) : 0;
-                const president = getPresident(d.year);
+                const president = PRESIDENTS.find(p => d.year >= p.start && d.year < p.end);
                 const isHovered = hovered === i;
-                const isGarry = d.year >= 2023;
+                const hasIncidents = d.count > 0;
+                const isTan = d.year >= 2023;
                 const dimmed = hovered !== null && !isHovered;
 
                 return (
@@ -196,41 +349,26 @@ export default function TimelinePage() {
                     onMouseEnter={() => setHovered(i)}
                     onMouseLeave={() => setHovered(null)}
                   >
-                    {/* Stacked bar: batch (gray) with incident overlay (orange) */}
-                    <div style={{ position: "relative", width: "100%", height: `${batchHeight}px` }}>
-                      {/* Batch bar */}
+                    <div style={{
+                      position: "relative", width: "100%", height: `${batchHeight}px`,
+                    }}>
                       <div style={{
-                        position: "absolute", bottom: 0, left: 0, right: 0,
-                        height: "100%",
-                        background: president?.color || "#222",
+                        position: "absolute", bottom: 0, left: 0, right: 0, height: "100%",
+                        background: hasIncidents ? (isTan ? "#dc2626" : "var(--accent)") : (president?.color || "#888"),
                         borderRadius: "2px 2px 0 0",
-                        opacity: dimmed ? 0.08 : (isHovered ? 0.4 : 0.18),
+                        opacity: dimmed ? 0.08 : (hasIncidents ? (isHovered ? 0.9 : 0.6) : (isHovered ? 0.3 : 0.12)),
                         transition: "all 0.25s ease-out",
                         transform: visible ? "scaleY(1)" : "scaleY(0)",
                         transformOrigin: "bottom",
                         transitionDelay: `${i * 40}ms`,
                       }} />
-                      {/* Incident overlay */}
-                      {incidentHeight > 0 && (
-                        <div style={{
-                          position: "absolute", bottom: 0, left: 0, right: 0,
-                          height: `${incidentHeight}px`,
-                          background: "var(--accent)",
-                          borderRadius: "2px 2px 0 0",
-                          opacity: dimmed ? 0.15 : (isHovered ? 1 : 0.75),
-                          transition: "all 0.25s ease-out",
-                          transform: visible ? "scaleY(1)" : "scaleY(0)",
-                          transformOrigin: "bottom",
-                          transitionDelay: `${i * 40 + 300}ms`,
-                        }} />
-                      )}
                     </div>
 
                     {/* Year label */}
                     <span style={{
                       fontFamily: "var(--font-mono)",
                       fontSize: isHovered ? "0.5rem" : "0.4rem",
-                      fontWeight: isHovered ? 800 : 700,
+                      fontWeight: isHovered ? 700 : 500,
                       color: isHovered ? (president?.color || "#000") : (dimmed ? "#444" : "#999"),
                       marginTop: "4px",
                       transform: "rotate(-45deg)", transformOrigin: "center",
@@ -245,7 +383,7 @@ export default function TimelinePage() {
                         position: "absolute",
                         bottom: `${batchHeight + 12}px`,
                         left: "50%",
-                        transform: i < 3 ? "translateX(-5%)" : i > CHART_DATA.length - 4 ? "translateX(-95%)" : "translateX(-50%)",
+                        transform: i < 3 ? "translateX(-5%)" : i > yearData.length - 4 ? "translateX(-95%)" : "translateX(-50%)",
                         background: "var(--surface-white)",
                         border: "var(--border-w) solid var(--border-color)",
                         borderRadius: "var(--radius-md)",
@@ -255,44 +393,32 @@ export default function TimelinePage() {
                         pointerEvents: "none",
                         zIndex: 100,
                       }}>
-                        {/* Header */}
                         <div className="flex items-center justify-between" style={{ marginBottom: "4px" }}>
                           <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, fontSize: "1rem" }}>{d.year}</span>
                           {president && (
                             <span className="pill-outline" style={{ fontSize: "0.45rem", padding: "2px 8px", color: president.color, borderColor: president.color }}>
-                              {president.name}
+                              {president.label}
                             </span>
                           )}
                         </div>
                         <div className="divider" style={{ margin: "6px 0" }} />
-
-                        {/* Stats */}
                         <div className="data-row">
                           <span className="text-mono" style={{ fontSize: "0.6rem", color: "#666" }}>COMPANIES FUNDED</span>
                           <span className="text-mono" style={{ fontSize: "0.75rem" }}>{d.batch}</span>
                         </div>
-                        <div className="data-row" style={{ borderBottom: d.incidents.length > 0 ? undefined : "none" }}>
-                          <span className="text-mono" style={{ fontSize: "0.6rem", color: "#666" }}>INCIDENTS</span>
-                          <span className="text-mono" style={{ fontSize: "0.75rem", color: d.incidents.length > 0 ? "var(--accent)" : "#999" }}>
-                            {d.incidents.length || "NONE"}
+                        <div className="data-row" style={{ borderBottom: "none" }}>
+                          <span className="text-mono" style={{ fontSize: "0.6rem", color: "#666" }}>EXHIBITS FROM THIS YEAR</span>
+                          <span className="text-mono" style={{ fontSize: "0.75rem", color: d.count > 0 ? (isTan ? "#dc2626" : "var(--accent)") : "#999" }}>
+                            {d.count || "NONE"}
                           </span>
                         </div>
-                        {d.incidents.length > 0 && (
-                          <div className="data-row" style={{ borderBottom: "none" }}>
-                            <span className="text-mono" style={{ fontSize: "0.6rem", color: "#666" }}>INCIDENT RATE</span>
-                            <span className="text-mono" style={{ fontSize: "0.75rem", color: isGarry ? "#dc2626" : "var(--accent)" }}>
-                              {((d.incidents.length / d.batch) * 100).toFixed(2)}%
-                            </span>
-                          </div>
-                        )}
 
-                        {/* Incident list */}
                         {d.incidents.length > 0 && (
                           <div style={{ marginTop: "8px", borderTop: "1px solid #eee", paddingTop: "8px" }}>
                             {d.incidents.map((inc, j) => (
                               <div key={j} style={{
                                 fontFamily: "var(--font-mono)", fontSize: "0.55rem",
-                                color: isGarry ? "#dc2626" : "#666",
+                                color: isTan ? "#dc2626" : "#666",
                                 fontWeight: 600, lineHeight: 1.6,
                               }}>
                                 → {inc}
@@ -307,44 +433,25 @@ export default function TimelinePage() {
               })}
             </div>
 
-            {/* Chart legend */}
+            {/* Legend */}
             <div className="flex items-center gap-4 flex-wrap" style={{ marginTop: "0.5rem" }}>
               <div className="flex items-center gap-1">
-                <div style={{ width: "12px", height: "12px", background: "#888", borderRadius: "2px", opacity: 0.3 }} />
-                <span className="text-mono" style={{ fontSize: "0.55rem", color: "#999" }}>BATCH SIZE</span>
+                <div style={{ width: "12px", height: "12px", background: "#888", borderRadius: "2px", opacity: 0.2 }} />
+                <span className="text-mono" style={{ fontSize: "0.55rem", color: "#999" }}>NO EXHIBITS</span>
               </div>
               <div className="flex items-center gap-1">
                 <div style={{ width: "12px", height: "12px", background: "var(--accent)", borderRadius: "2px" }} />
-                <span className="text-mono" style={{ fontSize: "0.55rem", color: "#999" }}>INCIDENTS</span>
+                <span className="text-mono" style={{ fontSize: "0.55rem", color: "#999" }}>HAS EXHIBITS</span>
               </div>
-              <span className="text-mono" style={{ fontSize: "0.55rem", color: "#bbb", marginLeft: "auto" }}>
-                2026 IS YTD (W26 ONLY)
-              </span>
-            </div>
-          </div>
-
-          {/* Stats grid */}
-          <div className="stat-grid">
-            <div className="stat-cell">
-              <AnimatedStat value={totalCompanies.toLocaleString()} />
-              <div className="stat-label">Companies Funded</div>
-            </div>
-            <div className="stat-cell">
-              <AnimatedStat value={String(totalIncidents)} />
-              <div className="stat-label" style={{ color: "var(--accent)" }}>Documented Incidents</div>
-            </div>
-            <div className="stat-cell">
-              <AnimatedStat value={preGarryRate.toFixed(2)} suffix="%" />
-              <div className="stat-label">2005–2022 Rate</div>
-            </div>
-            <div className="stat-cell">
-              <div className="stat-value" style={{ color: "#dc2626" }}>{garryRate.toFixed(2)}%</div>
-              <div className="stat-label" style={{ color: "#dc2626" }}>Garry Tan Rate</div>
+              <div className="flex items-center gap-1">
+                <div style={{ width: "12px", height: "12px", background: "#dc2626", borderRadius: "2px" }} />
+                <span className="text-mono" style={{ fontSize: "0.55rem", color: "#999" }}>GARRY TAN ERA</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Callout block */}
+        {/* Quotes */}
         <div className="block block--dark">
           <div className="block-inner" style={{ textAlign: "center", padding: "2rem 1.5rem" }}>
             <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "clamp(1.2rem, 3vw, 1.6rem)", color: "#fff", lineHeight: 1.4, maxWidth: "600px", margin: "0 auto" }}>
@@ -356,11 +463,36 @@ export default function TimelinePage() {
           </div>
         </div>
 
+        <div className="block block--dark">
+          <div className="block-inner" style={{ textAlign: "center", padding: "2rem 1.5rem" }}>
+            <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)", color: "#fff", lineHeight: 1.4, maxWidth: "600px", margin: "0 auto" }}>
+              &ldquo;Die slow motherf*ckers&rdquo;
+            </p>
+            <p className="text-mono" style={{ fontSize: "0.65rem", color: "#999", marginTop: "0.75rem", maxWidth: "500px", margin: "0.75rem auto 0" }}>
+              Garry Tan&apos;s since-deleted tweet directed at seven San Francisco supervisors, which led to multiple police reports and death threats against elected officials.
+            </p>
+            <p className="text-mono" style={{ fontSize: "0.7rem", color: "var(--accent)", marginTop: "0.75rem" }}>
+              — GARRY TAN, JAN 2024
+            </p>
+          </div>
+        </div>
+
+        <div className="block block--dark">
+          <div className="block-inner" style={{ textAlign: "center", padding: "2rem 1.5rem" }}>
+            <p style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)", color: "#fff", lineHeight: 1.4, maxWidth: "600px", margin: "0 auto" }}>
+              &ldquo;Right now we&apos;re in a moment where AI lets you generate code faster than any human can review it, and the answer from people like Garry seems to be &lsquo;so stop reviewing.&rsquo;&rdquo;
+            </p>
+            <p className="text-mono" style={{ fontSize: "0.7rem", color: "var(--accent)", marginTop: "1rem" }}>
+              — SOFTWARE ENGINEER, ON TAN&apos;S &ldquo;37,000 LINES/DAY&rdquo; CLAIM
+            </p>
+          </div>
+        </div>
+
         {/* Sources */}
         <div className="block">
           <div className="block-inner" style={{ textAlign: "center" }}>
             <p className="text-mono" style={{ fontSize: "0.65rem", color: "#999" }}>
-              BATCH DATA: YC OFFICIAL BLOG, YCDB, TECHCRUNCH, ELLENOX · INCIDENTS: PUBLIC RECORDS
+              BATCH DATA: YC OFFICIAL BLOG, YCDB, TECHCRUNCH · EXHIBITS: PUBLIC RECORDS · FREQUENCY = EXHIBITS / YEARS OF PRESIDENCY
             </p>
             <p className="text-mono" style={{ fontSize: "0.65rem", color: "#bbb", marginTop: "0.5rem" }}>
               SATIRICAL PROJECT. NOT AFFILIATED WITH Y COMBINATOR.
