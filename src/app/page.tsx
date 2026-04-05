@@ -531,7 +531,7 @@ export default function Home() {
         </aside>
 
         {/* Main exhibits */}
-        <main className="exhibits scrollbar-hide" style={{ overflowY: "auto", height: "100%", paddingTop: "var(--gap)" }}>
+        <main className="exhibits scrollbar-hide" style={{ overflowY: "auto", overflowX: "hidden", height: "100%", paddingTop: "var(--gap)", minWidth: 0 }}>
           {(!filter || featured.sector === filter) && (!eraFilter || getEra(featured.yearFounded) === eraFilter) && <FeaturedCard failure={featured} />}
 
           {/* Sort bar */}

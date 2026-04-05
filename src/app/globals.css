@@ -198,7 +198,7 @@ h1, h2, h3 {
 }
 
 .text-xl {
-  font-size: clamp(1.6rem, 4vw, 3.5rem);
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
 }
 
 .text-lg {
@@ -309,6 +309,8 @@ h1, h2, h3 {
   grid-template-columns: 1fr 300px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .exhibit-card:hover {
@@ -322,10 +324,17 @@ h1, h2, h3 {
   }
 }
 
+@media (max-width: 480px) {
+  .exhibit-card {
+    border-radius: var(--radius-md);
+  }
+}
+
 .exhibit-content {
   padding: 1.5rem;
   border-right: var(--border-w) solid var(--border-color);
   min-width: 0;
+  overflow: hidden;
   overflow-wrap: break-word;
   word-break: break-word;
 }
