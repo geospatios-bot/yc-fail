@@ -684,3 +684,56 @@ h1, h2, h3 {
   color: #444;
   font-size: 0.85rem;
 }
+
+/* ── Exhibit Timeline ────────────────────────────────── */
+.exhibit-timeline {
+  position: relative;
+  padding-left: 28px;
+}
+
+.exhibit-timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--border-color);
+}
+
+.timeline-event {
+  position: relative;
+  padding-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timeline-event:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -24px;
+  top: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background: var(--surface-white);
+}
+
+.timeline-date {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.timeline-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.4;
+}

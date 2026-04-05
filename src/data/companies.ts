@@ -19,6 +19,8 @@ export interface YCFailure {
   domain?: string; // company domain for logo via Google favicon API
   imageUrl?: string;
   sources: { label: string; url: string; type: "article" | "twitter" | "video" | "sec" }[];
+  timeline?: { date: string; event: string; type?: "founding" | "funding" | "scandal" | "death" | "legal" }[];
+  featured?: boolean;
 }
 
 export const STATUS_CONFIG: Record<Status, { label: string; color: string; bg: string }> = {
@@ -42,12 +44,22 @@ export const FAILURES: YCFailure[] = [
     status: "FRAUD",
     yearFounded: 2024,
     oneLiner: "Kicked out of YC. 493+ fabricated audit reports. Sold fraud to fellow YC companies.",
+    featured: true,
     description: "Claimed to automate SOC 2 and ISO compliance auditing with AI. Whistleblower revealed",
     redactedText: "the platform auto-generated identical passing audit reports with keyboard-mashed test data before clients even uploaded anything",
     descriptionAfter: ". CEO was caught on tape asking an auditor 'does your firm actually look at our platform?' Focused on selling to other YC companies who trusted the YC brand — the circular trust network weaponized. Insight Partners scrubbed their $32M investment blog post. YC officially expelled Delve in 2026. Investor Adam Cochran called it proof that YC has 'no technical acumen to evaluate claims' under Garry Tan's leadership.",
     bodyCount: "493+ fabricated reports",
     domain: "delve.co",
     imageUrl: "/images/delve-hero.jpeg",
+    timeline: [
+      { date: "2024-01", event: "Founded, joins YC W24", type: "founding" },
+      { date: "2024-06", event: "Raises $6M seed from Insight Partners", type: "funding" },
+      { date: "2024-12", event: "Raises $32M Series A led by Insight Partners", type: "funding" },
+      { date: "2025-07", event: "Whistleblower reveals fabricated audit reports to TechCrunch", type: "scandal" },
+      { date: "2026-03", event: "Second whistleblower provides receipts of keyboard-mashed test data", type: "scandal" },
+      { date: "2026-03", event: "Insight Partners scrubs $32M investment blog post", type: "scandal" },
+      { date: "2026-03", event: "YC officially expels Delve from portfolio", type: "death" },
+    ],
     sources: [
       { label: "TechCrunch: Delve Whistleblower Strikes Again", url: "https://techcrunch.com/2026/03/30/delve-whistleblower-strikes-again-with-alleged-receipts-about-fake-compliance/", type: "article" },
       { label: "Inc: The Delve Scandal", url: "https://www.inc.com/ben-sherry/the-delve-scandal-a-y-combinator-darling-just-got-hit-with-a-bombshell-fraud-accusation/", type: "article" },
@@ -71,7 +83,16 @@ export const FAILURES: YCFailure[] = [
     redactedText: "$8 billion in customer deposits to his hedge fund Alameda Research",
     descriptionAfter: "while sleeping on a beanbag in a Bahamas penthouse. Sentenced to 25 years. YC quietly scrubbed him from their website.",
     bodyCount: "1M+ customers affected",
-
+    timeline: [
+      { date: "2019", event: "Founded in Antigua, joins YC S19", type: "founding" },
+      { date: "2021-07", event: "Raises $900M Series B at $18B valuation", type: "funding" },
+      { date: "2022-01", event: "Super Bowl ad featuring Larry David", type: "scandal" },
+      { date: "2022-11-02", event: "CoinDesk exposes Alameda balance sheet", type: "scandal" },
+      { date: "2022-11-08", event: "Binance backs out of acquisition", type: "scandal" },
+      { date: "2022-11-11", event: "FTX files for Chapter 11 bankruptcy", type: "death" },
+      { date: "2022-12", event: "Sam Bankman-Fried arrested in Bahamas", type: "legal" },
+      { date: "2024-03", event: "SBF sentenced to 25 years in prison", type: "legal" },
+    ],
     sources: [
       { label: "DOJ: SBF Sentenced to 25 Years", url: "https://www.justice.gov/usao-sdny/pr/samuel-bankman-fried-sentenced-25-years-his-orchestration-multiple-fraudulent-schemes", type: "article" },
       { label: "YC's page on FTX (deleted)", url: "https://web.archive.org/web/2022/https://www.ycombinator.com/companies/ftx", type: "article" },
@@ -93,7 +114,13 @@ export const FAILURES: YCFailure[] = [
     redactedText: "95% of those users were automated bots the company created itself",
     descriptionAfter: ". Board shut it down in 2023. Shafi charged with securities fraud. The 'IRL' app was anything but.",
     bodyCount: "~95% fake users",
-
+    timeline: [
+      { date: "2017", event: "Founded, joins YC S17", type: "founding" },
+      { date: "2021-06", event: "Raises $170M Series C at $1.2B valuation", type: "funding" },
+      { date: "2023-06", event: "SEC investigation reveals 95% of users were bots", type: "scandal" },
+      { date: "2023-06", event: "Board shuts down the company", type: "death" },
+      { date: "2023-09", event: "Abraham Shafi charged with securities fraud", type: "legal" },
+    ],
     sources: [
       { label: "SEC: IRL Fraud Charges", url: "https://www.sec.gov/newsroom/press-releases/2023-168", type: "sec" },
       { label: "NYT: Social App IRL Shuts Down", url: "https://www.nytimes.com/2023/06/27/technology/irl-app-shut-down.html", type: "article" },
@@ -114,7 +141,15 @@ export const FAILURES: YCFailure[] = [
     redactedText: "dragged a pedestrian 20 feet and executives initially withheld the footage from regulators",
     descriptionAfter: ". California pulled their license. GM wrote off the entire investment. The future of autonomous driving became a $10B bonfire.",
     bodyCount: "2,500+ laid off",
-
+    timeline: [
+      { date: "2013", event: "Founded, joins YC W14", type: "founding" },
+      { date: "2016-03", event: "Acquired by GM for $1B", type: "funding" },
+      { date: "2021-01", event: "GM invests additional $2B", type: "funding" },
+      { date: "2023-10-02", event: "Robotaxi drags pedestrian 20 feet in San Francisco", type: "scandal" },
+      { date: "2023-10", event: "Executives withhold dragging footage from regulators", type: "scandal" },
+      { date: "2023-10-24", event: "California DMV suspends Cruise's driverless permit", type: "legal" },
+      { date: "2024-12", event: "GM announces shutdown of Cruise robotaxi program", type: "death" },
+    ],
     sources: [
       { label: "NYT: Cruise Withheld Footage of Pedestrian Dragging", url: "https://www.nytimes.com/2023/11/03/technology/cruise-general-motors-self-driving.html", type: "article" },
       { label: "Reuters: GM Shuts Down Cruise", url: "https://www.reuters.com/business/autos-transportation/gm-close-cruise-robotaxi-business-2024-12-10/", type: "article" },
@@ -337,7 +372,14 @@ export const FAILURES: YCFailure[] = [
     redactedText: "planting an undercover spy inside Rippling who was paid €5,000/month by Deel's CEO to steal trade secrets",
     descriptionAfter: ". The DOJ opened a criminal investigation. Deel allegedly ran the same playbook at crypto HR startup Toku. YC uses Rippling for their own HR — awkward.",
     bodyCount: "DOJ criminal investigation opened",
-
+    timeline: [
+      { date: "2016", event: "Founded by Parker Conrad (ex-Zenefits CEO)", type: "founding" },
+      { date: "2017", event: "Joins YC W17", type: "founding" },
+      { date: "2024-04", event: "Raises $200M at $13.5B valuation", type: "funding" },
+      { date: "2025-03", event: "Sues Deel for planting spy paid €5,000/month", type: "scandal" },
+      { date: "2025-04", event: "DOJ opens criminal investigation into Deel espionage", type: "legal" },
+      { date: "2025-05", event: "Raises $450M at $16.8B; reveals YC is a customer", type: "funding" },
+    ],
     sources: [
       { label: "CNBC: Rippling Sues Deel Over Corporate Espionage", url: "https://www.cnbc.com/2025/03/17/startup-rippling-sues-competitor-deel-claiming-a-spy-stole-sales-data.html", type: "article" },
       { label: "SF Standard: New Espionage Scandal Embroils Deel", url: "https://sfstandard.com/2025/04/29/another-startup-accuses-deel-of-trying-to-steal-trade-secrets/", type: "article" },

@@ -2,15 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Navbar, { NavLink } from "@/components/Navbar";
-
-/* ── Leadership ─────────────────────────────────────── */
-
-const PRESIDENTS = [
-  { name: "Paul Graham", start: 2005, end: 2014, color: "#22c55e", label: "Paul Graham" },
-  { name: "Sam Altman", start: 2014, end: 2019, color: "#eab308", label: "Sam Altman" },
-  { name: "Geoff Ralston", start: 2019, end: 2023, color: "#f97316", label: "Geoff Ralston" },
-  { name: "Garry Tan", start: 2023, end: 2027, color: "#dc2626", label: "Garry Tan" },
-];
+import { PRESIDENTS, getPresident } from "@/data/eras";
 
 /* ── Real YC Data ───────────────────────────────────── */
 
@@ -42,10 +34,6 @@ const CHART_DATA = [
 // Derived data
 const maxBatch = Math.max(...CHART_DATA.map(d => d.batch));
 const maxIncidents = Math.max(...CHART_DATA.map(d => d.incidents.length));
-
-function getPresident(year: number) {
-  return PRESIDENTS.find(p => year >= p.start && year < p.end);
-}
 
 /* ── Animated Counter ───────────────────────────────── */
 
