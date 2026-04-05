@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -23,23 +23,11 @@ export function NavLink({ href, children, external }: { href: string; children: 
   return <Link href={href} className="nav-link">{children}</Link>;
 }
 
-export function NavButton({ onClick, children }: { onClick: () => void; children: ReactNode }) {
-  return (
-    <button
-      onClick={onClick}
-      className="flex items-center justify-center nav-btn"
-    >
-      {children}
-    </button>
-  );
-}
-
 export const NAVBAR_HEIGHT = 42; // px — fixed height set in CSS
 
-export default function Navbar({ rightExtra }: { rightExtra?: ReactNode }) {
+export default function Navbar() {
   const pathname = usePathname();
-  const isHome = pathname === "/";
-  const isSubpage = !isHome;
+  const isSubpage = pathname !== "/";
 
   return (
     <nav className="navbar">
@@ -55,9 +43,8 @@ export default function Navbar({ rightExtra }: { rightExtra?: ReactNode }) {
         )}
       </div>
 
-      {/* Right: twitter + optional extras */}
+      {/* Right */}
       <div className="navbar-right">
-        {rightExtra}
         <NavLink href="https://x.com/NotOnKetamine" external>
           @NotOnKetamine
         </NavLink>

@@ -469,7 +469,6 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
 
 export default function Home() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sort, setSort] = useState<SortKey>("severity");
   const [filter, setFilter] = useState<string | null>(null);
   const [eraFilter, setEraFilter] = useState<Era | null>(null);
@@ -492,16 +491,6 @@ export default function Home() {
       }, 300);
     }
   }, []);
-
-  // Lock body scroll when mobile sidebar is open
-  useEffect(() => {
-    if (sidebarOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
-  }, [sidebarOpen]);
 
   const featured = FAILURES.find(f => f.featured) ?? FAILURES[0];
 
@@ -532,32 +521,7 @@ export default function Home() {
     <>
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      <Navbar rightExtra={
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="nav-btn nav-btn--mobile"
-        >
-          {sidebarOpen ? "✕" : "☰"}
-        </button>
-      } />
-
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div
-          className={`fixed inset-x-0 bottom-0 z-[60] lg:hidden`}
-          style={{ top: `${NAVBAR_HEIGHT}px` }}
-          onClick={() => setSidebarOpen(false)}
-        >
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm sidebar-backdrop" />
-          <div
-            className="absolute inset-0 flex flex-col sidebar-slide"
-            style={{ padding: "16px", gap: "var(--gap)", overflowY: "auto" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <SidebarContent onOpenSearch={() => { setSidebarOpen(false); setSearchOpen(true); }} activeFilter={filter} onFilter={setFilter} activeEra={eraFilter} onEraFilter={setEraFilter} />
-          </div>
-        </div>
-      )}
+      <Navbar />
 
       {/* Layout grid */}
       <div className="layout-grid" style={{ height: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}>
