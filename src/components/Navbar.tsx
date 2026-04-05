@@ -48,6 +48,7 @@ export function NavButton({ onClick, children }: { onClick: () => void; children
 }
 
 export const NAVBAR_HEIGHT = 42; // px — padding (10*2) + content (22)
+const NAVBAR_SPACER = 42 + 24; // navbar + gap below
 
 export default function Navbar({ right }: { right?: ReactNode }) {
   return (
@@ -69,8 +70,8 @@ export default function Navbar({ right }: { right?: ReactNode }) {
         </div>
       </nav>
 
-      {/* Spacer to push content below fixed navbar */}
-      <div style={{ height: `${NAVBAR_HEIGHT}px` }} />
+      {/* Spacer to push content below fixed navbar + gap */}
+      <div style={{ height: `${NAVBAR_SPACER}px` }} />
     </>
   );
 }

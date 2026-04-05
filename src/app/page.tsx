@@ -478,7 +478,7 @@ export default function Home() {
       )}
 
       {/* Layout grid */}
-      <div className="layout-grid" style={{ height: `calc(100vh - ${NAVBAR_HEIGHT + 48}px)` }}>
+      <div className="layout-grid" style={{ height: `calc(100vh - ${NAVBAR_HEIGHT + 24}px)` }}>
         {/* Sidebar — desktop only */}
         <aside className="hidden lg:flex flex-col scrollbar-hide" style={{ gap: "var(--gap)", overflowY: "auto", height: "100%", padding: "0 0 24px 0" }}>
           <SidebarContent onOpenSearch={() => setSearchOpen(true)} />
