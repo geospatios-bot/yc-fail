@@ -447,7 +447,12 @@ export default function Home() {
           <NavButton onClick={() => setSearchOpen(true)}>⌕</NavButton>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="flex lg:hidden items-center justify-center nav-btn"
+            className="lg:hidden"
+            style={{
+              width: "30px", height: "30px", background: "rgba(255,255,255,0.2)",
+              border: "none", borderRadius: "8px", color: "#fff", fontSize: "14px",
+              fontWeight: 900, cursor: "pointer", alignItems: "center", justifyContent: "center",
+            }}
           >
             {sidebarOpen ? "✕" : "☰"}
           </button>
