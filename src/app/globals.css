@@ -495,7 +495,8 @@ h1, h2, h3 {
   align-items: center;
   justify-content: space-between;
   background: var(--accent);
-  padding: 10px 16px;
+  height: 42px;
+  padding: 0 16px;
 }
 
 .navbar-brand {
