@@ -273,6 +273,10 @@ h1, h2, h3 {
   border-right: var(--border-w) solid var(--border-color);
 }
 
+.stat-cell:nth-last-child(-n+2) {
+  border-bottom: none;
+}
+
 .stat-value {
   font-family: var(--font-mono);
   font-size: 1.5rem;

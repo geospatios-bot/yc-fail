@@ -105,7 +105,7 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
 
 /* ── Sidebar ─────────────────────────────────────────── */
 
-function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
+function SidebarContent({ onOpenSearch, activeFilter, onFilter }: { onOpenSearch: () => void; activeFilter: string | null; onFilter: (sector: string | null) => void }) {
   const stats = computeStats();
 
   const sectors = FAILURES.reduce((acc, f) => {
@@ -142,7 +142,7 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
           </div>
           <h1>YCOMBINATOR.FYI</h1>
           <p className="text-mono" style={{ fontSize: "0.8rem" }}>
-            What Y Combinator doesn&apos;t put on Demo Day slides.<br />Not affiliated with Y Combinator.
+            What Y Combinator doesn&apos;t put on Demo Day slides.
           </p>
         </div>
 
@@ -190,15 +190,24 @@ function SidebarContent({ onOpenSearch }: { onOpenSearch: () => void }) {
           </div>
           <h3 className="text-lg" style={{ marginBottom: "1rem" }}>Categories</h3>
           {topSectors.map(([sector, count]) => (
-            <div key={sector} className="data-row">
+            <button
+              key={sector}
+              className="data-row"
+              onClick={() => onFilter(activeFilter === sector ? null : sector)}
+              style={{ cursor: "pointer", background: "none", border: "none", width: "100%", textAlign: "left", opacity: activeFilter && activeFilter !== sector ? 0.4 : 1, transition: "opacity 0.15s" }}
+            >
               <span className="text-mono">{sector}</span>
-              <span className="pill-solid accent">{count}</span>
-            </div>
+              <span className={activeFilter === sector ? "pill-solid accent" : "pill-solid accent"}>{count}</span>
+            </button>
           ))}
-          <div className="data-row">
+          <button
+            className="data-row"
+            onClick={() => onFilter(null)}
+            style={{ cursor: "pointer", background: "none", border: "none", width: "100%", textAlign: "left", opacity: activeFilter ? 0.4 : 1, transition: "opacity 0.15s" }}
+          >
             <span className="text-mono">ALL</span>
             <span className="pill-solid">{FAILURES.length}</span>
-          </div>
+          </button>
         </div>
       </div>
     </>
@@ -273,8 +282,6 @@ function FeaturedCard({ failure }: { failure: YCFailure }) {
 /* ── Exhibit Card ────────────────────────────────────── */
 
 function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) {
-  const isAccentMeta = index % 3 === 1;
-
   return (
     <div id={`exhibit-${failure.id}`} className="block exhibit-card">
       {/* Content */}
@@ -310,41 +317,35 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
       </div>
 
       {/* Meta sidebar */}
-      <div className={`exhibit-meta ${isAccentMeta ? "accent-bg" : ""}`}>
+      <div className="exhibit-meta">
         <div>
-          <div className="text-mono" style={{ color: isAccentMeta ? "var(--border-color)" : "#666", fontSize: "0.7rem", marginBottom: "0.5rem" }}>
+          <div className="text-mono" style={{ color: "#666", fontSize: "0.7rem", marginBottom: "0.5rem" }}>
             STATUS
           </div>
-          <div className="status-toggle" style={isAccentMeta ? { background: "rgba(0,0,0,0.1)" } : undefined}>
-            <span
-              className="toggle-pill"
-              style={isAccentMeta
-                ? { background: "var(--border-color)", color: "var(--surface-white)" }
-                : { background: "var(--accent)", color: "#000" }
-              }
-            >
+          <div className="status-toggle">
+            <span className="toggle-pill" style={{ background: "var(--accent)", color: "#000" }}>
               {failure.status}
             </span>
-            <span className="toggle-empty" style={isAccentMeta ? { color: "var(--border-color)" } : undefined}>
+            <span className="toggle-empty">
               {failure.status === "DEAD" || failure.status === "FRAUD" ? "ALIVE" : failure.status === "COPYCAT" ? "ORIGINAL" : failure.status === "GRIFT" ? "LEGIT" : "OK"}
             </span>
           </div>
         </div>
 
-        <div className="divider" style={{ margin: 0, background: isAccentMeta ? "rgba(0,0,0,0.2)" : undefined }} />
+        <div className="divider" style={{ margin: 0 }} />
 
         <div>
-          <div className="data-row" style={isAccentMeta ? { borderColor: "rgba(0,0,0,0.2)" } : undefined}>
+          <div className="data-row">
             <span className="text-mono" style={{ fontSize: "0.75rem" }}>Capital Raised</span>
             <span className="text-mono" style={{ fontSize: "1rem" }}>{failure.raised}</span>
           </div>
           {failure.valuation && (
-            <div className="data-row" style={isAccentMeta ? { borderColor: "rgba(0,0,0,0.2)" } : undefined}>
+            <div className="data-row">
               <span className="text-mono" style={{ fontSize: "0.75rem" }}>Peak Value</span>
               <span className="text-mono" style={{ fontSize: "1rem" }}>{failure.valuation}</span>
             </div>
           )}
-          <div className="data-row" style={isAccentMeta ? { borderColor: "rgba(0,0,0,0.2)" } : undefined}>
+          <div className="data-row">
             <span className="text-mono" style={{ fontSize: "0.75rem" }}>Lifespan</span>
             <span className="text-mono" style={{ fontSize: "1rem" }}>
               {failure.yearDied
@@ -357,9 +358,9 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
         {/* Sources */}
         {failure.sources.length > 0 && (
           <>
-            <div className="divider" style={{ margin: 0, background: isAccentMeta ? "rgba(0,0,0,0.2)" : undefined }} />
+            <div className="divider" style={{ margin: 0 }} />
             <div>
-              <div className="text-mono" style={{ fontSize: "0.65rem", color: isAccentMeta ? "var(--border-color)" : "#666", marginBottom: "0.5rem" }}>
+              <div className="text-mono" style={{ fontSize: "0.65rem", color: "#666", marginBottom: "0.5rem" }}>
                 SOURCES
               </div>
               {failure.sources.slice(0, 2).map((s, i) => (
@@ -389,6 +390,7 @@ export default function Home() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sort, setSort] = useState<SortKey>("default");
+  const [filter, setFilter] = useState<string | null>(null);
 
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
@@ -422,7 +424,8 @@ export default function Home() {
   const featured = FAILURES[0]; // FTX
 
   const sortedExhibits = (() => {
-    const list = FAILURES.slice(1);
+    let list = FAILURES.slice(1);
+    if (filter) list = list.filter(f => f.sector === filter);
     switch (sort) {
       case "recent":
         return [...list].sort((a, b) => (b.yearDied ?? b.yearFounded) - (a.yearDied ?? a.yearFounded));
@@ -472,7 +475,7 @@ export default function Home() {
             style={{ padding: "16px", gap: "var(--gap)", overflowY: "auto" }}
             onClick={(e) => e.stopPropagation()}
           >
-            <SidebarContent onOpenSearch={() => { setSidebarOpen(false); setSearchOpen(true); }} />
+            <SidebarContent onOpenSearch={() => { setSidebarOpen(false); setSearchOpen(true); }} activeFilter={filter} onFilter={setFilter} />
           </div>
         </div>
       )}
@@ -481,12 +484,12 @@ export default function Home() {
       <div className="layout-grid" style={{ height: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}>
         {/* Sidebar — desktop only */}
         <aside className="hidden lg:flex flex-col scrollbar-hide" style={{ gap: "var(--gap)", overflowY: "auto", height: "100%", padding: "var(--gap) 0 24px 0" }}>
-          <SidebarContent onOpenSearch={() => setSearchOpen(true)} />
+          <SidebarContent onOpenSearch={() => setSearchOpen(true)} activeFilter={filter} onFilter={setFilter} />
         </aside>
 
         {/* Main exhibits */}
         <main className="exhibits scrollbar-hide" style={{ overflowY: "auto", height: "100%", paddingTop: "var(--gap)" }}>
-          <FeaturedCard failure={featured} />
+          {(!filter || featured.sector === filter) && <FeaturedCard failure={featured} />}
 
           {/* Sort bar */}
           <div className="flex items-center gap-2 flex-wrap" style={{ padding: "0.5rem 0" }}>
