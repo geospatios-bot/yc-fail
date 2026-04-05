@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import {
   FAILURES,
   STATUS_CONFIG,
@@ -8,9 +9,14 @@ import {
   parseRaised,
   type YCFailure,
 } from "@/data/companies";
+import { PRESIDENTS, getEra, type Era } from "@/data/eras";
 import Navbar, { NavLink, NavButton, NAVBAR_HEIGHT } from "@/components/Navbar";
 
-type SortKey = "default" | "recent" | "biggest" | "oldest" | "a-z";
+type SortKey = "severity" | "recent" | "biggest" | "oldest" | "a-z";
+
+const SEVERITY_SCORE: Record<string, number> = {
+  FRAUD: 100, SCANDAL: 80, GRIFT: 60, COPYCAT: 40, DEAD: 20, ZOMBIE: 10,
+};
 
 /* ── Search Modal ────────────────────────────────────── */
 
@@ -74,10 +80,7 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
                   type="button"
                   onClick={() => {
                     onClose();
-                    window.history.replaceState(null, "", `#${f.id}`);
-                    setTimeout(() => {
-                      document.getElementById(`exhibit-${f.id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
-                    }, 100);
+                    window.location.href = `/exhibit/${f.id}`;
                   }}
                   className="search-modal-result"
                 >
@@ -105,7 +108,7 @@ function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) 
 
 /* ── Sidebar ─────────────────────────────────────────── */
 
-function SidebarContent({ onOpenSearch, activeFilter, onFilter }: { onOpenSearch: () => void; activeFilter: string | null; onFilter: (sector: string | null) => void }) {
+function SidebarContent({ onOpenSearch, activeFilter, onFilter, activeEra, onEraFilter }: { onOpenSearch: () => void; activeFilter: string | null; onFilter: (sector: string | null) => void; activeEra: Era | null; onEraFilter: (era: Era | null) => void }) {
   const stats = computeStats();
 
   const sectors = FAILURES.reduce((acc, f) => {
@@ -207,6 +210,34 @@ function SidebarContent({ onOpenSearch, activeFilter, onFilter }: { onOpenSearch
           </div>
         </div>
       </div>
+
+      {/* Era filter block */}
+      <div className="block" style={{ flexShrink: 0 }}>
+        <div className="block-inner">
+          <div className="label-group">
+            <span className="pill-outline">(FILTER BY ERA)</span>
+          </div>
+          <h3 className="text-lg" style={{ marginBottom: "1rem" }}>YC Presidents</h3>
+          {PRESIDENTS.map((p) => {
+            const era = getEra(p.start) as Era;
+            const count = FAILURES.filter(f => getEra(f.yearFounded) === era).length;
+            return (
+              <div
+                key={era}
+                className="data-row"
+                onClick={() => onEraFilter(activeEra === era ? null : era)}
+                style={{ cursor: "pointer", opacity: activeEra && activeEra !== era ? 0.4 : 1, transition: "opacity 0.15s" }}
+              >
+                <span className="text-mono" style={{ fontSize: "0.75rem" }}>
+                  <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: p.color, marginRight: 6 }} />
+                  {p.label} <span style={{ color: "#999" }}>({p.start}–{p.end === 2027 ? "now" : p.end})</span>
+                </span>
+                <span className="pill-solid accent">{count}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </>
   );
 }
@@ -253,6 +284,9 @@ function FeaturedCard({ failure }: { failure: YCFailure }) {
           <span className="pill-outline">(FEATURED FAILURE)</span>
           <span className="pill-outline" style={{ color: "var(--accent)", borderColor: "var(--accent)" }}>MUSEUM CHOICE</span>
           <CopyLinkButton id={failure.id} dark />
+          <Link href={`/exhibit/${failure.id}`} className="copy-link-btn" style={{ borderColor: "var(--accent)", color: "var(--accent)", textDecoration: "none" }}>
+            VIEW EXHIBIT →
+          </Link>
         </div>
         <div className="flex items-center gap-4" style={{ margin: "1rem 0" }}>
           {failure.domain && (
@@ -264,9 +298,11 @@ function FeaturedCard({ failure }: { failure: YCFailure }) {
               style={{ borderRadius: "10px", background: "#333", flexShrink: 0 }}
             />
           )}
-          <h2 className="text-hero" style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontWeight: 400, letterSpacing: "-0.02em" }}>
-            {failure.company}
-          </h2>
+          <Link href={`/exhibit/${failure.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+            <h2 className="text-hero" style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", fontWeight: 400, letterSpacing: "-0.02em" }}>
+              {failure.company}
+            </h2>
+          </Link>
         </div>
         <p className="text-mono" style={{ color: "var(--accent)", fontSize: "1.2rem", marginBottom: "2rem" }}>
           {failure.oneLiner}
@@ -300,8 +336,13 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
           <span className="pill-outline">(BATCH {failure.batch !== "—" ? failure.batch : "ADJ"})</span>
           <span className="pill-outline">(EXHIBIT {String(index + 1).padStart(3, "0")})</span>
           <CopyLinkButton id={failure.id} />
+          <Link href={`/exhibit/${failure.id}`} className="copy-link-btn" style={{ color: "var(--accent)", borderColor: "var(--accent)", textDecoration: "none" }}>
+            VIEW EXHIBIT →
+          </Link>
         </div>
-        <h2 className="text-xl" style={{ marginBottom: "1rem" }}>{failure.company}</h2>
+        <Link href={`/exhibit/${failure.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+          <h2 className="text-xl" style={{ marginBottom: "1rem" }}>{failure.company}</h2>
+        </Link>
         <p className="text-mono" style={{ color: "var(--accent)", fontSize: "1.2rem", marginBottom: "2rem" }}>
           {failure.oneLiner}
         </p>
@@ -405,8 +446,9 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
 export default function Home() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sort, setSort] = useState<SortKey>("default");
+  const [sort, setSort] = useState<SortKey>("severity");
   const [filter, setFilter] = useState<string | null>(null);
+  const [eraFilter, setEraFilter] = useState<Era | null>(null);
 
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
@@ -437,12 +479,18 @@ export default function Home() {
     return () => { document.body.style.overflow = ""; };
   }, [sidebarOpen]);
 
-  const featured = FAILURES[0]; // FTX
+  const featured = FAILURES.find(f => f.featured) ?? FAILURES[0];
 
   const sortedExhibits = (() => {
-    let list = FAILURES.slice(1);
+    let list = FAILURES.filter(f => f !== featured);
     if (filter) list = list.filter(f => f.sector === filter);
+    if (eraFilter) list = list.filter(f => getEra(f.yearFounded) === eraFilter);
     switch (sort) {
+      case "severity":
+        return [...list].sort((a, b) => {
+          const diff = (SEVERITY_SCORE[b.status] ?? 0) - (SEVERITY_SCORE[a.status] ?? 0);
+          return diff !== 0 ? diff : parseRaised(b.raised) - parseRaised(a.raised);
+        });
       case "recent":
         return [...list].sort((a, b) => (b.yearDied ?? b.yearFounded) - (a.yearDied ?? a.yearFounded));
       case "biggest":
@@ -491,7 +539,7 @@ export default function Home() {
             style={{ padding: "16px", gap: "var(--gap)", overflowY: "auto" }}
             onClick={(e) => e.stopPropagation()}
           >
-            <SidebarContent onOpenSearch={() => { setSidebarOpen(false); setSearchOpen(true); }} activeFilter={filter} onFilter={setFilter} />
+            <SidebarContent onOpenSearch={() => { setSidebarOpen(false); setSearchOpen(true); }} activeFilter={filter} onFilter={setFilter} activeEra={eraFilter} onEraFilter={setEraFilter} />
           </div>
         </div>
       )}
@@ -500,18 +548,18 @@ export default function Home() {
       <div className="layout-grid" style={{ height: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}>
         {/* Sidebar — desktop only */}
         <aside className="hidden lg:flex flex-col scrollbar-hide" style={{ gap: "var(--gap)", overflowY: "auto", height: "100%", padding: "var(--gap) 0 24px 0" }}>
-          <SidebarContent onOpenSearch={() => setSearchOpen(true)} activeFilter={filter} onFilter={setFilter} />
+          <SidebarContent onOpenSearch={() => setSearchOpen(true)} activeFilter={filter} onFilter={setFilter} activeEra={eraFilter} onEraFilter={setEraFilter} />
         </aside>
 
         {/* Main exhibits */}
         <main className="exhibits scrollbar-hide" style={{ overflowY: "auto", height: "100%", paddingTop: "var(--gap)" }}>
-          {(!filter || featured.sector === filter) && <FeaturedCard failure={featured} />}
+          {(!filter || featured.sector === filter) && (!eraFilter || getEra(featured.yearFounded) === eraFilter) && <FeaturedCard failure={featured} />}
 
           {/* Sort bar */}
           <div className="flex items-center gap-2 flex-wrap" style={{ padding: "0.5rem 0" }}>
             <span className="text-mono" style={{ fontSize: "0.65rem", color: "#666", marginRight: "4px" }}>SORT:</span>
             {([
-              ["default", "DEFAULT"],
+              ["severity", "SEVERITY"],
               ["recent", "RECENT"],
               ["biggest", "BIGGEST"],
               ["oldest", "OLDEST"],
