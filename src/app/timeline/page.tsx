@@ -119,7 +119,7 @@ export default function TimelinePage() {
     <>
       <Navbar right={<NavLink href="/">← DIRECTORY</NavLink>} />
 
-      <div style={{ maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "var(--gap)" }}>
+      <div style={{ maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "var(--gap)", padding: "var(--gap) 0" }}>
 
         {/* Hero callout */}
         <div className="block block--accent">

@@ -478,14 +478,14 @@ export default function Home() {
       )}
 
       {/* Layout grid */}
-      <div className="layout-grid" style={{ height: `calc(100vh - ${NAVBAR_HEIGHT + 24}px)` }}>
+      <div className="layout-grid" style={{ height: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}>
         {/* Sidebar — desktop only */}
-        <aside className="hidden lg:flex flex-col scrollbar-hide" style={{ gap: "var(--gap)", overflowY: "auto", height: "100%", padding: "0 0 24px 0" }}>
+        <aside className="hidden lg:flex flex-col scrollbar-hide" style={{ gap: "var(--gap)", overflowY: "auto", height: "100%", padding: "var(--gap) 0 24px 0" }}>
           <SidebarContent onOpenSearch={() => setSearchOpen(true)} />
         </aside>
 
         {/* Main exhibits */}
-        <main className="exhibits scrollbar-hide" style={{ overflowY: "auto", height: "100%" }}>
+        <main className="exhibits scrollbar-hide" style={{ overflowY: "auto", height: "100%", paddingTop: "var(--gap)" }}>
           <FeaturedCard failure={featured} />
 
           {/* Sort bar */}
