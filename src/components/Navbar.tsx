@@ -47,31 +47,25 @@ export function NavButton({ onClick, children }: { onClick: () => void; children
   );
 }
 
-export const NAVBAR_HEIGHT = 42; // px — padding (10*2) + content (22)
-const NAVBAR_SPACER = 42 + 24; // navbar + gap below
+export const NAVBAR_HEIGHT = 42; // px — fixed height set in CSS
 
 export default function Navbar({ right }: { right?: ReactNode }) {
   return (
-    <>
-      <nav className="navbar">
-        {/* Left: logo + site name */}
-        <Link href="/" className="navbar-brand">
-          {YC_LOGO}
-          <span>YCOMBINATOR.FYI</span>
-        </Link>
+    <nav className="navbar">
+      {/* Left: logo + site name */}
+      <Link href="/" className="navbar-brand">
+        {YC_LOGO}
+        <span>YCOMBINATOR.FYI</span>
+      </Link>
 
-        {/* Right: nav items */}
-        <div className="navbar-right">
-          {right}
-          {/* Twitter — always visible, case-sensitive */}
-          <NavLink href="https://x.com/NotOnKetamine" external>
-            <span style={{ textTransform: "none" }}>@NotOnKetamine</span>
-          </NavLink>
-        </div>
-      </nav>
-
-      {/* Spacer to push content below fixed navbar + gap */}
-      <div style={{ height: `${NAVBAR_SPACER}px` }} />
-    </>
+      {/* Right: nav items */}
+      <div className="navbar-right">
+        {right}
+        {/* Twitter — always visible, case-sensitive */}
+        <NavLink href="https://x.com/NotOnKetamine" external>
+          <span style={{ textTransform: "none" }}>@NotOnKetamine</span>
+        </NavLink>
+      </div>
+    </nav>
   );
 }
