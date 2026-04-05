@@ -198,7 +198,7 @@ h1, h2, h3 {
 }
 
 .text-xl {
-  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-size: clamp(1.6rem, 4vw, 3.5rem);
 }
 
 .text-lg {
@@ -325,6 +325,9 @@ h1, h2, h3 {
 .exhibit-content {
   padding: 1.5rem;
   border-right: var(--border-w) solid var(--border-color);
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 @media (min-width: 768px) {
