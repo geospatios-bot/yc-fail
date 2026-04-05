@@ -137,22 +137,6 @@ export default function TimelinePage() {
           </div>
         </div>
 
-        {/* Presidential eras legend */}
-        <div className="block">
-          <div className="block-inner" style={{ padding: "1rem 1.5rem" }}>
-            <div className="flex items-center gap-4 flex-wrap" style={{ justifyContent: "center" }}>
-              {PRESIDENTS.map(p => (
-                <div key={p.name} className="flex items-center gap-2">
-                  <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: p.color }} />
-                  <span className="text-mono" style={{ fontSize: "0.6rem", color: "#666" }}>
-                    {p.name} ({p.start}–{p.end > 2026 ? "NOW" : p.end})
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* Main chart */}
         <div className="block" style={{ overflow: "visible" }}>
           <div className="block-inner">
@@ -183,13 +167,25 @@ export default function TimelinePage() {
                     borderLeft: `2px solid ${p.color}20`,
                     zIndex: 0, pointerEvents: "none",
                   }}>
-                    <span style={{
-                      position: "absolute", top: "4px", left: "6px",
-                      fontFamily: "var(--font-mono)", fontSize: "0.5rem", fontWeight: 800,
-                      color: p.color, opacity: 0.6, textTransform: "uppercase", whiteSpace: "nowrap",
+                    <div style={{
+                      position: "absolute", top: "6px", left: "8px",
+                      pointerEvents: "none",
                     }}>
-                      {p.label}
-                    </span>
+                      <div style={{
+                        fontFamily: "var(--font-mono)", fontSize: "0.6rem", fontWeight: 800,
+                        color: p.color, opacity: 0.8, textTransform: "uppercase", whiteSpace: "nowrap",
+                        lineHeight: 1,
+                      }}>
+                        {p.name}
+                      </div>
+                      <div style={{
+                        fontFamily: "var(--font-mono)", fontSize: "0.45rem", fontWeight: 700,
+                        color: p.color, opacity: 0.5, whiteSpace: "nowrap",
+                        marginTop: "2px",
+                      }}>
+                        {p.start}–{p.end > 2026 ? "NOW" : p.end}
+                      </div>
+                    </div>
                   </div>
                 );
               })}
