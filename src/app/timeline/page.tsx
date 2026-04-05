@@ -194,10 +194,10 @@ export default function TimelinePage() {
               DOCUMENTED EXHIBITS PER YEAR OF PRESIDENCY
             </p>
 
-            <div ref={eraRef} style={{ display: "flex", alignItems: "flex-end", gap: "clamp(8px, 3vw, 16px)", height: "280px", padding: "0 0 40px" }}>
+            <div ref={eraRef} style={{ display: "flex", alignItems: "flex-end", gap: "clamp(4px, 2vw, 16px)", height: "320px", padding: "40px 0 40px" }}>
               {eraKeys.map((era, i) => {
                 const stats = eraStats[era];
-                const barHeight = maxExhibitsPerYear > 0 ? (stats.exhibitsPerYear / maxExhibitsPerYear) * 200 : 0;
+                const barHeight = maxExhibitsPerYear > 0 ? (stats.exhibitsPerYear / maxExhibitsPerYear) * 180 : 0;
                 const color = ERA_COLORS[era];
                 const isTan = era === "tan";
                 const [start, end] = ERA_YEARS[era];
@@ -321,11 +321,13 @@ export default function TimelinePage() {
                         top: 0, bottom: "32px",
                         background: `${p.color}08`, borderLeft: `2px solid ${p.color}20`,
                         zIndex: 0, pointerEvents: "none",
+                        overflow: "hidden",
                       }}>
-                        <div style={{ position: "absolute", top: "6px", left: "8px", pointerEvents: "none" }}>
+                        <div style={{ position: "absolute", top: "6px", left: "4px", pointerEvents: "none", right: 0, overflow: "hidden" }}>
                           <div style={{
-                            fontFamily: "var(--font-mono)", fontSize: "0.55rem", fontWeight: 700,
+                            fontFamily: "var(--font-mono)", fontSize: "clamp(0.35rem, 1.2vw, 0.55rem)", fontWeight: 700,
                             color: p.color, opacity: 0.7, textTransform: "uppercase", whiteSpace: "nowrap",
+                            overflow: "hidden", textOverflow: "ellipsis",
                           }}>
                             {p.label}
                           </div>
