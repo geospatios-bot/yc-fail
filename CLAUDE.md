@@ -29,7 +29,7 @@ src/
 - `NAVBAR_HEIGHT = 42px` — use this constant for spacers and offsets.
 - Always includes `@NotOnKetamine` link (case-sensitive, always visible, all breakpoints).
 - Pass page-specific items via `right` prop using `<NavLink>` and `<NavButton>`.
-- CSS lives in `globals.css` under `.navbar`, `.navbar-brand`, `.navbar-right`, `.nav-btn`.
+- CSS lives in `globals.css` under `.navbar`, `.navbar-brand`, `.navbar-brand-text`, `.navbar-right`, `.nav-link`, `.nav-btn`.
 
 ## Design System
 
