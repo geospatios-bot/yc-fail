@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { STATUS_CONFIG, type YCFailure } from "@/data/companies";
-import Navbar, { NavLink } from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 import Link from "next/link";
 
 const EVENT_COLORS: Record<string, string> = {
@@ -47,7 +47,7 @@ export default function ExhibitPage({
 
   return (
     <>
-      <Navbar right={<NavLink href="/">← DIRECTORY</NavLink>} />
+      <Navbar />
 
       <div
         style={{

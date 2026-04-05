@@ -10,7 +10,7 @@ import {
   type YCFailure,
 } from "@/data/companies";
 import { PRESIDENTS, getEra, type Era } from "@/data/eras";
-import Navbar, { NavLink, NavButton, NAVBAR_HEIGHT } from "@/components/Navbar";
+import Navbar, { NAVBAR_HEIGHT } from "@/components/Navbar";
 
 type SortKey = "severity" | "recent" | "biggest" | "oldest" | "a-z";
 
@@ -532,22 +532,13 @@ export default function Home() {
     <>
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      <Navbar right={
-        <>
-          <NavLink href="/timeline">TIMELINE</NavLink>
-          <NavButton onClick={() => setSearchOpen(true)}>⌕</NavButton>
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden"
-            style={{
-              width: "30px", height: "30px", background: "rgba(255,255,255,0.2)",
-              border: "none", borderRadius: "8px", color: "#fff", fontSize: "14px",
-              fontWeight: 900, cursor: "pointer", alignItems: "center", justifyContent: "center",
-            }}
-          >
-            {sidebarOpen ? "✕" : "☰"}
-          </button>
-        </>
+      <Navbar rightExtra={
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="lg:hidden nav-btn"
+        >
+          {sidebarOpen ? "✕" : "☰"}
+        </button>
       } />
 
       {/* Mobile sidebar overlay */}

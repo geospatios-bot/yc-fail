@@ -510,6 +510,12 @@ h1, h2, h3 {
   padding: 0 20px;
 }
 
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .navbar-brand {
   display: flex;
   align-items: center;
@@ -518,38 +524,49 @@ h1, h2, h3 {
 
 .navbar-brand-text {
   font-family: var(--font-sans);
-  font-weight: 800;
+  font-weight: 500;
   color: #fff;
-  font-size: 0.95rem;
-  letter-spacing: -0.03em;
+  font-size: 0.85rem;
+  letter-spacing: -0.02em;
+}
+
+.navbar-sep {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.85rem;
+  font-weight: 300;
+  margin: 0 4px;
+  user-select: none;
 }
 
 @media (max-width: 640px) {
   .navbar-brand-text {
     font-size: 0.8rem;
   }
+  .navbar-sep {
+    margin: 0 2px;
+  }
 }
 
 .navbar-right {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .nav-link {
   font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
   white-space: nowrap;
-  padding: 5px 10px;
+  padding: 4px 8px;
   border-radius: 6px;
   transition: background 0.15s, color 0.15s;
 }
 
 .nav-link:hover {
-  background: rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.1);
   color: #fff;
 }
 
@@ -561,7 +578,7 @@ h1, h2, h3 {
   border-radius: 8px;
   color: #fff;
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 400;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -570,7 +587,7 @@ h1, h2, h3 {
 }
 
 .nav-btn:hover {
-  background: rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 /* ── Copy link button ──────────────────────────────── */

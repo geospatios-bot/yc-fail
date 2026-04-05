@@ -2,13 +2,14 @@
 
 import { type ReactNode } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 /*
   Shared navbar used on every page.
   Orange background, white text, fixed at top.
 
-  Props:
-    - right: nav links + buttons rendered on the right side
+  Left: brand + nav links (always visible)
+  Right: @NotOnKetamine + optional extras (mobile hamburger)
 */
 
 export function NavLink({ href, children, external }: { href: string; children: ReactNode; external?: boolean }) {
@@ -35,19 +36,32 @@ export function NavButton({ onClick, children }: { onClick: () => void; children
 
 export const NAVBAR_HEIGHT = 42; // px — fixed height set in CSS
 
-export default function Navbar({ right }: { right?: ReactNode }) {
+export default function Navbar({ rightExtra }: { rightExtra?: ReactNode }) {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const isSubpage = !isHome;
+
   return (
     <nav className="navbar">
-      {/* Left: site name */}
-      <Link href="/" className="navbar-brand">
-        <span className="navbar-brand-text">ycombinator.fyi</span>
-      </Link>
+      {/* Left: brand + navigation */}
+      <div className="navbar-left">
+        <Link href="/" className="navbar-brand">
+          <span className="navbar-brand-text">ycombinator.fyi</span>
+        </Link>
+        <span className="navbar-sep">/</span>
+        <NavLink href="/timeline">Timeline</NavLink>
+        {isSubpage && (
+          <>
+            <NavLink href="/">Directory</NavLink>
+          </>
+        )}
+      </div>
 
-      {/* Right: nav items */}
+      {/* Right: twitter + optional extras */}
       <div className="navbar-right">
-        {right}
+        {rightExtra}
         <NavLink href="https://x.com/NotOnKetamine" external>
-          <span style={{ textTransform: "none" }}>@NotOnKetamine</span>
+          @NotOnKetamine
         </NavLink>
       </div>
     </nav>

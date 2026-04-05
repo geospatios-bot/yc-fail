@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Navbar, { NavLink } from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 import { PRESIDENTS, getPresident } from "@/data/eras";
 
 /* ── Real YC Data ───────────────────────────────────── */
@@ -105,7 +105,7 @@ export default function TimelinePage() {
 
   return (
     <>
-      <Navbar right={<NavLink href="/">← DIRECTORY</NavLink>} />
+      <Navbar />
 
       <div style={{ maxWidth: "960px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "var(--gap)", padding: "var(--gap) 0" }}>
 
