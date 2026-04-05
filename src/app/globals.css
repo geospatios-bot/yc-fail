@@ -484,6 +484,56 @@ h1, h2, h3 {
   flex-shrink: 0;
 }
 
+/* ── Navbar ───────────────────────────────────────── */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--accent);
+  padding: 10px 16px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.navbar-brand span {
+  font-weight: 900;
+  color: #fff;
+  font-size: 0.8rem;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-btn {
+  width: 30px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ── Copy link button ──────────────────────────────── */
 .copy-link-btn {
   border: 2px solid currentColor;
