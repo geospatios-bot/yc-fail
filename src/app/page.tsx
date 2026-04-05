@@ -535,7 +535,7 @@ export default function Home() {
       <Navbar rightExtra={
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="lg:hidden nav-btn"
+          className="nav-btn nav-btn--mobile"
         >
           {sidebarOpen ? "✕" : "☰"}
         </button>

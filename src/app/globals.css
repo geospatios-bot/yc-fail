@@ -590,6 +590,12 @@ h1, h2, h3 {
   background: rgba(0, 0, 0, 0.1);
 }
 
+@media (min-width: 1025px) {
+  .nav-btn--mobile {
+    display: none;
+  }
+}
+
 /* ── Copy link button ──────────────────────────────── */
 .copy-link-btn {
   border: 2px solid currentColor;

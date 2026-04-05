@@ -51,9 +51,7 @@ export default function Navbar({ rightExtra }: { rightExtra?: ReactNode }) {
         <span className="navbar-sep">/</span>
         <NavLink href="/timeline">Timeline</NavLink>
         {isSubpage && (
-          <>
-            <NavLink href="/">Directory</NavLink>
-          </>
+          <NavLink href="/">← Directory</NavLink>
         )}
       </div>
 
