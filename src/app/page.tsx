@@ -267,7 +267,23 @@ function CopyLinkButton({ id, dark }: { id: string; dark?: boolean }) {
 
 function FeaturedCard({ failure }: { failure: YCFailure }) {
   return (
-    <div id={`exhibit-${failure.id}`} className="block block--dark">
+    <div
+      id={`exhibit-${failure.id}`}
+      className="block block--dark"
+      style={{ cursor: "pointer", transition: "transform 0.2s ease, box-shadow 0.2s ease" }}
+      onClick={(e) => {
+        if ((e.target as HTMLElement).closest("a, button")) return;
+        window.location.href = `/exhibit/${failure.id}`;
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-3px)";
+        e.currentTarget.style.boxShadow = "0 8px 24px rgba(255, 102, 0, 0.2)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "";
+        e.currentTarget.style.boxShadow = "";
+      }}
+    >
       {/* Hero image */}
       {failure.imageUrl && (
         <div style={{ position: "relative", width: "100%", height: "280px", overflow: "hidden" }}>
@@ -329,7 +345,15 @@ function ExhibitCard({ failure, index }: { failure: YCFailure; index: number }) 
   const isAccent = failure.status === "FRAUD" || failure.status === "SCANDAL";
 
   return (
-    <div id={`exhibit-${failure.id}`} className="block exhibit-card">
+    <div
+      id={`exhibit-${failure.id}`}
+      className="block exhibit-card"
+      onClick={(e) => {
+        // Don't navigate if clicking a link/button inside the card
+        if ((e.target as HTMLElement).closest("a, button")) return;
+        window.location.href = `/exhibit/${failure.id}`;
+      }}
+    >
       {/* Content */}
       <div className="exhibit-content">
         <div className="label-group">
